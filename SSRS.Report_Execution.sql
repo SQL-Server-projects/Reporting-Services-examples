@@ -2,6 +2,7 @@
 | Purpose:	To search the reporting services execution log
 | Note:		SQLCmdMode Script
 '--------------------------------------------------------------------------------------------------------------------
+*/
 
 DECLARE @LogStatus AS VARCHAR(50)
 DECLARE @ReportFolder AS VARCHAR(450)
@@ -28,7 +29,6 @@ SET @EndDate = NULL
 USE [$(_database)];
 GO
 
-*/
 
 ;WITH
 report_execution_log

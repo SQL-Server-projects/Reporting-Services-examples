@@ -6,6 +6,7 @@
 | Notes:		To deploy this report to the main report page, you must use "Upload File"
 |				SQLCmdMode Script
 |--------------------------------------------------------------------------------------------------
+*/
 
 DECLARE @HideNonAccessGroups AS BIT
 SET @HideNonAccessGroups = 0
@@ -19,7 +20,6 @@ SET @HideNonAccessGroups = 0
 USE [$(_database)];
 GO
 
-*/
 
 ;WITH 
 catalog_type_description

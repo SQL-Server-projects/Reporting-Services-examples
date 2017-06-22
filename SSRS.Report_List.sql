@@ -2,6 +2,7 @@
 | Purpose:	To search deployed reports on the report server
 | Note:		SQLCmdMode Script
 '--------------------------------------------------------------------------------------------------------------------
+*/
 
 DECLARE @ReportFolder AS VARCHAR(100)
 DECLARE @ReportName AS VARCHAR(100)
@@ -32,7 +33,6 @@ SET @SearchType = NULL  -- 'Report Name', 'Report Description', 'Report Definiti
 USE [$(_database)];
 GO
 
-*/
 
 ;WITH
 report_users 

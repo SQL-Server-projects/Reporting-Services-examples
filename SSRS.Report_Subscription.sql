@@ -2,6 +2,7 @@
 | Purpose:	Schedule Of Recurring Report Subscriptions
 | Note:		SQLCmdMode Script
 '--------------------------------------------------------------------------------------------------------------------
+*/
 
 DECLARE @ReportFolder AS VARCHAR(100)
 DECLARE @ReportName AS VARCHAR(100)
@@ -32,7 +33,6 @@ SET @LastSubscriptionDate = NULL --getdate()-1
 USE [$(_database)];
 GO
 
-*/
 
 ;WITH
 report_users 
