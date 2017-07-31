@@ -2,7 +2,7 @@
 Various example reports I use for Reporting Services
 
 ## Example Reports
-* [Activity Moniter](aduguid/repo/blob/master/SqlServerReportingServices/ExampleReports/Activity Moniter.rdl)
+* [Activity Moniter](\Activity Moniter.rdl)
 * [Data Sources](.\ExampleReports\Data Sources.rdl)
 * [Database Dictionary](\ExampleReports\Database Dictionary.rdl)
 <h1 align="left">
