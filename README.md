@@ -5,7 +5,7 @@ Various example reports I use for Reporting Services
 * [Activity Moniter](\ExampleReports\Activity Moniter.rdl)
 * [Data Sources](\ExampleReports\Data Sources.rdl)
 * [Database Dictionary](\ExampleReports\Database Dictionary.rdl)
-** <h1 align="left">
+<h1 align="left">
   <img src="Images/ssrsdatadictionary.png" alt="ssrsdatadictionary" />
 </h1>
 * [Execution Log](\ExampleReports\Execution Log.rdl)
