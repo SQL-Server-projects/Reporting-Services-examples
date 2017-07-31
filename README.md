@@ -16,4 +16,12 @@ Various example reports I use for Reporting Services
 </h1>
 
 * [Scheduled Jobs](Scheduled%20Jobs.rdl)
+<h1 align="left">
+  <img src="Images/ssrsscheduledjobs.png" alt="ssrsscheduledjobs" />
+</h1>
+
 * [Subscriptions](Subscriptions.rdl)
+<h1 align="left">
+  <img src="Images/ssrsreportsubscriptions.png" alt="ssrsreportsubscriptions" />
+</h1>
+
