@@ -2,7 +2,7 @@
 Various example reports I use for Reporting Services
 
 ## Example Reports
-* [Activity Moniter](Activity%20Moniter.rdl)
+* [Activity Moniter](/ExampleReports/Activity%20Moniter.rdl)
 * [Data Sources](Data%20Sources.rdl)
 * [Database Dictionary](Database%20Dictionary.rdl)
 <h1 align="left">
