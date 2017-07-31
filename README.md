@@ -1,8 +1,8 @@
 # SQL Server Reporting Services
 Various example reports I use for Reporting Services
 
-## Reporting Services Scripts
-* [Activity Moniter](\ExampleReports\Activity Moniter.rdl)
+## Example Reports
+* [Activity Moniter](ExampleReports\Activity Moniter.rdl)
 * [Data Sources](\ExampleReports\Data Sources.rdl)
 * [Database Dictionary](\ExampleReports\Database Dictionary.rdl)
 <h1 align="left">
