@@ -1,3 +1,5 @@
+<img align="left" src="Images/ReadMe/App.png" width="64px" >
+
 # SQL Server Reporting Services
 Various example reports I use for Reporting Services
 
