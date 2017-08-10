@@ -7,11 +7,20 @@
       <FullPath>ReportServer.rds</FullPath>
     </ProjectItem>
   </DataSources>
-  <DataSets />
+  <DataSets>
+    <ProjectItem>
+      <Name>Servers.rsd</Name>
+      <FullPath>Servers.rsd</FullPath>
+    </ProjectItem>
+  </DataSets>
   <Reports>
     <ProjectItem>
       <Name>Data Sources.rdl</Name>
       <FullPath>Data Sources.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Execution Log.rdl</Name>
+      <FullPath>Execution Log.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Report List.rdl</Name>
@@ -22,8 +31,20 @@
       <FullPath>Subscriptions.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Execution Log.rdl</Name>
-      <FullPath>Execution Log.rdl</FullPath>
+      <Name>Scheduled Jobs.rdl</Name>
+      <FullPath>Scheduled Jobs.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Activity Moniter.rdl</Name>
+      <FullPath>Activity Moniter.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Job Search.rdl</Name>
+      <FullPath>Job Search.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Database Dictionary.rdl</Name>
+      <FullPath>Database Dictionary.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
