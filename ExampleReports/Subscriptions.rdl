@@ -732,19 +732,19 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.55cm</Width>
+                  <Width>0.62146cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.75cm</Width>
+                  <Width>4.61635cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.55cm</Width>
+                  <Width>0.61219cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>8.75cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.55cm</Width>
+                  <Width>0.56854cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.55cm</Width>
@@ -843,7 +843,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox55">
+                        <Textbox Name="Textbox20">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -854,7 +854,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -863,10 +862,10 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox55</rd:DefaultName>
-                          <ZIndex>69</ZIndex>
+                          <rd:DefaultName>Textbox20</rd:DefaultName>
                           <Style>
                             <Border>
+                              <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
                             <TopBorder>
@@ -952,7 +951,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox49">
+                        <Textbox Name="Textbox46">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -963,7 +962,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -972,10 +970,10 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox49</rd:DefaultName>
-                          <ZIndex>67</ZIndex>
+                          <rd:DefaultName>Textbox46</rd:DefaultName>
                           <Style>
                             <Border>
+                              <Style>None</Style>
                               <Width>0.5pt</Width>
                             </Border>
                             <TopBorder>
@@ -1061,7 +1059,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox52">
+                        <Textbox Name="Textbox66">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1072,7 +1070,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1081,8 +1078,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox52</rd:DefaultName>
-                          <ZIndex>65</ZIndex>
+                          <rd:DefaultName>Textbox66</rd:DefaultName>
                           <Style>
                             <Border>
                               <Width>0.5pt</Width>
@@ -1114,7 +1110,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox64">
+                        <Textbox Name="Textbox57">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -1125,7 +1121,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1134,7 +1129,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <ZIndex>64</ZIndex>
+                          <rd:DefaultName>Textbox57</rd:DefaultName>
                           <Style>
                             <Border>
                               <Width>0.5pt</Width>
@@ -2632,39 +2627,43 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image2">
-                          <Source>Embedded</Source>
-                          <Value>folder</Value>
-                          <Sizing>Clip</Sizing>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
-                          <ZIndex>34</ZIndex>
-                          <ToolTip>go to this folder</ToolTip>
+                        <Rectangle Name="Rectangle1">
+                          <ReportItems>
+                            <Image Name="image5">
+                              <Source>Embedded</Source>
+                              <Value>folder</Value>
+                              <Sizing>Clip</Sizing>
+                              <ActionInfo>
+                                <Actions>
+                                  <Action>
+                                    <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
+                                  </Action>
+                                </Actions>
+                              </ActionInfo>
+                              <Height>0.5cm</Height>
+                              <Width>0.62146cm</Width>
+                              <ToolTip>go to this folder</ToolTip>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                  <Width>0.5pt</Width>
+                                </Border>
+                                <PaddingLeft>1.5pt</PaddingLeft>
+                                <PaddingTop>1.5pt</PaddingTop>
+                              </Style>
+                            </Image>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>Solid</Style>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <PaddingLeft>1.5pt</PaddingLeft>
-                            <PaddingTop>1.5pt</PaddingTop>
+                            <BackgroundColor>=Code.CandyStripe(True)</BackgroundColor>
                           </Style>
-                        </Image>
+                        </Rectangle>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2690,21 +2689,13 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ZIndex>33</ZIndex>
                           <Style>
                             <Border>
+                              <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
-                            <BackgroundColor>White</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2715,39 +2706,43 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image1">
-                          <Source>Embedded</Source>
-                          <Value>report</Value>
-                          <Sizing>Clip</Sizing>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Hyperlink>=Fields!URL_Report.Value</Hyperlink>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
-                          <ZIndex>32</ZIndex>
-                          <ToolTip>go to this report</ToolTip>
+                        <Rectangle Name="Rectangle2">
+                          <ReportItems>
+                            <Image Name="image2">
+                              <Source>Embedded</Source>
+                              <Value>report</Value>
+                              <Sizing>Clip</Sizing>
+                              <ActionInfo>
+                                <Actions>
+                                  <Action>
+                                    <Hyperlink>=Fields!URL_Report.Value</Hyperlink>
+                                  </Action>
+                                </Actions>
+                              </ActionInfo>
+                              <Height>0.5cm</Height>
+                              <Width>0.61219cm</Width>
+                              <ToolTip>go to this report</ToolTip>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                  <Width>0.5pt</Width>
+                                </Border>
+                                <PaddingLeft>1.5pt</PaddingLeft>
+                                <PaddingTop>1.5pt</PaddingTop>
+                              </Style>
+                            </Image>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>Solid</Style>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <PaddingLeft>1.5pt</PaddingLeft>
-                            <PaddingTop>1.5pt</PaddingTop>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                           </Style>
-                        </Image>
+                        </Rectangle>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2774,21 +2769,16 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ToolTip>=Fields!Description.Value</ToolTip>
                           <Style>
                             <Border>
+                              <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>White</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2799,99 +2789,114 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image3">
-                          <Source>Embedded</Source>
-                          <Value>email</Value>
-                          <Sizing>Clip</Sizing>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Hyperlink>=Fields!URL.Value</Hyperlink>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
-                          <ZIndex>30</ZIndex>
-                          <ToolTip>go to this subscription</ToolTip>
+                        <Rectangle Name="Rectangle3">
+                          <ReportItems>
+                            <Image Name="image6">
+                              <Source>Embedded</Source>
+                              <Value>email</Value>
+                              <Sizing>Clip</Sizing>
+                              <ActionInfo>
+                                <Actions>
+                                  <Action>
+                                    <Hyperlink>=Fields!URL.Value</Hyperlink>
+                                  </Action>
+                                </Actions>
+                              </ActionInfo>
+                              <Left>0.00927cm</Left>
+                              <Height>0.5cm</Height>
+                              <Width>0.55cm</Width>
+                              <ToolTip>go to this subscription</ToolTip>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                  <Width>0.5pt</Width>
+                                </Border>
+                                <PaddingLeft>1.5pt</PaddingLeft>
+                                <PaddingTop>1.5pt</PaddingTop>
+                              </Style>
+                            </Image>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>Solid</Style>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <PaddingLeft>1.5pt</PaddingLeft>
-                            <PaddingTop>1.5pt</PaddingTop>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                           </Style>
-                        </Image>
+                        </Rectangle>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image4">
-                          <Source>Embedded</Source>
-                          <Value>log</Value>
-                          <MIMEType>image/png</MIMEType>
-                          <Sizing>Clip</Sizing>
-                          <ActionInfo>
-                            <Actions>
-                              <Action>
-                                <Drillthrough>
-                                  <ReportName>Execution Log</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="ReportName">
-                                      <Value>=Fields!Name.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="StartDate">
-                                      <Value>=nothing</Value>
-                                    </Parameter>
-                                    <Parameter Name="LogStatus">
-                                      <Value>="&lt;ALL&gt;"</Value>
-                                    </Parameter>
-                                    <Parameter Name="EndDate">
-                                      <Value>=nothing</Value>
-                                    </Parameter>
-                                    <Parameter Name="ShowParameters">
-                                      <Value>="N"</Value>
-                                    </Parameter>
-                                    <Parameter Name="GroupByIsCollasped">
-                                      <Value>=2</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
-                              </Action>
-                            </Actions>
-                          </ActionInfo>
-                          <ZIndex>29</ZIndex>
-                          <ToolTip>view report of the log</ToolTip>
+                        <Rectangle Name="Rectangle4">
+                          <ReportItems>
+                            <Image Name="image7">
+                              <Source>Embedded</Source>
+                              <Value>log</Value>
+                              <MIMEType>image/png</MIMEType>
+                              <Sizing>Clip</Sizing>
+                              <ActionInfo>
+                                <Actions>
+                                  <Action>
+                                    <Drillthrough>
+                                      <ReportName>Execution Log</ReportName>
+                                      <Parameters>
+                                        <Parameter Name="ReportName">
+                                          <Value>=Fields!Name.Value</Value>
+                                        </Parameter>
+                                        <Parameter Name="StartDate">
+                                          <Value>=nothing</Value>
+                                        </Parameter>
+                                        <Parameter Name="LogStatus">
+                                          <Value>="&lt;ALL&gt;"</Value>
+                                        </Parameter>
+                                        <Parameter Name="EndDate">
+                                          <Value>=nothing</Value>
+                                        </Parameter>
+                                        <Parameter Name="ShowParameters">
+                                          <Value>="N"</Value>
+                                        </Parameter>
+                                        <Parameter Name="GroupByIsCollasped">
+                                          <Value>=2</Value>
+                                        </Parameter>
+                                      </Parameters>
+                                    </Drillthrough>
+                                  </Action>
+                                </Actions>
+                              </ActionInfo>
+                              <Height>0.5cm</Height>
+                              <Width>0.55cm</Width>
+                              <ToolTip>view report of the log</ToolTip>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                  <Width>0.5pt</Width>
+                                </Border>
+                                <PaddingLeft>1.5pt</PaddingLeft>
+                                <PaddingTop>1.5pt</PaddingTop>
+                              </Style>
+                            </Image>
+                          </ReportItems>
+                          <KeepTogether>true</KeepTogether>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>Solid</Style>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
                             <RightBorder>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </RightBorder>
-                            <PaddingLeft>1.5pt</PaddingLeft>
-                            <PaddingTop>1.5pt</PaddingTop>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                           </Style>
-                        </Image>
+                        </Rectangle>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2922,12 +2927,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2964,12 +2964,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2991,7 +2986,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3007,7 +3002,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDaySun.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3029,7 +3024,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3044,7 +3039,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDayMon.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3066,7 +3061,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3081,7 +3076,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDayTue.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3103,7 +3098,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3118,7 +3113,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDayWed.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3140,7 +3135,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3155,7 +3150,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDayThr.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3177,7 +3172,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3192,7 +3187,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDayFri.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3214,7 +3209,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Color>White</Color>
+                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3229,7 +3224,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <BackgroundColor>=IIf(Fields!SchDaySat.Value="0", "White", "DimGray")</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3267,12 +3262,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3310,12 +3300,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3347,20 +3332,10 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ZIndex>17</ZIndex>
                           <Style>
                             <Border>
+                              <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3395,12 +3370,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3435,12 +3405,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3475,12 +3440,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3515,12 +3475,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3555,12 +3510,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3595,12 +3545,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3635,12 +3580,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3675,12 +3615,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3715,12 +3650,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3755,12 +3685,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3797,12 +3722,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3839,12 +3759,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3882,12 +3797,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3924,12 +3834,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3967,12 +3872,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -4009,12 +3909,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -4051,12 +3946,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.5pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -4071,24 +3961,12 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -4197,7 +4075,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>1.5cm</Height>
-            <Width>120.31128cm</Width>
+            <Width>120.32982cm</Width>
             <Style>
               <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
@@ -4207,7 +4085,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
         <Height>1.5cm</Height>
         <Style />
       </Body>
-      <Width>120.31128cm</Width>
+      <Width>120.32982cm</Width>
       <Page>
         <PageFooter>
           <Height>1cm</Height>
@@ -4542,6 +4420,25 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
+  <Code>Private Alt As Boolean
+
+Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional ByVal OddColor as String = "Beige", Optional ByVal EvenColor as String = "White") As String
+'------------------------------------------------------------------------------------------------
+' Purpose:  To candy stripe the detail rows of a report
+' Example:  BackgroundColor = Code.CandyStripe()
+' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
+'------------------------------------------------------------------------------------------------
+	If NewRow Then 
+		Alt = Not Alt
+	End If
+	
+	If Alt Then
+		Return OddColor
+	Else
+		Return EvenColor
+	End If
+
+End Function</Code>
   <EmbeddedImages>
     <EmbeddedImage Name="report">
       <MIMEType>image/png</MIMEType>
