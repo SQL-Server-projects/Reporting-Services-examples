@@ -3284,7 +3284,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>dd-MMM-yyyy  hh:mm</Format>
+                                    <Format>= Code.DateFormat()</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3781,7 +3781,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>dd-MMM-yyyy  hh:mm</Format>
+                                    <Format>= Code.DateFormat()</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3856,7 +3856,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>dd-MMM-yyyy  hh:mm</Format>
+                                    <Format>= Code.DateFormat()</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3931,7 +3931,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>dd-MMM-yyyy  hh:mm</Format>
+                                    <Format>= Code.DateFormat()</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -4437,6 +4437,15 @@ Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional B
 	Else
 		Return EvenColor
 	End If
+
+End Function
+
+Public Function DateFormat()As String
+'------------------------------------------------------------------------------------------------
+' Purpose:  To standardize the date format in a report
+' Example:  Format = Code.DateFormat()
+'------------------------------------------------------------------------------------------------
+	Return "dd-MMM-yyyy  hh:mm"
 
 End Function</Code>
   <EmbeddedImages>
