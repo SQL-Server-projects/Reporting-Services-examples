@@ -1,4 +1,7 @@
 
+- [ ] add documentation report
+- [ ] add data sources report
+
 <table style="width:100%">
     <caption>
         <h2>
@@ -35,15 +38,15 @@
         </td>
         <td>
             <kbd>
-                Execution Log
+                Activity Monitor
                 <br>
                 <br>
-                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Execution Log" />
+                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Activity Monitor" />
                 <br>
                 <br>
-                This report is used for querying the
+                This report queries the activity monitor
                 <br>
-                report server exection log table.
+                of a SQL Server.
             </kbd>
         </td>
     </tr>
@@ -78,15 +81,15 @@
         </td>
         <td>
             <kbd>
-                Activity Monitor
+                Execution Log
                 <br>
                 <br>
-                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Activity Monitor" />
+                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Execution Log" />
                 <br>
                 <br>
-                This report queries the activity monitor
+                This report is used for querying the
                 <br>
-                of a SQL Server.
+                report server exection log table.
             </kbd>
         </td>
     </tr>
