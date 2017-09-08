@@ -1,29 +1,97 @@
-<img align="left" src="Images/ReadMe/App.png" width="64px" >
 
-# SQL Server Reporting Services
-Various example reports I use for Reporting Services
+- [ ] add documentation report
+- [ ] add data sources report
+- [ ] add folder permissions
 
-## Example Reports
-* [Activity Moniter](/ExampleReports/Activity%20Moniter.rdl)
-* [Data Sources](/ExampleReports/Data%20Sources.rdl)
-* [Database Dictionary](/ExampleReports/Database%20Dictionary.rdl)
-<h1 align="left">
-  <img src="Images/ReadMe/ssrsdatadictionary.png" alt="ssrsdatadictionary" />
-</h1>
-
-* [Execution Log](/ExampleReports/Execution%20Log.rdl)
-* [Report List](/ExampleReports/Report%20List.rdl)
-<h1 align="left">
-  <img src="Images/ReadMe/ssrsreportlisting.png" alt="ssrsreportlisting" />
-</h1>
-
-* [Scheduled Jobs](/ExampleReports/Scheduled%20Jobs.rdl)
-<h1 align="left">
-  <img src="Images/ReadMe/ssrsscheduledjobs.png" alt="ssrsscheduledjobs" />
-</h1>
-
-* [Subscriptions](/ExampleReports/Subscriptions.rdl)
-<h1 align="left">
-  <img src="Images/ReadMe/ssrsreportsubscriptions.png" alt="ssrsreportsubscriptions" />
-</h1>
-
+<table style="width:100%">
+    <caption>
+        <h2>
+            <img align="left" src="Images/ReadMe/App.png" width="32px">
+            Microsoft SQL Server Reporting Services (SSRS)
+        </h2>
+    </caption>
+    <tr valign="top">
+        <td>
+            <kbd>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ExampleReports/Database%20Dictionary.rdl">Data Dictionary</a>
+                <br>
+                <br>
+                <img src="Images/ReadMe/ssrsdatadictionary.png" align="top" width="256px" title="Data Dictionary" />
+                <br>
+                <br>
+                This report is used for querying the
+                <br>
+                data dictionary of a SQL Server database.
+            </kbd>
+        </td>
+        <td>
+            <kbd>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ExampleReports/Scheduled%20Jobs.rdl">Scheduled Jobs Gantt Chart</a>
+                <br>
+                <br>
+                <img src="Images/ReadMe/ssrsscheduledjobs.png" align="top" width="256px" title="Scheduled Jobs Gantt Chart" />
+                <br>
+                <br>
+                This report is used for querying the
+                <br>
+                scheduled jobs for a SQL Server database.
+            </kbd>
+        </td>
+        <td>
+            <kbd>
+                Activity Monitor
+                <br>
+                <br>
+                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Activity Monitor" />
+                <br>
+                <br>
+                This report queries the activity monitor
+                <br>
+                of a SQL Server.
+            </kbd>
+        </td>
+    </tr>
+    <tr valign="top">
+        <td>
+            <kbd>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ExampleReports/Report%20List.rdl">Report Listing</a>
+                <br>
+                <br>
+                <img src="Images/ReadMe/ssrsreportlisting.png" align="top" width="256px" title="Report Listing" />
+                <br>
+                <br>
+                This report is used for querying the
+                <br>
+                deployed SSRS reports, their subscriptions
+                <br>
+                and their execution logs.
+            </kbd>
+        </td>
+        <td>
+            <kbd>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ExampleReports/Subscriptions.rdl">Report Subscriptions</a>
+                <br>
+                <br>
+                <img src="Images/ReadMe/ssrsreportsubscriptions.png" align="top" width="256px" title="Report Subscriptions" />
+                <br>
+                <br>
+                This report is used for querying the
+                <br>
+                deployed SSRS subscriptions.
+            </kbd>
+        </td>
+        <td>
+            <kbd>
+                Execution Log
+                <br>
+                <br>
+                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Execution Log" />
+                <br>
+                <br>
+                This report is used for querying the
+                <br>
+                report server exection log table.
+            </kbd>
+        </td>
+    </tr>
+</table>
