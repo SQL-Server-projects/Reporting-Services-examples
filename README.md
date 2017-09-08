@@ -1,6 +1,7 @@
 
 - [ ] add documentation report
 - [ ] add data sources report
+- [ ] add folder permissions
 
 <table style="width:100%">
     <caption>
