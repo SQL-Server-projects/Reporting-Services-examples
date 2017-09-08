@@ -426,7 +426,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -484,7 +484,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -537,7 +537,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -595,7 +595,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -650,7 +650,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -700,7 +700,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -750,7 +750,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -800,7 +800,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -850,7 +850,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -900,7 +900,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -950,7 +950,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1000,7 +1000,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1050,7 +1050,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1100,7 +1100,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1150,7 +1150,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1200,7 +1200,7 @@ WHERE
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2369,15 +2369,12 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Produced By: " &amp; Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))
- &amp; " @ " &amp; DateTime.Now.ToString("dd-MMM-yyyy  hh:mm tt")
- &amp; Environment.NewLine 
- &amp; "Execution Time: "
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2) 
- &amp; Environment.NewLine 
- &amp; "Page: " &amp; Globals!PageNumber.ToString() &amp; " of " &amp; Globals!TotalPages.ToString()</Value>
+                      <Value>="Produced By: " + Variables!UserName.Value
+ + " @ " + Variables!ReportRunDateTime.Value
+ + Environment.NewLine 
+ + "Execution Time: " + Variables!ReportExecutionTime.Value
+ + Environment.NewLine 
+ + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2407,18 +2404,7 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Globals!ReportServerUrl &amp; "/ReportServer?"
- &amp; Replace(Globals!ReportFolder, " ", "+") &amp; "%2f"
- &amp; Replace(Globals!ReportName, " ", "+") &amp; "&amp;rs:Command=Render"
- &amp; "&amp;ReportFolder=" &amp; Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
- &amp; "&amp;ReportName=" &amp; Join(Parameters!ReportName.Value, "&amp;ReportName=")
- &amp; "&amp;LogStatus=" &amp; Join(Parameters!LogStatus.Value, "&amp;LogStatus=")
- &amp; "&amp;UserName=" &amp; Join(Parameters!UserName.Value, "&amp;UserName=")
- &amp; IIf(IsNothing(Parameters!StartDate.Value), "&amp;StartDate:IsNull=True", "&amp;StartDate=" &amp; Format(Parameters!StartDate.Value, "dd-MMM-yyyy"))
- &amp; IIf(IsNothing(Parameters!EndDate.Value), "&amp;EndDate:IsNull=True", "&amp;EndDate=" &amp; Format(Parameters!EndDate.Value, "dd-MMM-yyyy"))
- &amp; "&amp;ShowParameters=" &amp; Parameters!ShowParameters.Value
- &amp; "&amp;GroupByColumn=" &amp; Parameters!GroupByColumn.Value
- &amp; "&amp;GroupByIsCollasped=" &amp; Parameters!GroupByIsCollasped.Value</Value>
+                      <Value>=Variables!UrlReport.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2435,7 +2421,7 @@ WHERE
               <ActionInfo>
                 <Actions>
                   <Action>
-                    <Hyperlink>=ReportItems!txtCriteria.value</Hyperlink>
+                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
                   </Action>
                 </Actions>
               </ActionInfo>
@@ -2741,6 +2727,47 @@ WHERE
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
+  <Variables>
+    <Variable Name="ColorTableHeader">
+      <Value>Gainsboro</Value>
+    </Variable>
+    <Variable Name="FormatDate">
+      <Value>dd-MMM-yyyy</Value>
+    </Variable>
+    <Variable Name="FormatDateTime">
+      <Value>dd-MMM-yyyy  hh:mm tt</Value>
+    </Variable>
+    <Variable Name="ReportExecutionTime">
+      <Value>
+        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+      </Value>
+    </Variable>
+    <Variable Name="ReportRunDateTime">
+      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
+    </Variable>
+    <Variable Name="UrlReport">
+      <Value>=Globals!ReportServerUrl + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+    </Variable>
+    <Variable Name="UrlReportWithParameters">
+      <Value>=Variables!UrlReport.Value
+ + "&amp;ReportFolder=" + Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
+ + "&amp;ReportName=" + Join(Parameters!ReportName.Value, "&amp;ReportName=")
+ + "&amp;LogStatus=" + Join(Parameters!LogStatus.Value, "&amp;LogStatus=")
+ + "&amp;UserName=" + Join(Parameters!UserName.Value, "&amp;UserName=")
+ + IIf(IsNothing(Parameters!StartDate.Value), "&amp;StartDate:IsNull=True", "&amp;StartDate=" + Format(Parameters!StartDate.Value, Variables!FormatDate.Value))
+ + IIf(IsNothing(Parameters!EndDate.Value), "&amp;EndDate:IsNull=True", "&amp;EndDate=" + Format(Parameters!EndDate.Value, Variables!FormatDate.Value))
+ + "&amp;ShowParameters=" + Parameters!ShowParameters.Value
+ + "&amp;GroupByColumn=" + Parameters!GroupByColumn.Value
+ + "&amp;GroupByIsCollasped=" + Parameters!GroupByIsCollasped.Value</Value>
+    </Variable>
+    <Variable Name="UserName">
+      <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+  </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>83036679-a77a-400c-bce9-3fbcfe4dca09</rd:ReportID>

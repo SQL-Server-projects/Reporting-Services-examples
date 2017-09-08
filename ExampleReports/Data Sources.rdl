@@ -162,7 +162,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -218,7 +218,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -271,7 +271,7 @@ WHERE
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -690,15 +690,12 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Produced By: " &amp; Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))
- &amp; " @ " &amp; DateTime.Now.ToString("dd-MMM-yyyy  hh:mm tt")
- &amp; Environment.NewLine 
- &amp; "Execution Time: "
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2) 
- &amp; Environment.NewLine 
- &amp; "Page: " &amp; Globals!PageNumber.ToString() &amp; " of " &amp; Globals!TotalPages.ToString()</Value>
+                      <Value>="Produced By: " + Variables!UserName.Value
+ + " @ " + Variables!ReportRunDateTime.Value
+ + Environment.NewLine 
+ + "Execution Time: " + Variables!ReportExecutionTime.Value
+ + Environment.NewLine 
+ + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -710,9 +707,9 @@ WHERE
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>10.64601cm</Left>
+              <Left>10.46962cm</Left>
               <Height>1cm</Height>
-              <Width>14.30497cm</Width>
+              <Width>14.48136cm</Width>
               <Style>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
@@ -728,9 +725,7 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Globals!ReportServerUrl &amp; "/ReportServer?"
- &amp; Replace(Globals!ReportFolder, " ", "+") &amp; "%2f"
- &amp; Replace(Globals!ReportName, " ", "+") &amp; "&amp;rs:Command=Render"</Value>
+                      <Value>=Variables!UrlReport.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -744,9 +739,8 @@ WHERE
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>0.03528cm</Left>
               <Height>1cm</Height>
-              <Width>10.43434cm</Width>
+              <Width>10.46962cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <PaddingLeft>2pt</PaddingLeft>
@@ -793,6 +787,33 @@ dQAAAABJRU5ErkJggg==</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
+  <Variables>
+    <Variable Name="ColorTableHeader">
+      <Value>Gainsboro</Value>
+    </Variable>
+    <Variable Name="FormatDate">
+      <Value>dd-MMM-yyyy</Value>
+    </Variable>
+    <Variable Name="FormatDateTime">
+      <Value>dd-MMM-yyyy  hh:mm tt</Value>
+    </Variable>
+    <Variable Name="UrlReport">
+      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
++ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
++ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+    </Variable>
+    <Variable Name="UserName">
+      <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+    <Variable Name="ReportRunDateTime">
+      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
+    </Variable>
+    <Variable Name="ReportExecutionTime">
+      <Value>=  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":" 
+ + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":" 
+ + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)</Value>
+    </Variable>
+  </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>83036679-a77a-400c-bce9-3fbcfe4dca09</rd:ReportID>

@@ -678,7 +678,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -715,7 +715,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -752,7 +752,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -791,7 +791,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -828,7 +828,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -865,7 +865,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -902,7 +902,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>Gainsboro</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2020,6 +2020,10 @@ ORDER BY 1</CommandText>
             <Height>2.63492cm</Height>
             <Width>38.77646cm</Width>
             <Style>
+              <Border>
+                <Style>None</Style>
+                <Width>0.75pt</Width>
+              </Border>
               <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
             </Style>
@@ -2043,15 +2047,12 @@ ORDER BY 1</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Produced By: " &amp; Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))
- &amp; " @ " &amp; DateTime.Now.ToString("dd-MMM-yyyy  hh:mm tt")
- &amp; Environment.NewLine 
- &amp; "Execution Time: "
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2) 
- &amp; Environment.NewLine 
- &amp; "Page: " &amp; Globals!PageNumber.ToString() &amp; " of " &amp; Globals!TotalPages.ToString()</Value>
+                      <Value>="Produced By: " + Variables!UserName.Value
+ + " @ " + Variables!ReportRunDateTime.Value
+ + Environment.NewLine 
+ + "Execution Time: " + Variables!ReportExecutionTime.Value
+ + Environment.NewLine 
+ + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2081,17 +2082,7 @@ ORDER BY 1</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Globals!ReportServerUrl &amp; "/ReportServer?"
- &amp; Replace(Globals!ReportFolder, " ", "+") &amp; "%2f"
- &amp; Replace(Globals!ReportName, " ", "+") &amp; "&amp;rs:Command=Render"
- &amp; "&amp;Server=" &amp; Parameters!Server.Value
- &amp; "&amp;Enabled=" &amp; Parameters!Enabled.Value
- &amp; "&amp;Category_Name=" &amp; Join(Parameters!Category_Name.Value, "&amp;Category_Name=")
- &amp; "&amp;Day_Of_Week=" &amp; Parameters!Day_Of_Week.Value
- &amp; "&amp;Is_Collasped=" &amp; Parameters!Is_Collasped.Value
- &amp; "&amp;Job_Status=" &amp; Join(Parameters!Job_Status.Value, "&amp;Job_Status=")
- &amp; IIf(IsNothing(Parameters!RunDate.Value), "&amp;RunDate:IsNull=True", "&amp;RunDate=" &amp; Format(Parameters!RunDate.Value, "dd-MMM-yyyy"))
- &amp; IIf(IsNothing(Parameters!Job_Name.Value), "&amp;Job_Name:IsNull=True", "&amp;Job_Name=" &amp; Parameters!Job_Name.Value)</Value>
+                      <Value>=Variables!UrlReport.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2108,7 +2099,7 @@ ORDER BY 1</CommandText>
               <ActionInfo>
                 <Actions>
                   <Action>
-                    <Hyperlink>=ReportItems!txtCriteria.value</Hyperlink>
+                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
                   </Action>
                 </Actions>
               </ActionInfo>
@@ -2188,53 +2179,6 @@ ORDER BY 1</CommandText>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Day_Of_Week">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>0</Value>
-        </Values>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Day of Week</Prompt>
-      <Hidden>true</Hidden>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>0</Value>
-            <Label>&lt;ALL&gt;</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>1</Value>
-            <Label>Sunday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>2</Value>
-            <Label>Monday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>3</Value>
-            <Label>Tuesday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>4</Value>
-            <Label>Wednesday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>5</Value>
-            <Label>Thursday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>6</Value>
-            <Label>Friday</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>7</Value>
-            <Label>Saturday</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="Is_Collasped">
       <DataType>String</DataType>
@@ -2321,10 +2265,57 @@ ORDER BY 1</CommandText>
       </DefaultValue>
       <Prompt>Job Name Like</Prompt>
     </ReportParameter>
+    <ReportParameter Name="Day_Of_Week">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Day of Week</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>&lt;ALL&gt;</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Sunday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Monday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Tuesday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>Wednesday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>Thursday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>6</Value>
+            <Label>Friday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>7</Value>
+            <Label>Saturday</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>3</NumberOfColumns>
+      <NumberOfColumns>2</NumberOfColumns>
       <NumberOfRows>4</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
@@ -2333,7 +2324,7 @@ ORDER BY 1</CommandText>
           <ParameterName>Server</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>0</RowIndex>
           <ParameterName>Enabled</ParameterName>
         </CellDefinition>
@@ -2344,11 +2335,11 @@ ORDER BY 1</CommandText>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>Day_Of_Week</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>Is_Collasped</ParameterName>
         </CellDefinition>
@@ -2358,7 +2349,7 @@ ORDER BY 1</CommandText>
           <ParameterName>Job_Status</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
+          <ColumnIndex>1</ColumnIndex>
           <RowIndex>2</RowIndex>
           <ParameterName>RunDate</ParameterName>
         </CellDefinition>
@@ -2400,6 +2391,48 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
+  <Variables>
+    <Variable Name="ColorTableHeader">
+      <Value>Gainsboro</Value>
+    </Variable>
+    <Variable Name="FormatDate">
+      <Value>dd-MMM-yyyy</Value>
+    </Variable>
+    <Variable Name="FormatDateTime">
+      <Value>dd-MMM-yyyy  hh:mm tt</Value>
+    </Variable>
+    <Variable Name="ReportExecutionTime">
+      <Value>
+        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+      </Value>
+    </Variable>
+    <Variable Name="ReportRunDateTime">
+      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
+    </Variable>
+    <Variable Name="UrlReport">
+      <Value>
+        =Globals!ReportServerUrl + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
+    </Variable>
+    <Variable Name="UrlReportWithParameters">
+      <Value>=Variables!UrlReport.Value
+ + "&amp;Server=" + Parameters!Server.Value
+ + "&amp;Enabled=" + Parameters!Enabled.Value
+ + "&amp;Category_Name=" + Join(Parameters!Category_Name.Value, "&amp;Category_Name=")
+ + "&amp;Day_Of_Week=" + Parameters!Day_Of_Week.Value
+ + "&amp;Is_Collasped=" + Parameters!Is_Collasped.Value
+ + "&amp;Job_Status=" + Join(Parameters!Job_Status.Value, "&amp;Job_Status=")
+ + IIf(IsNothing(Parameters!RunDate.Value), "&amp;RunDate:IsNull=True", "&amp;RunDate=" + Format(Parameters!RunDate.Value, Variables!FormatDate.Value))
+ + IIf(IsNothing(Parameters!Job_Name.Value), "&amp;Job_Name:IsNull=True", "&amp;Job_Name=" + Parameters!Job_Name.Value)</Value>
+    </Variable>
+    <Variable Name="UserName">
+      <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+  </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>83036679-a77a-400c-bce9-3fbcfe4dca09</rd:ReportID>

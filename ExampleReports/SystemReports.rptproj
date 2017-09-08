@@ -46,6 +46,38 @@
       <Name>Subscriptions.rdl</Name>
       <FullPath>Subscriptions.rdl</FullPath>
     </ProjectItem>
+    <ProjectItem>
+      <Name>Permissions.rdl</Name>
+      <FullPath>Permissions.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Datasets.rdl</Name>
+      <FullPath>Report Documentation Datasets.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Execution Logs.rdl</Name>
+      <FullPath>Report Documentation Execution Logs.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Parameters.rdl</Name>
+      <FullPath>Report Documentation Parameters.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Permissions.rdl</Name>
+      <FullPath>Report Documentation Permissions.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Subscriptions.rdl</Name>
+      <FullPath>Report Documentation Subscriptions.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation Variables.rdl</Name>
+      <FullPath>Report Documentation Variables.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report Documentation.rdl</Name>
+      <FullPath>Report Documentation.rdl</FullPath>
+    </ProjectItem>
   </Reports>
   <Configurations>
     <Configuration>

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
-  <Description>A list of reporting services reports</Description>
+  <Description>A subreport to Report Documentation</Description>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -11,155 +11,322 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet">
+    <DataSet Name="Subscriptions">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
-          <QueryParameter Name="@SearchFor">
-            <Value>=Parameters!SearchFor.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@CreatedBy">
-            <Value>=Parameters!CreatedBy.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@CreatedDate">
-            <Value>=Parameters!CreatedDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ModifiedBy">
-            <Value>=Parameters!ModifiedBy.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ModifiedDate">
-            <Value>=Parameters!ModifiedDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportFolder">
-            <Value>=Parameters!ReportFolder.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@SearchType">
-            <Value>=Parameters!SearchType.Value</Value>
+          <QueryParameter Name="@ItemID">
+            <Value>=Parameters!ItemID.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>/*
-+-----------------------------------------------------------------------------
-| Purpose:	To search deployed reports on the report server
-| Note:		SQLCmdMode Script
-+-----------------------------------------------------------------------------
-
-:setvar _server "YourServerNameHere"
-:setvar _database "ReportServer"
---:setvar _user "***username***"
---:setvar _password "***password***"
---:connect $(_server) -U $(_user) -P $(_password)
-:connect $(_server)
-
-USE [$(_database)];
-GO
-
-
-DECLARE @ReportFolder AS VARCHAR(100)
-DECLARE @ReportName AS VARCHAR(100)
-DECLARE @ReportDescription AS VARCHAR(50)
-DECLARE @CreatedBy AS VARCHAR(50)
-DECLARE @CreatedDate AS DATETIME
-DECLARE @ModifiedBy AS VARCHAR(50)
-DECLARE @ModifiedDate AS DATETIME
-DECLARE @ReportDefinition AS VARCHAR(50)
-DECLARE @SearchFor AS VARCHAR(50)
-DECLARE @SearchType AS VARCHAR(50)
-DECLARE @all_value AS VARCHAR(50)
-
-SET @ReportFolder = '&lt;ALL&gt;'
-SET @ReportName = NULL
-SET @ReportDescription = NULL
-SET @CreatedBy = NULL
-SET @CreatedDate = NULL
-SET @ModifiedBy = NULL
-SET @ModifiedDate = NULL
-SET @ReportDefinition = NULL
-SET @SearchFor = NULL
-SET @SearchType = NULL
-SET @all_value = '&lt;ALL&gt;'
-
-*/
-
-;WITH
+        <CommandText>;WITH
 report_users 
 AS
 (
-	SELECT UserID, SimpleUserName = UPPER(RIGHT(UserName, (LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
+	SELECT UserID, SimpleUserName = UPPER(RIGHT(UserName,(LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
 )
 ,
 report_catalog
 AS
 (
 	SELECT    
-		  rpt.ItemID
-		, rpt.CreatedById
-		, rpt.ModifiedById
-		, rpt.[Type]
-		, rpt.[Name] 
-		, rpt.[Description]
-		, rpt.Parameter
-		, CreationDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.CreationDate, 13))
-		, ModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.ModifiedDate, 13))
-		, ReportFolder = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
-		, rpt.[Path]
-		, URL_ReportFolder = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-		, URL_Report = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-		, ReportDefinition = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
+		  c.ItemID
+		, c.CreatedById
+		, c.ModifiedById
+		, c.[Type]
+		, c.Name 
+		, c.[Description]
+		, c.Parameter
+		, ReportCreationDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.CreationDate, 13))
+		, ReportModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.ModifiedDate, 13))
+		, ReportFolder = 
+			CASE
+				WHEN c.Path = '/' + c.Name THEN ''
+				ELSE SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2) 
+			END 
+		, ReportPath = c.[Path]
+		, UrlPath = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+		, ReportDefinition = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX),c.content))  
 	FROM 
-		dbo.Catalog AS rpt
+		dbo.Catalog AS c
 	WHERE 
 		1=1
-		AND rpt.[Type] = 2
+		AND c.Type = 2
+		AND c.ItemID = @ItemID
 )
-SELECT    
-	  rpt.ItemID
-	, rpt.[Name]
-	, rpt.[Description]
-	, rpt.Parameter
+, 
+subscription_days
+AS
+(
+	SELECT tbl.* FROM (VALUES
+	  ( 'DaysOfMonth', 1, '1')
+	, ( 'DaysOfMonth', 2, '2')
+	, ( 'DaysOfMonth', 4, '3')
+	, ( 'DaysOfMonth', 8, '4')
+	, ( 'DaysOfMonth', 16, '5')
+	, ( 'DaysOfMonth', 32, '6')
+	, ( 'DaysOfMonth', 64, '7')
+	, ( 'DaysOfMonth', 128, '8')
+	, ( 'DaysOfMonth', 256, '9')
+	, ( 'DaysOfMonth', 512, '10')
+	, ( 'DaysOfMonth', 1024, '11')
+	, ( 'DaysOfMonth', 2048, '12')
+	, ( 'DaysOfMonth', 4096, '13')
+	, ( 'DaysOfMonth', 8192, '14')
+	, ( 'DaysOfMonth', 16384, '15')
+	, ( 'DaysOfMonth', 32768, '16')
+	, ( 'DaysOfMonth', 65536, '17')
+	, ( 'DaysOfMonth', 131072, '18')
+	, ( 'DaysOfMonth', 262144, '19')
+	, ( 'DaysOfMonth', 524288, '20')
+	, ( 'DaysOfMonth', 1048576, '21')
+	, ( 'DaysOfMonth', 2097152, '22')
+	, ( 'DaysOfMonth', 4194304, '23')
+	, ( 'DaysOfMonth', 8388608, '24')
+	, ( 'DaysOfMonth', 16777216, '25')
+	, ( 'DaysOfMonth', 33554432, '26')
+	, ( 'DaysOfMonth', 67108864, '27')
+	, ( 'DaysOfMonth', 134217728, '28')
+	, ( 'DaysOfMonth', 268435456, '29')
+	, ( 'DaysOfMonth', 536870912, '30')
+	, ( 'DaysOfMonth', 1073741824, '31')
+	, ( 'DaysOfMonth', 8193, '1st and 14th')
+	, ( 'DaysOfWeek', 1, 'Sun')
+	, ( 'DaysOfWeek', 2, 'Mon')
+	, ( 'DaysOfWeek', 4, 'Tues')
+	, ( 'DaysOfWeek', 8, 'Wed')
+	, ( 'DaysOfWeek', 16, 'Thurs')
+	, ( 'DaysOfWeek', 32, 'Fri')
+	, ( 'DaysOfWeek', 64, 'Sat')
+	, ( 'DaysOfWeek', 62, 'Mon - Fri')
+	, ( 'DaysOfWeek', 10, 'Mon - Wed')
+	, ( 'DaysOfWeek', 24, 'Wed - Thurs')
+	, ( 'DaysOfWeek', 120, 'Wed - Sat')
+	, ( 'DaysOfWeek', 126, 'Mon - Sat')
+	, ( 'DaysOfWeek', 127, 'Daily')
+	, ( 'DayOfWeek', 1, 'Sun')
+	, ( 'DayOfWeek', 127, 'Sun')
+	, ( 'DayOfWeek', 2, 'Mon')
+	, ( 'DayOfWeek', 10, 'Mon')
+	, ( 'DayOfWeek', 62, 'Mon')
+	, ( 'DayOfWeek', 126, 'Mon')
+	, ( 'DayOfWeek', 127, 'Mon')
+	, ( 'DayOfWeek', 4, 'Tue')
+	, ( 'DayOfWeek', 10, 'Tue')
+	, ( 'DayOfWeek', 62, 'Tue')
+	, ( 'DayOfWeek', 126, 'Tue')
+	, ( 'DayOfWeek', 127, 'Tue')
+	, ( 'DayOfWeek', 8, 'Wed')
+	, ( 'DayOfWeek', 10, 'Wed')
+	, ( 'DayOfWeek', 24, 'Wed')
+	, ( 'DayOfWeek', 62, 'Wed')
+	, ( 'DayOfWeek', 120, 'Wed')
+	, ( 'DayOfWeek', 126, 'Wed')
+	, ( 'DayOfWeek', 127, 'Wed')
+	, ( 'DayOfWeek', 16, 'Thr')
+	, ( 'DayOfWeek', 24, 'Thr')
+	, ( 'DayOfWeek', 62, 'Thr')
+	, ( 'DayOfWeek', 120, 'Thr')
+	, ( 'DayOfWeek', 126, 'Thr')
+	, ( 'DayOfWeek', 127, 'Thr')
+	, ( 'DayOfWeek', 32, 'Fri')
+	, ( 'DayOfWeek', 62, 'Fri')
+	, ( 'DayOfWeek', 120, 'Fri')
+	, ( 'DayOfWeek', 126, 'Fri')
+	, ( 'DayOfWeek', 127, 'Fri')
+	, ( 'DayOfWeek', 64, 'Sat')
+	, ( 'DayOfWeek', 120, 'Sat')
+	, ( 'DayOfWeek', 126, 'Sat')
+	, ( 'DayOfWeek', 127, 'Sat')
+	) tbl ([GroupName], [CodeNbr], [Label]) 
+)
+,
+subscription_schedule
+AS
+(
+	SELECT 
+		  ScheduleID
+		, SchDaySun = Sun
+		, SchDayMon = Mon
+		, SchDayTue = Tue
+		, SchDayWed = Wed
+		, SchDayThr = Thr
+		, SchDayFri = Fri
+		, SchDaySat = Sat
+		, ScheduleName
+		, ScheduleStartDate 
+		, ScheduleEndDate 
+		, Flags
+		, RecurrenceType
+		, [State]
+		, MinutesInterval
+		, DaysInterval
+		, WeeksInterval
+		, DaysOfWeek
+		, DaysOfMonth
+		, [Month]
+		, MonthlyWeek 
+		, ScheduleDays 
+	FROM
+		(
+		SELECT 
+			  sc.ScheduleID 
+			, sd.CodeNbr
+			, sd.Label
+			, ScheduleName = sc.name
+			, ScheduleStartDate = sc.StartDate
+			, ScheduleEndDate = sc.EndDate
+			, sc.Flags
+			, sc.RecurrenceType
+			, sc.[State]
+			, sc.MinutesInterval
+			, sc.DaysInterval
+			, sc.WeeksInterval
+			, sc.DaysOfWeek
+			, sc.DaysOfMonth
+			, sc.[Month]
+			, sc.MonthlyWeek 
+			, ScheduleDays = 
+				CASE
+					WHEN sc.DaysOfMonth IS NOT NULL THEN COALESCE(dom.Label, '(' + CAST(sc.DaysOfMonth AS VARCHAR(20)) + ') NOT CODED')
+					WHEN sc.DaysOfWeek IS NOT NULL THEN COALESCE(dow.Label, '(' + CAST(sc.DaysOfWeek AS VARCHAR(20)) + ') NOT CODED')
+				END 
+			--, sc.RecurrenceType
+		FROM 
+			dbo.Schedule sc 
+			LEFT JOIN subscription_days sd ON sc.DaysOfWeek = sd.CodeNbr AND sd.GroupName = 'DayOfWeek'
+			LEFT JOIN subscription_days AS dom ON sc.DaysOfMonth = dom.CodeNbr AND dom.GroupName = 'DaysOfMonth'
+			LEFT JOIN subscription_days AS dow ON sc.DaysOfWeek = dow.CodeNbr AND dow.GroupName = 'DaysOfWeek'
+		) sch
+		PIVOT
+		(
+			COUNT(sch.Label) 
+			FOR sch.Label
+			IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
+		) AS pvt
+)
+,
+report_subscription
+AS
+(
+	SELECT     
+		  s.SubscriptionID
+		, s.Report_OID
+		, SubscriptionDescription = s.[Description]
+		, s.ExtensionSettings
+		, s.EventType
+		, s.OwnerID
+		, s.ModifiedByID
+		, s.ModifiedDate		
+		, RunTime = CONVERT(VARCHAR(5), s.LastRunTime, 8)
+		, LastRunDate = CONVERT(VARCHAR(11),s.LastRunTime,13)
+		, s.LastRunTime
+		, s.DeliveryExtension		
+		, s.MatchData		
+		, SubscriptionLastStatus = s.LastStatus		
+		, StatusFail = CASE WHEN s.LastStatus  LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END		
+		, EmailSubject = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, EmailTo = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
+		, EmailCc = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
+		, EmailBcc = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, EmailComment = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, EmailIncludeLink = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
+		, EmailRenderFormat = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, EmailPriority = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, sch.MinutesInterval
+		, sch.DaysInterval
+		, sch.WeeksInterval
+		, sch.DaysOfWeek
+		, sch.DaysOfMonth
+		, sch.[Month]
+		, sch.MonthlyWeek 
+		--, JobName = sj.name 
+		, sch.ScheduleName 
+		, sch.ScheduleDays 
+		, sch.SchDaySun
+		, sch.SchDayMon
+		, sch.SchDayTue
+		, sch.SchDayWed
+		, sch.SchDayThr
+		, sch.SchDayFri
+		, sch.SchDaySat
+		, sch.ScheduleStartDate 
+		, sch.ScheduleEndDate 
+		, sch.Flags
+		, sch.RecurrenceType
+		, sch.[State]
+	FROM  
+		dbo.Subscriptions AS s 
+		LEFT JOIN dbo.Notifications AS n ON n.SubscriptionID = s.SubscriptionID AND s.Report_OID = n.ReportID
+		LEFT JOIN dbo.ReportSchedule AS rs ON s.SubscriptionID = rs.SubscriptionID 
+		LEFT JOIN subscription_schedule AS sch ON rs.ScheduleID = sch.ScheduleID 
+)
+SELECT     
+	  c.Name 
+	, c.Description 
+	, c.Parameter 	
+	, c.ReportFolder 
+	, c.ReportPath 
+	, URL_ReportFolder = c.UrlPath + c.ReportFolder + '&amp;ViewMode=List'
+	, URL_Report = c.UrlPath + c.ReportFolder + '%2f' + c.Name 
+	, URL = 'http://' + Host_Name() + '/Reports/Pages/SubscriptionProperties.aspx?ItemPath=' + c.ReportPath + '&amp;IsDataDriven=False&amp;SubscriptionID=' + CAST(s.SubscriptionID AS VARCHAR(80)) 
+	, URL2 = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.ReportPath + '&amp;SelectedTabId=SubscriptionsTab'  
 	, ReportCreatedBy = urc.SimpleUserName
-	, ReportCreationDate = rpt.CreationDate 
+	, c.ReportCreationDate
 	, ReportModifiedBy = urm.SimpleUserName
-	, ReportModifiedDate = rpt.ModifiedDate 
-	, rpt.ReportFolder
-	, ReportPath = rpt.[Path]
-	, rpt.URL_ReportFolder
-	, rpt.URL_Report
-	, rpt.ReportDefinition
-	, CommandText = rpt.ReportDefinition
-	, el.ExecutionLogCount
-	, sc.SubscriptionCount
-	, SearchForStr = ISNULL(@SearchFor, ' ') 
+	, c.ReportModifiedDate 	
+	, SubscriptionOwner = usc.SimpleUserName
+	, SubscriptionModifiedBy = usm.SimpleUserName
+	, SubscriptionModifiedDate = s.ModifiedDate 	
+	, s.SubscriptionID
+	, s.SubscriptionDescription 
+	, s.ExtensionSettings
+	, s.EventType
+	, s.EmailSubject 
+	, s.EmailTo 
+	, s.EmailCc 
+	, s.EmailBcc 
+	, s.EmailComment 
+	, s.EmailIncludeLink 
+	, s.EmailRenderFormat 
+	, s.EmailPriority 
+	, s.DeliveryExtension	
+	, s.SubscriptionLastStatus
+	, s.StatusFail 
+	, s.MatchData	
+	, s.RunTime 
+	, s.LastRunDate
+	, s.LastRunTime	
+	, s.MinutesInterval
+	, s.DaysInterval
+	, s.WeeksInterval
+	, s.DaysOfWeek
+	, s.DaysOfMonth
+	, s.[Month]
+	, s.MonthlyWeek 	
+	, s.ScheduleName 
+	, s.ScheduleDays
+	, s.SchDaySun
+	, s.SchDayMon
+	, s.SchDayTue
+	, s.SchDayWed
+	, s.SchDayThr
+	, s.SchDayFri
+	, s.SchDaySat
+	, s.ScheduleStartDate
+	, s.ScheduleEndDate
+	, s.Flags
+	, s.RecurrenceType
+	, s.[State]
 FROM  
-	report_catalog AS rpt 
-	LEFT JOIN (SELECT ExecutionLogCount = COUNT([ReportID]), ReportID FROM dbo.ExecutionLog GROUP BY ReportID) el ON el.ReportID = rpt.ItemID
-	LEFT JOIN (SELECT SubscriptionCount = COUNT([Report_OID]), Report_OID FROM dbo.Subscriptions GROUP BY Report_OID) sc ON sc.Report_OID = rpt.ItemID
-	LEFT JOIN report_users AS urc ON rpt.CreatedById = urc.UserID 
-	LEFT JOIN report_users AS urm ON rpt.ModifiedById = urm.UserID 
-WHERE 
-	1=1
-	AND (@all_value IN (@ReportFolder) OR rpt.ReportFolder IN(@ReportFolder))
-	AND (@CreatedBy IS NULL OR urc.SimpleUserName LIKE '%' + @CreatedBy + '%')
-	AND (@CreatedDate IS NULL OR rpt.CreationDate &gt;= @CreatedDate)
-	AND (@ModifiedBy IS NULL OR urm.SimpleUserName LIKE '%' + @ModifiedBy + '%')
-	AND (@ModifiedDate IS NULL OR rpt.ModifiedDate &gt;= @ModifiedDate)
-	AND (
-			@SearchFor IS NULL 
-			OR (
-				(rpt.[Name] LIKE '%' + @SearchFor + '%' AND (@all_value IN(@SearchType) OR 'Report Name' IN(@SearchType)))
-				OR (rpt.[Description] LIKE '%' + @SearchFor + '%' AND (@all_value IN(@SearchType) OR 'Report Description' IN(@SearchType)) )
-				OR (PATINDEX('%' + @SearchFor + '%', rpt.ReportDefinition) &gt; 0 AND (@all_value IN(@SearchType) OR 'Report Definition' IN(@SearchType)) )   
-				)
-		)</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+	report_catalog AS c
+	INNER JOIN	report_subscription AS s ON s.Report_OID = c.ItemID 
+	LEFT OUTER JOIN report_users AS urc ON c.CreatedById = urc.UserID 
+	LEFT OUTER JOIN report_users AS urm ON c.ModifiedById = urm.UserID 
+	LEFT OUTER JOIN report_users AS usc ON s.OwnerID = usc.UserID 
+	LEFT OUTER JOIN report_users AS usm ON s.ModifiedByID = usm.UserID </CommandText>
       </Query>
       <Fields>
-        <Field Name="ItemID">
-          <DataField>ItemID</DataField>
-          <rd:TypeName>System.Guid</rd:TypeName>
-        </Field>
         <Field Name="Name">
           <DataField>Name</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -170,6 +337,30 @@ WHERE
         </Field>
         <Field Name="Parameter">
           <DataField>Parameter</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportFolder">
+          <DataField>ReportFolder</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ReportPath">
+          <DataField>ReportPath</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="URL_ReportFolder">
+          <DataField>URL_ReportFolder</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="URL_Report">
+          <DataField>URL_Report</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="URL">
+          <DataField>URL</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="URL2">
+          <DataField>URL2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="ReportCreatedBy">
@@ -188,68 +379,177 @@ WHERE
           <DataField>ReportModifiedDate</DataField>
           <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
-        <Field Name="ReportFolder">
-          <DataField>ReportFolder</DataField>
+        <Field Name="SubscriptionOwner">
+          <DataField>SubscriptionOwner</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ReportPath">
-          <DataField>ReportPath</DataField>
+        <Field Name="SubscriptionModifiedBy">
+          <DataField>SubscriptionModifiedBy</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="URL_ReportFolder">
-          <DataField>URL_ReportFolder</DataField>
+        <Field Name="SubscriptionModifiedDate">
+          <DataField>SubscriptionModifiedDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="SubscriptionID">
+          <DataField>SubscriptionID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
+        <Field Name="SubscriptionDescription">
+          <DataField>SubscriptionDescription</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="URL_Report">
-          <DataField>URL_Report</DataField>
+        <Field Name="ExtensionSettings">
+          <DataField>ExtensionSettings</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ReportDefinition">
-          <DataField>ReportDefinition</DataField>
+        <Field Name="EventType">
+          <DataField>EventType</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="CommandText">
-          <DataField>CommandText</DataField>
+        <Field Name="EmailSubject">
+          <DataField>EmailSubject</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ExecutionLogCount">
-          <DataField>ExecutionLogCount</DataField>
+        <Field Name="EmailTo">
+          <DataField>EmailTo</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailCc">
+          <DataField>EmailCc</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailBcc">
+          <DataField>EmailBcc</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailComment">
+          <DataField>EmailComment</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailIncludeLink">
+          <DataField>EmailIncludeLink</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailRenderFormat">
+          <DataField>EmailRenderFormat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmailPriority">
+          <DataField>EmailPriority</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DeliveryExtension">
+          <DataField>DeliveryExtension</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubscriptionLastStatus">
+          <DataField>SubscriptionLastStatus</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="StatusFail">
+          <DataField>StatusFail</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="MatchData">
+          <DataField>MatchData</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RunTime">
+          <DataField>RunTime</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LastRunDate">
+          <DataField>LastRunDate</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LastRunTime">
+          <DataField>LastRunTime</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="MinutesInterval">
+          <DataField>MinutesInterval</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="SubscriptionCount">
-          <DataField>SubscriptionCount</DataField>
+        <Field Name="DaysInterval">
+          <DataField>DaysInterval</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="SearchForStr">
-          <DataField>SearchForStr</DataField>
+        <Field Name="WeeksInterval">
+          <DataField>WeeksInterval</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DaysOfWeek">
+          <DataField>DaysOfWeek</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DaysOfMonth">
+          <DataField>DaysOfMonth</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Month">
+          <DataField>Month</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="MonthlyWeek">
+          <DataField>MonthlyWeek</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ScheduleName">
+          <DataField>ScheduleName</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="ReportFolder">
-      <Query>
-        <DataSourceName>ReportServer</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>SELECT 
-	Report_Folder = SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2)   
-FROM 
-	ReportServer.dbo.Catalog AS c WITH (NOLOCK) 
-WHERE
-	1=1
-	AND c.[Type] = 2
-UNION 
-SELECT @all_value
-ORDER BY 1</CommandText>
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
-      <Fields>
-        <Field Name="Report_Folder">
-          <DataField>Report_Folder</DataField>
-          <rd:TypeName>System.Object</rd:TypeName>
+        <Field Name="ScheduleDays">
+          <DataField>ScheduleDays</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SchDaySun">
+          <DataField>SchDaySun</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDayMon">
+          <DataField>SchDayMon</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDayTue">
+          <DataField>SchDayTue</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDayWed">
+          <DataField>SchDayWed</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDayThr">
+          <DataField>SchDayThr</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDayFri">
+          <DataField>SchDayFri</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="SchDaySat">
+          <DataField>SchDaySat</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ScheduleStartDate">
+          <DataField>ScheduleStartDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="ScheduleEndDate">
+          <DataField>ScheduleEndDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Flags">
+          <DataField>Flags</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="RecurrenceType">
+          <DataField>RecurrenceType</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="State">
+          <DataField>State</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -262,55 +562,117 @@ ORDER BY 1</CommandText>
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>0.55cm</Width>
+                  <Width>0.56854cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4cm</Width>
+                  <Width>0.56854cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.55cm</Width>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>10cm</Width>
+                  <Width>1.25cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.8225cm</Width>
+                  <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.64cm</Width>
+                  <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.81104cm</Width>
+                  <Width>1.25cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>0.64cm</Width>
+                  <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>11.5cm</Width>
+                  <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.77646cm</Width>
+                  <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.02646cm</Width>
+                  <Width>3.92604cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.75cm</Width>
+                  <Width>2.20625cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.02646cm</Width>
+                  <Width>6.89208cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>13cm</Width>
+                  <Width>7.21917cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.25cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.25cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.57396cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>0.57938cm</Height>
+                  <Height>1cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="Textbox6">
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>#</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox66">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
@@ -329,7 +691,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>Textbox6</rd:DefaultName>
+                          <rd:DefaultName>Textbox66</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>None</Style>
@@ -352,6 +714,7 @@ ORDER BY 1</CommandText>
                               <Style>None</Style>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -362,17 +725,14 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox35">
+                        <Textbox Name="textbox58">
                           <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ReportFolder.Value</SortExpression>
-                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Report Folder</Value>
+                                  <Value>Schedule</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -385,30 +745,27 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox35</rd:DefaultName>
-                          <ZIndex>24</ZIndex>
+                          <rd:DefaultName>textbox58</rd:DefaultName>
+                          <ZIndex>62</ZIndex>
                           <Style>
                             <Border>
-                              <Style>None</Style>
+                              <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
-                              <Style>Solid</Style>
                             </TopBorder>
                             <BottomBorder>
                               <Color>Black</Color>
-                              <Style>Solid</Style>
                             </BottomBorder>
                             <LeftBorder>
                               <Color>Black</Color>
-                              <Style>None</Style>
                             </LeftBorder>
                             <RightBorder>
                               <Color>Black</Color>
-                              <Style>Solid</Style>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -417,245 +774,16 @@ ORDER BY 1</CommandText>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox13">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox13</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Color>Gray</Color>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox3">
-                          <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!Name.Value</SortExpression>
-                          </UserSort>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Report Name</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox3</rd:DefaultName>
-                          <ZIndex>22</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Color>Gray</Color>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox9">
-                          <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!SubscriptionCount.Value</SortExpression>
-                          </UserSort>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Email</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox9</rd:DefaultName>
-                          <ZIndex>21</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Color>Gray</Color>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                        <ColSpan>2</ColSpan>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell />
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox15">
-                          <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ExecutionLogCount.Value</SortExpression>
-                          </UserSort>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Log</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <ZIndex>20</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Color>Gray</Color>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>Black</Color>
-                              <Style>None</Style>
-                            </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                        <ColSpan>2</ColSpan>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell />
                     <TablixCell>
                       <CellContents>
                         <Textbox Name="textbox1">
                           <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!Description.Value</SortExpression>
-                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Description</Value>
+                                  <Value>Sun</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -668,8 +796,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox1</rd:DefaultName>
-                          <ZIndex>19</ZIndex>
+                          <ZIndex>61</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -686,9 +813,9 @@ ORDER BY 1</CommandText>
                             </LeftBorder>
                             <RightBorder>
                               <Color>Black</Color>
-                              <Style>Double</Style>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -699,17 +826,14 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox37">
+                        <Textbox Name="textbox2">
                           <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ReportCreatedBy.Value</SortExpression>
-                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Created By</Value>
+                                  <Value>Mon</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -722,8 +846,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox37</rd:DefaultName>
-                          <ZIndex>18</ZIndex>
+                          <ZIndex>60</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -742,6 +865,7 @@ ORDER BY 1</CommandText>
                               <Color>Black</Color>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -752,17 +876,14 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox33">
+                        <Textbox Name="textbox5">
                           <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ReportCreationDate.Value</SortExpression>
-                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Created Date</Value>
+                                  <Value>Tue</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -775,8 +896,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox33</rd:DefaultName>
-                          <ZIndex>17</ZIndex>
+                          <ZIndex>59</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -795,6 +915,7 @@ ORDER BY 1</CommandText>
                               <Color>Black</Color>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -805,17 +926,14 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox29">
+                        <Textbox Name="textbox6">
                           <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ReportModifiedBy.Value</SortExpression>
-                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Modified By</Value>
+                                  <Value>Wed</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -828,8 +946,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox29</rd:DefaultName>
-                          <ZIndex>16</ZIndex>
+                          <ZIndex>58</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -848,59 +965,7 @@ ORDER BY 1</CommandText>
                               <Color>Black</Color>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox27">
-                          <CanGrow>true</CanGrow>
-                          <UserSort>
-                            <SortExpression>=Fields!ReportModifiedDate.Value</SortExpression>
-                          </UserSort>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>Modified Date</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>#,#.00</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox27</rd:DefaultName>
-                          <ZIndex>15</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Color>Gray</Color>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Color>Black</Color>
-                            </BottomBorder>
-                            <LeftBorder>
-                              <Color>Black</Color>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Color>Black</Color>
-                            </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -918,7 +983,7 @@ ORDER BY 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>Sql</Value>
+                                  <Value>Thu</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -931,8 +996,7 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox8</rd:DefaultName>
-                          <ZIndex>14</ZIndex>
+                          <ZIndex>57</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -951,6 +1015,468 @@ ORDER BY 1</CommandText>
                               <Color>Black</Color>
                             </RightBorder>
                             <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Fri</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>56</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Sat</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>55</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox13">
+                          <CanGrow>true</CanGrow>
+                          <UserSort>
+                            <SortExpression>=Fields!LastRunTime.Value</SortExpression>
+                          </UserSort>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Last Subscription</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox13</rd:DefaultName>
+                          <ZIndex>54</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox19">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription End Date</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox19</rd:DefaultName>
+                          <ZIndex>53</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Email Subject</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox3</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox59">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Status</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox59</rd:DefaultName>
+                          <ZIndex>42</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox92">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Owner</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox92</rd:DefaultName>
+                          <ZIndex>41</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox110">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Modified By </Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox110</rd:DefaultName>
+                          <ZIndex>40</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox31">
+                          <CanGrow>true</CanGrow>
+                          <UserSort>
+                            <SortExpression>=Fields!SubscriptionModifiedDate.Value</SortExpression>
+                          </UserSort>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Modified Date</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,#.00</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox31</rd:DefaultName>
+                          <ZIndex>39</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -962,73 +1488,29 @@ ORDER BY 1</CommandText>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
-                  <Height>0.60583cm</Height>
+                  <Height>0.5cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Rectangle Name="Rectangle3">
-                          <ReportItems>
-                            <Image Name="image6">
-                              <Source>Embedded</Source>
-                              <Value>folder</Value>
-                              <Sizing>Clip</Sizing>
-                              <ActionInfo>
-                                <Actions>
-                                  <Action>
-                                    <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
-                                  </Action>
-                                </Actions>
-                              </ActionInfo>
-                              <Height>0.60583cm</Height>
-                              <Width>0.55cm</Width>
-                              <ToolTip>go to this folder</ToolTip>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                  <Width>0.5pt</Width>
-                                </Border>
-                                <PaddingLeft>1.5pt</PaddingLeft>
-                                <PaddingTop>1.5pt</PaddingTop>
-                              </Style>
-                            </Image>
-                          </ReportItems>
-                          <KeepTogether>true</KeepTogether>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <RightBorder>
-                              <Style>None</Style>
-                            </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe(True)</BackgroundColor>
-                          </Style>
-                        </Rectangle>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox36">
+                        <Textbox Name="Textbox20">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ReportFolder.Value</Value>
+                                  <Value>=RowNumber(nothing)</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Right</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox36</rd:DefaultName>
-                          <ZIndex>12</ZIndex>
+                          <rd:DefaultName>Textbox20</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1037,7 +1519,10 @@ ORDER BY 1</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe(true)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1048,22 +1533,23 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Rectangle Name="Rectangle1">
+                        <Rectangle Name="Rectangle3">
                           <ReportItems>
-                            <Image Name="image5">
+                            <Image Name="image6">
                               <Source>Embedded</Source>
-                              <Value>report</Value>
+                              <Value>email</Value>
                               <Sizing>Clip</Sizing>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL_Report.Value</Hyperlink>
+                                    <Hyperlink>=Fields!URL.Value</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
-                              <Height>0.60583cm</Height>
+                              <Left>0.00927cm</Left>
+                              <Height>0.5cm</Height>
                               <Width>0.55cm</Width>
-                              <ToolTip>go to this report</ToolTip>
+                              <ToolTip>go to this subscription</ToolTip>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -1080,6 +1566,9 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
@@ -1090,14 +1579,14 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox4">
+                        <Textbox Name="textbox61">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Name.Value</Value>
+                                  <Value>=Fields!ScheduleDays.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1109,16 +1598,13 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox4</rd:DefaultName>
-                          <ZIndex>10</ZIndex>
+                          <rd:DefaultName>textbox61</rd:DefaultName>
+                          <ZIndex>27</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>None</Style>
-                            </LeftBorder>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
@@ -1137,89 +1623,68 @@ ORDER BY 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!SubscriptionCount.Value</Value>
+                                  <Value>=IIf(Fields!SchDaySun.Value="0", "", Fields!RunTime.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>6pt</FontSize>
-                                    <Color>RoyalBlue</Color>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>textbox11</rd:DefaultName>
-                          <ZIndex>9</ZIndex>
+                          <ZIndex>26</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <RightBorder>
-                              <Style>None</Style>
-                            </RightBorder>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingTop>3pt</PaddingTop>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Rectangle Name="Rectangle2">
-                          <ReportItems>
-                            <Image Name="image3">
-                              <Source>Embedded</Source>
-                              <Value>=IIF(Fields!SubscriptionCount.Value&gt;0, "email", nothing)</Value>
-                              <Sizing>Clip</Sizing>
-                              <ActionInfo>
-                                <Actions>
-                                  <Action>
-                                    <Drillthrough>
-                                      <ReportName>Subscriptions</ReportName>
-                                      <Parameters>
-                                        <Parameter Name="ReportName">
-                                          <Value>=Fields!Name.Value</Value>
-                                        </Parameter>
-                                        <Parameter Name="LastSubscriptionDate">
-                                          <Value>=nothing</Value>
-                                        </Parameter>
-                                        <Parameter Name="Current">
-                                          <Value>="&lt;ALL&gt;"</Value>
-                                        </Parameter>
-                                      </Parameters>
-                                    </Drillthrough>
-                                  </Action>
-                                </Actions>
-                              </ActionInfo>
-                              <Height>0.60583cm</Height>
-                              <Width>0.64cm</Width>
-                              <ToolTip>view report of the subscriptions</ToolTip>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                  <Width>0.5pt</Width>
-                                </Border>
-                                <PaddingLeft>1.5pt</PaddingLeft>
-                                <PaddingTop>1.5pt</PaddingTop>
-                              </Style>
-                            </Image>
-                          </ReportItems>
+                        <Textbox Name="textbox7">
+                          <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(Fields!SchDayMon.Value="0", "", Fields!RunTime.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>25</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <LeftBorder>
-                              <Style>None</Style>
-                            </LeftBorder>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
-                        </Rectangle>
+                        </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -1231,110 +1696,332 @@ ORDER BY 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ExecutionLogCount.Value</Value>
+                                  <Value>=IIf(Fields!SchDayTue.Value="0", "", Fields!RunTime.Value)</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>6pt</FontSize>
-                                    <Color>RoyalBlue</Color>
+                                    <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Right</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox11</rd:DefaultName>
-                          <ZIndex>9</ZIndex>
+                          <ZIndex>24</ZIndex>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <RightBorder>
-                              <Style>None</Style>
-                            </RightBorder>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingTop>3pt</PaddingTop>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Rectangle Name="Rectangle4">
-                          <ReportItems>
-                            <Image Name="image7">
-                              <Source>Embedded</Source>
-                              <Value>=IIF(Fields!ExecutionLogCount.Value &gt; 0, "log", Nothing)</Value>
-                              <Sizing>Clip</Sizing>
-                              <ActionInfo>
-                                <Actions>
-                                  <Action>
-                                    <Drillthrough>
-                                      <ReportName>Execution Log</ReportName>
-                                      <Parameters>
-                                        <Parameter Name="ReportName">
-                                          <Value>=Fields!Name.Value</Value>
-                                        </Parameter>
-                                        <Parameter Name="StartDate">
-                                          <Value>=nothing</Value>
-                                        </Parameter>
-                                        <Parameter Name="LogStatus">
-                                          <Value>="&lt;ALL&gt;"</Value>
-                                        </Parameter>
-                                        <Parameter Name="EndDate">
-                                          <Value>=nothing</Value>
-                                        </Parameter>
-                                        <Parameter Name="ShowParameters">
-                                          <Value>="N"</Value>
-                                        </Parameter>
-                                        <Parameter Name="GroupByIsCollasped">
-                                          <Value>=2</Value>
-                                        </Parameter>
-                                      </Parameters>
-                                    </Drillthrough>
-                                  </Action>
-                                </Actions>
-                              </ActionInfo>
-                              <Height>0.60583cm</Height>
-                              <Width>0.64cm</Width>
-                              <ToolTip>view report of the log</ToolTip>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                  <Width>0.5pt</Width>
-                                </Border>
-                                <PaddingLeft>1.5pt</PaddingLeft>
-                                <PaddingTop>1.5pt</PaddingTop>
-                              </Style>
-                            </Image>
-                          </ReportItems>
-                          <KeepTogether>true</KeepTogether>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <LeftBorder>
-                              <Style>None</Style>
-                            </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
-                          </Style>
-                        </Rectangle>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox2">
+                        <Textbox Name="textbox17">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!Description.Value</Value>
+                                  <Value>=IIf(Fields!SchDayWed.Value="0",  "", Fields!RunTime.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>23</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox16">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(Fields!SchDayThr.Value="0",  "", Fields!RunTime.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>22</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox15">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(Fields!SchDayFri.Value="0",  "", Fields!RunTime.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>21</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox14">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=IIf(Fields!SchDaySat.Value="0",  "", Fields!RunTime.Value)</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>20</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox18">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!LastRunTime.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>=Variables!FormatDateTime.Value</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox18</rd:DefaultName>
+                          <ZIndex>19</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ScheduleEndDate">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ScheduleEndDate.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>= Variables!FormatDate.Value</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ScheduleEndDate</rd:DefaultName>
+                          <ZIndex>18</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="EmailSubject">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!EmailSubject.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>EmailSubject</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox60">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SubscriptionLastStatus.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox60</rd:DefaultName>
+                          <ZIndex>7</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox93">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SubscriptionOwner.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1346,7 +2033,44 @@ ORDER BY 1</CommandText>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <rd:DefaultName>textbox93</rd:DefaultName>
+                          <ZIndex>6</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox111">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SubscriptionModifiedBy.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox111</rd:DefaultName>
                           <ZIndex>5</ZIndex>
                           <Style>
                             <Border>
@@ -1364,174 +2088,28 @@ ORDER BY 1</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Textbox Name="textbox40">
+                        <Textbox Name="textbox32">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!ReportCreatedBy.Value</Value>
+                                  <Value>=Fields!SubscriptionModifiedDate.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Format>= Variables!FormatDate.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style>
-                                <TextAlign>Left</TextAlign>
+                                <TextAlign>Center</TextAlign>
                               </Style>
                             </Paragraph>
                           </Paragraphs>
-                          <rd:DefaultName>textbox40</rd:DefaultName>
+                          <rd:DefaultName>textbox32</rd:DefaultName>
                           <ZIndex>4</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox34">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!ReportCreationDate.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>=Variables!FormatDateTime.Value</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox34</rd:DefaultName>
-                          <ZIndex>3</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox30">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!ReportModifiedBy.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Left</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox30</rd:DefaultName>
-                          <ZIndex>2</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox28">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!ReportModifiedDate.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                    <Format>=Variables!FormatDateTime.Value</Format>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style>
-                                <TextAlign>Center</TextAlign>
-                              </Style>
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox28</rd:DefaultName>
-                          <ZIndex>1</ZIndex>
-                          <Style>
-                            <Border>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="textbox10">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!CommandText.Value</Value>
-                                  <Style>
-                                    <FontFamily>Tahoma</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>textbox10</rd:DefaultName>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
@@ -1552,40 +2130,23 @@ ORDER BY 1</CommandText>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
-                <TablixMember>
-                  <FixedData>true</FixedData>
-                </TablixMember>
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
-                <TablixMember>
-                  <Visibility>
-                    <Hidden>=IIF(Parameters!ShowSql.Value = "N", True, False)</Hidden>
-                  </Visibility>
-                </TablixMember>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -1607,6 +2168,9 @@ ORDER BY 1</CommandText>
                     <SortExpression>
                       <Value>=Fields!Name.Value</Value>
                     </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!EmailSubject.Value</Value>
+                    </SortExpression>
                   </SortExpressions>
                   <TablixMembers>
                     <TablixMember />
@@ -1617,12 +2181,12 @@ ORDER BY 1</CommandText>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet</DataSetName>
+            <DataSetName>Subscriptions</DataSetName>
             <PageBreak>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
-            <Height>1.18521cm</Height>
-            <Width>54.09292cm</Width>
+            <Height>1.5cm</Height>
+            <Width>39.83688cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1633,97 +2197,11 @@ ORDER BY 1</CommandText>
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>1.18521cm</Height>
+        <Height>1.5cm</Height>
         <Style />
       </Body>
-      <Width>54.09292cm</Width>
+      <Width>41.76834cm</Width>
       <Page>
-        <PageFooter>
-          <Height>1.00001cm</Height>
-          <PrintOnFirstPage>true</PrintOnFirstPage>
-          <PrintOnLastPage>true</PrintOnLastPage>
-          <ReportItems>
-            <Textbox Name="txtPrintedBy">
-              <CanGrow>true</CanGrow>
-              <CanShrink>true</CanShrink>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>="Produced By: " + Variables!UserName.Value
- + " @ " + Variables!ReportRunDateTime.Value
- + Environment.NewLine 
- + "Execution Time: " + Variables!ReportExecutionTime.Value
- + Environment.NewLine 
- + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
-                      <Style>
-                        <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <Top>0.00001cm</Top>
-              <Left>31cm</Left>
-              <Height>0.99999cm</Height>
-              <Width>8.25cm</Width>
-              <Style>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="txtCriteria">
-              <CanGrow>true</CanGrow>
-              <CanShrink>true</CanShrink>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>=Variables!UrlReport.Value</Value>
-                      <Style>
-                        <FontFamily>Tahoma</FontFamily>
-                        <FontSize>8pt</FontSize>
-                        <TextDecoration>Underline</TextDecoration>
-                        <Color>Blue</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Left</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <ActionInfo>
-                <Actions>
-                  <Action>
-                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
-                  </Action>
-                </Actions>
-              </ActionInfo>
-              <Height>1cm</Height>
-              <Width>30.55042cm</Width>
-              <ZIndex>1</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-          </ReportItems>
-          <Style />
-        </PageFooter>
         <PageHeight>29.7cm</PageHeight>
         <PageWidth>42cm</PageWidth>
         <InteractiveHeight>11in</InteractiveHeight>
@@ -1738,180 +2216,20 @@ ORDER BY 1</CommandText>
     </ReportSection>
   </ReportSections>
   <ReportParameters>
-    <ReportParameter Name="all_value">
+    <ReportParameter Name="ItemID">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>&lt;ALL&gt;</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>All Value Hidden</Prompt>
-      <Hidden>true</Hidden>
-    </ReportParameter>
-    <ReportParameter Name="ReportFolder">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Report Folder</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ReportFolder</DataSetName>
-          <ValueField>Report_Folder</ValueField>
-          <LabelField>Report_Folder</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="SearchType">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Search Type</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>&lt;ALL&gt;</Value>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Report Name</Value>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Report Description</Value>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Report Definition</Value>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="CreatedBy">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Created By</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="CreatedDate">
-      <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Created Date &gt;=</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ModifiedBy">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Modified By</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ModifiedDate">
-      <DataType>DateTime</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Modified Date &gt;=</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="SearchFor">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
-        </Values>
-      </DefaultValue>
-      <Prompt>Search For</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ShowSql">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>N</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show SQL</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Y</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>N</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
+      <Prompt>ItemID</Prompt>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>5</NumberOfRows>
+      <NumberOfRows>1</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>ReportFolder</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>1</RowIndex>
-          <ParameterName>SearchType</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>CreatedBy</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>CreatedDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>ModifiedBy</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>ModifiedDate</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>SearchFor</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>ShowSql</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
           <RowIndex>0</RowIndex>
-          <ParameterName>all_value</ParameterName>
+          <ParameterName>ItemID</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
@@ -1933,6 +2251,16 @@ Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional B
 	Else
 		Return EvenColor
 	End If
+
+End Function
+
+Public Function ShowCheckbox(ByVal FieldValue As Boolean)
+
+If FieldValue  = True Then
+	Return chr(254)
+Else
+	Return chr(168)
+End If
 
 End Function</Code>
   <EmbeddedImages>
@@ -1965,33 +2293,14 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     <Variable Name="FormatDateTime">
       <Value>dd-MMM-yyyy  hh:mm tt</Value>
     </Variable>
-    <Variable Name="ReportExecutionTime">
-      <Value>
-        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
-      </Value>
-    </Variable>
-    <Variable Name="ReportRunDateTime">
-      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
-    </Variable>
     <Variable Name="UrlReport">
-      <Value>
-        =Globals!ReportServerUrl + "/ReportServer?"
-        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
-        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
-      </Value>
+      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
++ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
++ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>=Variables!UrlReport.Value
- + "&amp;ReportFolder=" + Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
- + "&amp;SearchType=" + Join(Parameters!SearchType.Value, "&amp;SearchType=")
- + IIf(IsNothing(Parameters!SearchFor.Value), "&amp;SearchFor:IsNull=True", "&amp;SearchFor=" + Parameters!SearchFor.Value)
- + IIf(IsNothing(Parameters!CreatedDate.Value), "&amp;CreatedDate:IsNull=True", "&amp;CreatedDate=" + Format(Parameters!CreatedDate.Value, Variables!FormatDate.Value))
- + IIf(IsNothing(Parameters!ModifiedDate.Value), "&amp;ModifiedDate:IsNull=True", "&amp;ModifiedDate=" + Format(Parameters!ModifiedDate.Value, Variables!FormatDate.Value))
- + IIf(IsNothing(Parameters!CreatedBy.Value), "&amp;CreatedBy:IsNull=True", "&amp;CreatedBy=" + Parameters!CreatedBy.Value)
- + IIf(IsNothing(Parameters!ModifiedBy.Value), "&amp;ModifiedBy:IsNull=True", "&amp;ModifiedBy=" + Parameters!ModifiedBy.Value)
- + "&amp;ShowSql=" + Parameters!ShowSql.Value</Value>
+ + "&amp;document_map_name= + Parameters!document_map_name.Value "</Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>

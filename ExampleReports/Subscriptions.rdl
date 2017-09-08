@@ -777,7 +777,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <Width>1.27646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3cm</Width>
+                  <Width>3.52917cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3cm</Width>
@@ -866,7 +866,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -884,7 +884,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -922,7 +922,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ZIndex>68</ZIndex>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -940,7 +941,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -974,7 +975,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>None</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -992,7 +993,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1030,7 +1031,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ZIndex>66</ZIndex>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1048,7 +1050,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1081,7 +1083,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <rd:DefaultName>Textbox66</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1099,7 +1102,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1132,7 +1135,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <rd:DefaultName>Textbox57</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1150,7 +1154,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1186,7 +1190,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1200,7 +1204,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1236,7 +1240,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1250,7 +1254,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1285,7 +1289,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1299,7 +1303,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1334,7 +1338,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1348,7 +1352,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1383,7 +1387,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1397,7 +1401,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1432,7 +1436,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1446,7 +1450,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1481,7 +1485,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1495,7 +1499,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1530,7 +1534,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1544,7 +1548,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1579,7 +1583,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1593,7 +1597,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1632,7 +1636,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1646,7 +1650,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1682,7 +1686,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1696,7 +1700,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1734,7 +1738,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <ZIndex>52</ZIndex>
                           <Style>
                             <Border>
-                              <Width>0.5pt</Width>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1752,7 +1757,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Color>Black</Color>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1788,7 +1793,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1802,7 +1807,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1838,7 +1843,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1852,7 +1857,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1888,7 +1893,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1902,7 +1907,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1938,7 +1943,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -1952,7 +1957,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1988,7 +1993,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2002,7 +2007,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2038,7 +2043,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2052,7 +2057,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2088,7 +2093,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2102,7 +2107,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2138,7 +2143,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2152,7 +2157,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2188,7 +2193,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2202,7 +2207,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2238,7 +2243,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2252,7 +2257,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2288,7 +2293,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2302,7 +2307,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2338,7 +2343,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2352,7 +2357,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2391,7 +2396,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2405,7 +2410,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2441,7 +2446,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2455,7 +2460,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2494,7 +2499,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2508,7 +2513,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2544,7 +2549,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2558,7 +2563,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2597,7 +2602,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <TopBorder>
                               <Color>Gray</Color>
@@ -2611,7 +2616,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Color>Black</Color>
                             </RightBorder>
-                            <BackgroundColor>#e0e0e0</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2657,6 +2662,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <RightBorder>
                               <Style>None</Style>
@@ -2690,7 +2696,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <LeftBorder>
                               <Style>None</Style>
@@ -2736,6 +2742,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <RightBorder>
                               <Style>None</Style>
@@ -2770,7 +2777,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <LeftBorder>
                               <Style>None</Style>
@@ -2820,6 +2827,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <LeftBorder>
                               <Style>None</Style>
@@ -2887,6 +2895,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
+                              <Width>0.75pt</Width>
                             </Border>
                             <LeftBorder>
                               <Style>None</Style>
@@ -2925,7 +2934,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -2962,7 +2971,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -2986,7 +2995,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3000,7 +3008,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3024,7 +3032,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3037,7 +3044,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3061,7 +3068,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3074,7 +3080,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3098,7 +3104,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3111,7 +3116,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3135,7 +3140,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3148,7 +3152,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3172,7 +3176,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3185,7 +3188,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3209,7 +3212,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <FontWeight>Bold</FontWeight>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3222,7 +3224,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3246,7 +3248,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>dd-MMM-yyyy  hh:mm</Format>
+                                    <Format>=Variables!FormatDateTime.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3260,7 +3262,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3284,7 +3286,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>= Code.DateFormat()</Format>
+                                    <Format>=Variables!FormatDate.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3298,7 +3300,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3333,7 +3335,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3368,7 +3370,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3403,7 +3405,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3438,7 +3440,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3473,7 +3475,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3508,7 +3510,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3543,7 +3545,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3578,7 +3580,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3613,7 +3615,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3648,7 +3650,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3683,7 +3685,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3720,7 +3722,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3757,7 +3759,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3781,7 +3783,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>= Code.DateFormat()</Format>
+                                    <Format>=Variables!FormatDateTime.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3795,7 +3797,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3804,6 +3806,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3832,7 +3835,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3856,7 +3859,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>= Code.DateFormat()</Format>
+                                    <Format>=Variables!FormatDateTime.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3870,7 +3873,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3879,6 +3882,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -3907,7 +3911,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3931,7 +3935,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
-                                    <Format>= Code.DateFormat()</Format>
+                                    <Format>=Variables!FormatDateTime.Value</Format>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -3944,7 +3948,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                           <Style>
                             <Border>
                               <Style>Solid</Style>
-                              <Width>0.5pt</Width>
+                              <Width>0.75pt</Width>
                             </Border>
                             <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -3953,6 +3957,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -4075,8 +4080,12 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>1.5cm</Height>
-            <Width>120.32982cm</Width>
+            <Width>120.85899cm</Width>
             <Style>
+              <Border>
+                <Style>None</Style>
+                <Width>0.75pt</Width>
+              </Border>
               <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
             </Style>
@@ -4085,7 +4094,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
         <Height>1.5cm</Height>
         <Style />
       </Body>
-      <Width>120.32982cm</Width>
+      <Width>120.85899cm</Width>
       <Page>
         <PageFooter>
           <Height>1cm</Height>
@@ -4100,15 +4109,12 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>="Produced By: " &amp; Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))
- &amp; " @ " &amp; DateTime.Now.ToString("dd-MMM-yyyy  hh:mm tt")
- &amp; Environment.NewLine 
- &amp; "Execution Time: "
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) &amp; ":" 
- &amp; Right("00" &amp; (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2) 
- &amp; Environment.NewLine 
- &amp; "Page: " &amp; Globals!PageNumber.ToString() &amp; " of " &amp; Globals!TotalPages.ToString()</Value>
+                      <Value>="Produced By: " + Variables!UserName.Value
+ + " @ " + Variables!ReportRunDateTime.Value
+ + Environment.NewLine 
+ + "Execution Time: " + Variables!ReportExecutionTime.Value
+ + Environment.NewLine 
+ + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -4138,17 +4144,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Globals!ReportServerUrl &amp; "/ReportServer?"
- &amp; Replace(Globals!ReportFolder, " ", "+") &amp; "%2f"
- &amp; Replace(Globals!ReportName, " ", "+") &amp; "&amp;rs:Command=Render"
- &amp; "&amp;ReportFolder=" &amp; Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
- &amp; "&amp;ReportName=" &amp; Join(Parameters!ReportName.Value, "&amp;ReportName=")
- &amp; "&amp;EventStatus=" &amp; Join(Parameters!EventStatus.Value, "&amp;EventStatus=")
- &amp; IIf(IsNothing(Parameters!EmailLike.Value), "&amp;EmailLike:IsNull=True", "&amp;EmailLike=" &amp; Parameters!EmailLike.Value)
- &amp; IIf(IsNothing(Parameters!LastSubscriptionDate.Value), "&amp;LastSubscriptionDate:IsNull=True", "&amp;LastSubscriptionDate=" &amp; Format(Parameters!LastSubscriptionDate.Value, "dd-MMM-yyyy"))
- &amp; "&amp;SubscriptionStatus=" &amp; Parameters!SubscriptionStatus.Value
- &amp; "&amp;ShowParameters=" &amp; Parameters!ShowParameters.Value
- &amp; "&amp;ShowEmailDetails=" &amp; Parameters!ShowEmailDetails.Value</Value>
+                      <Value>=Variables!UrlReport.Value</Value>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -4165,7 +4161,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
               <ActionInfo>
                 <Actions>
                   <Action>
-                    <Hyperlink>=ReportItems!txtCriteria.value</Hyperlink>
+                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
                   </Action>
                 </Actions>
               </ActionInfo>
@@ -4438,15 +4434,6 @@ Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional B
 		Return EvenColor
 	End If
 
-End Function
-
-Public Function DateFormat()As String
-'------------------------------------------------------------------------------------------------
-' Purpose:  To standardize the date format in a report
-' Example:  Format = Code.DateFormat()
-'------------------------------------------------------------------------------------------------
-	Return "dd-MMM-yyyy  hh:mm"
-
 End Function</Code>
   <EmbeddedImages>
     <EmbeddedImage Name="report">
@@ -4468,6 +4455,48 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
+  <Variables>
+    <Variable Name="ColorTableHeader">
+      <Value>Gainsboro</Value>
+    </Variable>
+    <Variable Name="FormatDate">
+      <Value>dd-MMM-yyyy</Value>
+    </Variable>
+    <Variable Name="FormatDateTime">
+      <Value>dd-MMM-yyyy  hh:mm tt</Value>
+    </Variable>
+    <Variable Name="ReportExecutionTime">
+      <Value>
+        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+      </Value>
+    </Variable>
+    <Variable Name="ReportRunDateTime">
+      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
+    </Variable>
+    <Variable Name="UrlReport">
+      <Value>
+        =Globals!ReportServerUrl + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
+    </Variable>
+    <Variable Name="UrlReportWithParameters">
+      <Value>=Variables!UrlReport.Value
+ + "&amp;ReportFolder=" + Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
+ + "&amp;ReportName=" + Join(Parameters!ReportName.Value, "&amp;ReportName=")
+ + "&amp;EventStatus=" + Join(Parameters!EventStatus.Value, "&amp;EventStatus=")
+ + IIf(IsNothing(Parameters!EmailLike.Value), "&amp;EmailLike:IsNull=True", "&amp;EmailLike=" &amp; Parameters!EmailLike.Value)
+ + IIf(IsNothing(Parameters!LastSubscriptionDate.Value), "&amp;LastSubscriptionDate:IsNull=True", "&amp;LastSubscriptionDate=" + Format(Parameters!LastSubscriptionDate.Value, Variables!FormatDate.Value))
+ + "&amp;SubscriptionStatus=" + Parameters!SubscriptionStatus.Value
+ + "&amp;ShowParameters=" + Parameters!ShowParameters.Value
+ + "&amp;ShowEmailDetails=" + Parameters!ShowEmailDetails.Value</Value>
+    </Variable>
+    <Variable Name="UserName">
+      <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+  </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
   <rd:ReportID>83036679-a77a-400c-bce9-3fbcfe4dca09</rd:ReportID>
