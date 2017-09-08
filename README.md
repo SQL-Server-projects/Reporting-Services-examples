@@ -42,7 +42,7 @@
                 Activity Monitor
                 <br>
                 <br>
-                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Activity Monitor" />
+                <img src="Images/ReadMe/sorry-image-not-available.png" align="top" width="256px" title="Activity Monitor" />
                 <br>
                 <br>
                 This report queries the activity monitor
@@ -85,7 +85,7 @@
                 Execution Log
                 <br>
                 <br>
-                <img src="Images/ReadMe/nopicture.png" align="top" width="256px" title="Execution Log" />
+                <img src="Images/ReadMe/sorry-image-not-available.png" align="top" width="256px" title="Execution Log" />
                 <br>
                 <br>
                 This report is used for querying the
