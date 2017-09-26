@@ -1,0 +1,2439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Description>A list of scheduled jobs in SQL Server</Description>
+  <Author>Anthony Duguid</Author>
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="MSDB">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>="data source=" &amp; Parameters!Server.Value &amp; ";Initial Catalog=MSDB"</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>4610eb81-a43a-4aa2-b78c-cb5df771f6c8</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="DataSet">
+      <Query>
+        <DataSourceName>MSDB</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Enabled">
+            <Value>=Parameters!Enabled.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Job_Name">
+            <Value>=Parameters!Job_Name.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Category_Name">
+            <Value>=Parameters!Category_Name.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@RunDate">
+            <Value>=Parameters!RunDate.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Day_Of_Week">
+            <Value>=Parameters!Day_Of_Week.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Job_Status">
+            <Value>=Parameters!Job_Status.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>/*'---------------------------------------------------------------------------------------
+' Purpose:				Sql Server Job Schedule
+' Notes:				Original sql from http://solihinho.wordpress.com/2009/01/01/query-for-listing-sql-server-job-schedule/
+'						#CurrentJobStatus sql from http://www.sqlservercentral.com/Forums/Topic259078-8-1.aspx
+'-----------------------------------------------------------------------------------------
+
+DECLARE @Day_Of_Week AS varchar(1)
+DECLARE @Job_Name AS varchar(200)
+DECLARE @Category_Name AS varchar(100)
+DECLARE @Enabled AS int
+DECLARE @Job_Status AS INT
+DECLARE @RunDate AS DATETIME
+
+SET @Day_Of_Week = '0'
+SET @Job_Name = NULL
+SET @Category_Name = '&lt;ALL&gt;'
+SET @Enabled = 2
+SET @Job_Status = 4  -- 0='&lt;ALL&gt;'
+SET @RunDate = NULL
+
+*/
+
+DECLARE @is_sysadmin INT
+DECLARE @job_owner   sysname
+
+IF OBJECT_ID('tempdb..#xp_results') IS NOT NULL
+BEGIN
+    DROP TABLE #xp_results
+END
+
+CREATE TABLE #xp_results (
+     job_id                UNIQUEIDENTIFIER NOT NULL,
+     last_run_date         INT              NOT NULL,
+     last_run_time         INT              NOT NULL,
+     next_run_date         INT              NOT NULL,
+     next_run_time         INT              NOT NULL,
+     next_run_schedule_id  INT              NOT NULL,
+     requested_to_run      INT              NOT NULL,
+     request_source        INT              NOT NULL,
+     request_source_id     sysname          COLLATE database_default NULL,
+     running               INT              NOT NULL,
+     current_step          INT              NOT NULL,
+     current_retry_attempt INT              NOT NULL,
+     job_state             INT              NOT NULL)
+
+SELECT @is_sysadmin = ISNULL(IS_SRVROLEMEMBER(N'sysadmin'), 0)
+SELECT @job_owner = SUSER_SNAME()
+
+INSERT INTO #xp_results
+    EXECUTE master.dbo.xp_sqlagent_enum_jobs @is_sysadmin, @job_owner
+
+
+SELECT
+  job_name = j.Name
+, category_name = c.Name
+, job_enabled = 
+	CASE j.enabled 
+		WHEN 1 THEN 'Yes' 
+		ELSE 'No' 
+	END
+, job_scheduled = 
+	CASE s.enabled 
+		WHEN 1 THEN 'Yes' 
+		ELSE 'No' 
+	END
+, job_description = j.description
+, schedule = 
+	CASE s.freq_type 
+		WHEN 1 THEN 'Once' 
+		WHEN 4 THEN 'Daily' 
+		WHEN 8 THEN 'Wk ' 
+		+ CASE s.freq_interval &amp; 2 WHEN 2 THEN 'M' ELSE '' END 
+		+ CASE s.freq_interval &amp; 4 WHEN 4 THEN 'Tu' ELSE '' END 
+		+ CASE s.freq_interval &amp; 8 WHEN 8 THEN 'W' ELSE '' END 
+		+ CASE s.freq_interval &amp; 16 WHEN 16 THEN 'Th' ELSE '' END
+		+ CASE s.freq_interval &amp; 32 WHEN 32 THEN 'F' ELSE '' END 
+		+ CASE s.freq_interval &amp; 64 WHEN 64 THEN 'Sa' ELSE '' END 
+		+ CASE s.freq_interval &amp; 1 WHEN 1 THEN 'Su' ELSE '' END 
+			WHEN 16 THEN 'Mthly on day ' + CONVERT(varchar(2), s.freq_interval) 
+			WHEN 32 THEN 'Mthly ' + CASE s.freq_relative_interval 
+			WHEN 1 THEN 'Every First ' 
+			WHEN 2 THEN 'Every Second ' 
+			WHEN 4 THEN 'Every Third ' 
+			WHEN 8 THEN 'Every Fourth ' 
+			WHEN 16 THEN 'Every Last ' END 
+		+ CASE freq_interval 
+			WHEN 1 THEN 'Sunday' 
+			WHEN 2 THEN 'Monday' 
+			WHEN 3 THEN 'Tuesday'
+			WHEN 4 THEN 'Wednesday' 
+			WHEN 5 THEN 'Thursday' 
+			WHEN 6 THEN 'Friday' 
+			WHEN 7 THEN 'Saturday' 
+			WHEN 8 THEN 'Day' 
+			WHEN 9 THEN 'Week day'
+			WHEN 10 THEN 'Weekend day' END 
+		WHEN 64 THEN 'Startup' 
+		WHEN 128 THEN 'Idle' 
+		ELSE 'Err' 
+	END
+, Occurs = 
+	CASE s.freq_type
+		WHEN  1 THEN 'Once'
+		WHEN  4 THEN 'Daily'
+		WHEN  8 THEN 'Weekly'
+		WHEN 16 THEN 'Monthly'
+		WHEN 32 THEN 'Monthly relative'
+		WHEN 64 THEN 'When SQL Server Agent starts'
+		WHEN 128 THEN 'Start whenever the CPU(s) become idle' 
+	END
+, schedule2 = 
+	CASE s.freq_type
+		WHEN  1 THEN 'O'
+		WHEN  4 THEN 'Every '
+			+ convert(varchar,s.freq_interval)
+			+ ' day(s)'
+		WHEN  8 THEN 'Every '
+			+ convert(varchar,s.freq_recurrence_factor)
+			+ ' weeks(s) on '
+			+ CASE s.freq_interval 
+				WHEN 1 THEN 'Sunday' 
+				WHEN 2 THEN 'Monday' 
+				WHEN 3 THEN 'Tuesday'
+				WHEN 4 THEN 'Wednesday' 
+				WHEN 5 THEN 'Thursday' 
+				WHEN 6 THEN 'Friday' 
+				WHEN 7 THEN 'Saturday' 
+				WHEN 8 THEN 'Day' 
+				WHEN 9 THEN 'Week day'
+				WHEN 10 THEN 'Weekend day'
+				WHEN 64 THEN 'Startup' 
+				WHEN 128 THEN 'Idle' ELSE 'Err' END
+		WHEN 16 THEN 'Day ' + convert(varchar,s.freq_interval)
+			+ ' of every '
+			+ convert(varchar,s.freq_recurrence_factor)
+			+ ' month(s)'
+		WHEN 32 THEN 'The '
+			+ CASE s.freq_relative_interval
+				WHEN  1 THEN 'First'
+				WHEN  2 THEN 'Second'
+				WHEN  4 THEN 'Third'
+				WHEN  8 THEN 'Fourth'
+				WHEN 16 THEN 'Last' END
+			+ CASE s.freq_interval
+				WHEN  1 THEN ' Sunday'
+				WHEN  2 THEN ' Monday'
+				WHEN  3 THEN ' Tuesday'
+				WHEN  4 THEN ' Wednesday'
+				WHEN  5 THEN ' Thursday'
+				WHEN  6 THEN ' Friday'
+				WHEN  7 THEN ' Saturday'
+				WHEN  8 THEN ' Day'
+				WHEN  9 THEN ' Weekday'
+				WHEN 10 THEN ' Weekend Day' END
+			+ ' of every '
+			+ convert(varchar,s.freq_recurrence_factor)
+			+ ' month(s)' 
+	END
+, j.enabled
+, s.freq_type 
+, s.freq_interval
+, s.freq_relative_interval
+, sch_Sun = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 1 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 1 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 10 THEN 'Y' 
+		ELSE 'N' 
+	END
+, sch_Mon = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 2 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 2 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 9 THEN 'Y' 
+		ELSE 'N' 
+	END  
+, sch_Tue = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 3 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 9 THEN 'Y' 
+		ELSE 'N' 
+	END  
+, sch_Wed = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 4 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 9 THEN 'Y' 
+		ELSE 'N' 
+	END 
+, sch_Thr = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 16 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 5 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 9 THEN 'Y' 
+		ELSE 'N' 
+	END 
+, sch_Fri = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 32 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 6 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 9 THEN 'Y' 
+		ELSE 'N' 
+	END
+, sch_Sat = 
+	CASE 
+		WHEN s.freq_type = 4 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 64 THEN 'Y' 
+		WHEN s.freq_type = 8 AND s.freq_interval = 127 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 7 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 8 THEN 'Y' 
+		WHEN s.freq_type = 32 AND s.freq_interval = 10 THEN 'Y' 
+		ELSE 'N' 
+	END
+, DayOfWeek = 
+	CASE 
+		WHEN freq_type = 4 THEN '1' 
+		WHEN freq_type = 8 AND freq_interval = 1 THEN '1' 
+		WHEN freq_type = 8 AND freq_interval = 127 THEN '1' 
+		WHEN freq_type = 32 AND freq_interval = 1 THEN '1' 
+		WHEN freq_type = 32 AND freq_interval = 8 THEN '1' 
+		WHEN freq_type = 32 AND freq_interval = 10 THEN '1' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '2' 
+			WHEN freq_type = 8 AND freq_interval = 2 THEN '2' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '2' 
+			WHEN freq_type = 32 AND freq_interval = 2 THEN '2' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '2' 
+			WHEN freq_type = 32 AND freq_interval = 9 THEN '2' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '3' 
+			WHEN freq_type = 8 AND freq_interval = 4 THEN '3' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '3' 
+			WHEN freq_type = 32 AND freq_interval = 3 THEN '3' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '3' 
+			WHEN freq_type = 32 AND freq_interval = 9 THEN '3' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '4' 
+			WHEN freq_type = 8 AND freq_interval = 8 THEN '4' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '4' 
+			WHEN freq_type = 32 AND freq_interval = 4 THEN '4' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '4' 
+			WHEN freq_type = 32 AND freq_interval = 9 THEN '4' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '5' 
+			WHEN freq_type = 8 AND freq_interval = 16 THEN '5' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '5' 
+			WHEN freq_type = 32 AND freq_interval = 5 THEN '5' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '5' 
+			WHEN freq_type = 32 AND freq_interval = 9 THEN '5' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '6' 
+			WHEN freq_type = 8 AND freq_interval = 32 THEN '6' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '6' 
+			WHEN freq_type = 32 AND freq_interval = 6 THEN '6' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '6' 
+			WHEN freq_type = 32 AND freq_interval = 9 THEN '6' ELSE '' END 
+		+ CASE 
+			WHEN freq_type = 4 THEN '7' 
+			WHEN freq_type = 8 AND freq_interval = 64 THEN '7' 
+			WHEN freq_type = 8 AND freq_interval = 127 THEN '7' 
+			WHEN freq_type = 32 AND freq_interval = 7 THEN '7' 
+			WHEN freq_type = 32 AND freq_interval = 8 THEN '7' 
+			WHEN freq_type = 32 AND freq_interval = 10 THEN '7' ELSE '' 
+	END 
+/*, CASE s.freq_subday_type
+     WHEN 1 THEN 'Occurs once at '
+        + master.dbo.fn_Time2Str(s.active_start_time)
+     WHEN 2 THEN 'Occurs every '
+        + convert(varchar,s.freq_subday_interval)
+        + ' Seconds(s) Starting at '
+        + master.dbo.fn_Time2Str(s.active_start_time)
+        + ' ending at '
+        + master.dbo.fn_Time2Str(s.active_end_time)
+     WHEN 4 THEN 'Occurs every '
+        + convert(varchar,s.freq_subday_interval)
+        + ' Minute(s) Starting at '
+        + master.dbo.fn_Time2Str(s.active_start_time)
+        + ' ending at '
+        + master.dbo.fn_Time2Str(s.active_end_time)
+     WHEN 8 THEN 'Occurs every '
+        + convert(varchar,s.freq_subday_interval)
+        + ' Hour(s) Starting at '
+        + master.dbo.fn_Time2Str(s.active_start_time)
+        + ' ending at '
+        + master.dbo.fn_Time2Str(s.active_end_time) END AS Frequency
+*/
+, frequency = 
+	CASE s.freq_subday_type 
+		WHEN 1 THEN 'Runs once' 
+		WHEN 2 THEN 'every ' + CONVERT(varchar(3), freq_subday_interval) + ' seconds' 
+		WHEN 4 THEN 'every ' + CONVERT(varchar(3), freq_subday_interval) + ' minutes' 
+		WHEN 8 THEN 'every ' + CONVERT(varchar(3), freq_subday_interval) + ' hours' 
+	END  
+, LeftBuffer = DATEDIFF(minute, '00:00:00', SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 5, 2)) 
+, StartTime = SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 5, 2)  
+, RunTime = DATEDIFF(minute, SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_start_time), 6), 5, 2), SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 5, 2))  
+, EndTime = SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 5, 2) 
+, RightBuffer = DATEDIFF(minute, SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 1, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 3, 2) + ':' + SUBSTRING(RIGHT(STUFF(' ', 1, 1, '000000') + CONVERT(varchar(6), s.active_end_time), 6), 5, 2), '23:59:59')   
+, h.*
+, run_duration_format = LEFT(RIGHT('000000' + CAST(h.run_duration AS VARCHAR(10)),6),2) + ':' +
+	SUBSTRING(RIGHT('000000' + CAST(h.run_duration AS VARCHAR(10)),6),3,2) + ':' +
+	RIGHT(RIGHT('000000' + CAST(h.run_duration AS VARCHAR(10)),6),2) 
+, run_time_format = CAST (CONVERT(VARCHAR, h.run_date) + ' ' + STUFF(STUFF(RIGHT('000000' + CONVERT(VARCHAR,h.run_time),6),5,0,':'),3,0,':') AS DATETIME) 
+/*, CurrentStatus = 
+	CASE 
+		WHEN h.run_status IS NULL THEN 6
+		WHEN cjs.current_execution_status IS NULL THEN h.run_priority
+		WHEN cjs.current_execution_status IS NOT NULL THEN 5
+		ELSE NULL 
+	END  */
+, CASE WHEN xp.job_state = 1 THEN 5
+		WHEN h.run_status IS NULL THEN 6
+		ELSE h.run_priority END AS CurrentStatus
+/*
+, Duration = 
+	CASE 
+		WHEN s.freq_type =  1 THEN 'On date: '
+          + master.dbo.fn_Date2Str(s.active_start_date)
+          + ' At time: '
+          + master.dbo.fn_Time2Str(s.active_start_time)
+		WHEN s.freq_type &lt; 64 THEN 'Start date: '
+          + master.dbo.fn_Date2Str(s.active_start_date)
+          + ' end date: '
+          + master.dbo.fn_Date2Str(s.active_end_date) 
+	END
+, Next_Run_Date = master.dbo.fn_Date2Str(xp.next_run_date) + ' ' + master.dbo.fn_Time2Str(xp.next_run_time)
+*/
+FROM  
+	dbo.sysjobs j 
+	INNER JOIN dbo.sysjobschedules js ON j.job_id = js.job_id
+	INNER JOIN dbo.sysschedules s ON js.schedule_id = s.schedule_id
+	INNER JOIN dbo.syscategories c ON j.category_id = c.category_id
+	LEFT JOIN (SELECT  
+					sh.*
+					, run_status_desc = 
+						CASE CAST(sh.run_status AS NVARCHAR(11))
+							WHEN 0 THEN 'Failed'
+							WHEN 1 THEN 'Succeeded'
+							WHEN 2 THEN 'Retry'
+							WHEN 3 THEN 'Canceled'
+							WHEN 4 THEN 'In Progress'
+						END 
+					, run_priority = 
+						CASE CAST(sh.run_status AS NVARCHAR(11))
+						WHEN 0 THEN 4
+						WHEN 1 THEN 1
+						WHEN 2 THEN 3
+						WHEN 3 THEN 2 
+						WHEN 4 THEN 5
+						END
+				FROM 
+					MSDB.dbo.sysjobhistory sh (NOLOCK)) h ON j.job_id = h.job_id
+	INNER JOIN #xp_results xp ON j.job_id = xp.job_id
+WHERE 
+	1=1	
+	AND (CAST(j.enabled AS INT) = @Enabled OR 2 IN(@Enabled)) 
+	AND (s.freq_relative_interval = 0) -- only weekly jobs not monthly or one off
+	AND (s.freq_type NOT IN (1)) -- only weekly jobs not monthly or one off
+	AND (@Job_Name IS NULL OR j.name LIKE '%' + @Job_Name + '%')
+	AND ('&lt;ALL&gt;' IN(@Category_Name) OR c.name IN(@Category_Name))
+	AND ((CAST (CONVERT(VARCHAR, h.run_date) + ' ' + STUFF(STUFF(RIGHT('000000' + CONVERT(VARCHAR,h.run_time),6),5,0,':'),3,0,':') AS DATETIME)) &gt;= @RunDate OR @RunDate IS NULL)
+	--AND (CHARINDEX(@Day_Of_Week, a.DayOfWeek) &gt; '0' OR @Day_Of_Week = '0')
+	AND (
+		CASE 
+			WHEN xp.job_state = 1 THEN 5
+			WHEN h.run_status IS NULL THEN 6
+			ELSE h.run_priority 
+		END IN(@Job_Status) OR 0 IN (@Job_Status))
+ORDER BY j.name</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="job_name">
+          <DataField>job_name</DataField>
+        </Field>
+        <Field Name="job_description">
+          <DataField>job_description</DataField>
+        </Field>
+        <Field Name="job_enabled">
+          <DataField>job_enabled</DataField>
+        </Field>
+        <Field Name="category_name">
+          <DataField>category_name</DataField>
+        </Field>
+        <Field Name="schedule">
+          <DataField>schedule</DataField>
+        </Field>
+        <Field Name="enabled">
+          <DataField>enabled</DataField>
+        </Field>
+        <Field Name="freq_type">
+          <DataField>freq_type</DataField>
+        </Field>
+        <Field Name="freq_interval">
+          <DataField>freq_interval</DataField>
+        </Field>
+        <Field Name="freq_relative_interval">
+          <DataField>freq_relative_interval</DataField>
+        </Field>
+        <Field Name="sch_Sun">
+          <DataField>sch_Sun</DataField>
+        </Field>
+        <Field Name="sch_Mon">
+          <DataField>sch_Mon</DataField>
+        </Field>
+        <Field Name="sch_Tue">
+          <DataField>sch_Tue</DataField>
+        </Field>
+        <Field Name="sch_Wed">
+          <DataField>sch_Wed</DataField>
+        </Field>
+        <Field Name="sch_Thr">
+          <DataField>sch_Thr</DataField>
+        </Field>
+        <Field Name="sch_Fri">
+          <DataField>sch_Fri</DataField>
+        </Field>
+        <Field Name="sch_Sat">
+          <DataField>sch_Sat</DataField>
+        </Field>
+        <Field Name="frequency">
+          <DataField>frequency</DataField>
+        </Field>
+        <Field Name="LeftBuffer">
+          <DataField>LeftBuffer</DataField>
+        </Field>
+        <Field Name="StartTime">
+          <DataField>StartTime</DataField>
+        </Field>
+        <Field Name="RunTime">
+          <DataField>RunTime</DataField>
+        </Field>
+        <Field Name="EndTime">
+          <DataField>EndTime</DataField>
+        </Field>
+        <Field Name="RightBuffer">
+          <DataField>RightBuffer</DataField>
+        </Field>
+        <Field Name="instance_id">
+          <DataField>instance_id</DataField>
+        </Field>
+        <Field Name="job_id">
+          <DataField>job_id</DataField>
+        </Field>
+        <Field Name="step_id">
+          <DataField>step_id</DataField>
+        </Field>
+        <Field Name="step_name">
+          <DataField>step_name</DataField>
+        </Field>
+        <Field Name="sql_message_id">
+          <DataField>sql_message_id</DataField>
+        </Field>
+        <Field Name="sql_severity">
+          <DataField>sql_severity</DataField>
+        </Field>
+        <Field Name="message">
+          <DataField>message</DataField>
+        </Field>
+        <Field Name="run_status">
+          <DataField>run_status</DataField>
+        </Field>
+        <Field Name="run_date">
+          <DataField>run_date</DataField>
+        </Field>
+        <Field Name="run_time">
+          <DataField>run_time</DataField>
+        </Field>
+        <Field Name="run_duration">
+          <DataField>run_duration</DataField>
+        </Field>
+        <Field Name="operator_id_emailed">
+          <DataField>operator_id_emailed</DataField>
+        </Field>
+        <Field Name="operator_id_netsent">
+          <DataField>operator_id_netsent</DataField>
+        </Field>
+        <Field Name="operator_id_paged">
+          <DataField>operator_id_paged</DataField>
+        </Field>
+        <Field Name="retries_attempted">
+          <DataField>retries_attempted</DataField>
+        </Field>
+        <Field Name="server">
+          <DataField>server</DataField>
+        </Field>
+        <Field Name="run_status_desc">
+          <DataField>run_status_desc</DataField>
+        </Field>
+        <Field Name="run_priority">
+          <DataField>run_priority</DataField>
+        </Field>
+        <Field Name="run_duration_format">
+          <DataField>run_duration_format</DataField>
+        </Field>
+        <Field Name="run_time_format">
+          <DataField>run_time_format</DataField>
+        </Field>
+        <Field Name="CurrentStatus">
+          <DataField>CurrentStatus</DataField>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Category">
+      <Query>
+        <DataSourceName>MSDB</DataSourceName>
+        <CommandText>SELECT 
+	category_name = c.name
+FROM  
+	msdb.dbo.sysjobs AS j 
+	INNER JOIN msdb.dbo.syscategories as c on j.category_id = c.category_id
+UNION SELECT '&lt;ALL&gt;'</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="category_name">
+          <DataField>category_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="Jobs">
+      <Query>
+        <DataSourceName>MSDB</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Enabled">
+            <Value>=Parameters!Enabled.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Category_Name">
+            <Value>=Parameters!Category_Name.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT 
+	job_name = j.name
+FROM 
+	msdb.dbo.sysjobs AS j 
+	INNER JOIN msdb.dbo.sysjobschedules AS js ON j.job_id = js.job_id
+	INNER JOIN msdb.dbo.syscategories as c on j.category_id = c.category_id
+	INNER JOIN dbo.sysschedules s ON js.schedule_id = s.schedule_id
+WHERE 
+	1=1
+	AND (CAST(j.enabled AS INT) = @Enabled OR 2 IN(@Enabled)) 
+	AND (s.freq_relative_interval = 0) -- only weekly jobs not monthly or one off
+	AND (s.freq_type NOT IN (1)) -- only weekly jobs not monthly or one off
+	AND ('&lt;ALL&gt;' IN(@Category_Name) OR c.name IN(@Category_Name))
+UNION SELECT '&lt;ALL&gt;'
+ORDER BY 1</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="job_name">
+          <DataField>job_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Tablix Name="table1">
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>3.25cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>10cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.75cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.77646cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.75cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.25cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.75cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>16.25cm</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>1cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox7">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Category Name / Id</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox7</rd:DefaultName>
+                          <ZIndex>22</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox6">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Job Name / Step Name</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox6</rd:DefaultName>
+                          <ZIndex>21</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox12">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Frequency / Status</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox12</rd:DefaultName>
+                          <ZIndex>20</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>2</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox10">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Enabled / Duration</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox10</rd:DefaultName>
+                          <ZIndex>19</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Start Time / Run Date</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox5</rd:DefaultName>
+                          <ZIndex>18</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox3">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>End Time / Run Time</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox3</rd:DefaultName>
+                          <ZIndex>17</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox20">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Hours of the day / Message</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox20</rd:DefaultName>
+                          <ZIndex>16</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>1cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="txtcategory_name">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!category_name.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>15</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox8">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!job_name.Value &amp; " (" &amp; Fields!schedule.Value &amp; ")"</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox8</rd:DefaultName>
+                          <ZIndex>14</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="imgStatusJob">
+                          <Source>Embedded</Source>
+                          <Value>=Choose(max(Fields!CurrentStatus.Value),"succeeded","canceled","retry","failed","in_progress","script_delete")</Value>
+                          <Sizing>Clip</Sizing>
+                          <ZIndex>13</ZIndex>
+                          <ToolTip>=Choose(Max(Fields!CurrentStatus.Value),"succeeded","canceled","retry","failed","in_progress","No activity logged")</ToolTip>
+                          <Style>
+                            <Border>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>5pt</PaddingLeft>
+                            <PaddingTop>3pt</PaddingTop>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!frequency.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <ZIndex>12</ZIndex>
+                          <Style>
+                            <Border>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox11">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!job_enabled.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox11</rd:DefaultName>
+                          <ZIndex>11</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox9">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!StartTime.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox9</rd:DefaultName>
+                          <ZIndex>10</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!EndTime.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox4</rd:DefaultName>
+                          <ZIndex>9</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Chart Name="chart6">
+                          <ChartCategoryHierarchy>
+                            <ChartMembers>
+                              <ChartMember>
+                                <Label />
+                              </ChartMember>
+                            </ChartMembers>
+                          </ChartCategoryHierarchy>
+                          <ChartSeriesHierarchy>
+                            <ChartMembers>
+                              <ChartMember>
+                                <Label>Left Buffer</Label>
+                              </ChartMember>
+                              <ChartMember>
+                                <Label />
+                              </ChartMember>
+                              <ChartMember>
+                                <Label>Run Time</Label>
+                              </ChartMember>
+                              <ChartMember>
+                                <Label />
+                              </ChartMember>
+                              <ChartMember>
+                                <Label>Right Buffer</Label>
+                              </ChartMember>
+                            </ChartMembers>
+                          </ChartSeriesHierarchy>
+                          <ChartData>
+                            <ChartSeriesCollection>
+                              <ChartSeries Name="Series1">
+                                <ChartDataPoints>
+                                  <ChartDataPoint>
+                                    <ChartDataPointValues>
+                                      <Y>=(Fields!LeftBuffer.Value/60)</Y>
+                                    </ChartDataPointValues>
+                                    <ChartDataLabel>
+                                      <Style>
+                                        <Format>d</Format>
+                                      </Style>
+                                      <Label>=Fields!LeftBuffer.Value</Label>
+                                    </ChartDataLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>Black</Color>
+                                        <Width>0.376pt</Width>
+                                      </Border>
+                                      <Color>White</Color>
+                                    </Style>
+                                    <ChartMarker>
+                                      <Size>6pt</Size>
+                                      <Style />
+                                    </ChartMarker>
+                                  </ChartDataPoint>
+                                </ChartDataPoints>
+                                <Type>Bar</Type>
+                                <Subtype>Stacked</Subtype>
+                                <Style />
+                                <ChartEmptyPoints>
+                                  <Style />
+                                  <ChartMarker>
+                                    <Style />
+                                  </ChartMarker>
+                                  <ChartDataLabel>
+                                    <Style />
+                                  </ChartDataLabel>
+                                </ChartEmptyPoints>
+                                <CustomProperties>
+                                  <CustomProperty>
+                                    <Name>PointWidth</Name>
+                                    <Value>0.6</Value>
+                                  </CustomProperty>
+                                </CustomProperties>
+                                <ValueAxisName>Primary</ValueAxisName>
+                                <CategoryAxisName>Primary</CategoryAxisName>
+                                <ChartSmartLabel>
+                                  <CalloutLineColor>Black</CalloutLineColor>
+                                  <MinMovingDistance>0pt</MinMovingDistance>
+                                </ChartSmartLabel>
+                              </ChartSeries>
+                              <ChartSeries Name="Series2">
+                                <ChartDataPoints>
+                                  <ChartDataPoint>
+                                    <ChartDataPointValues>
+                                      <Y>=0.005</Y>
+                                    </ChartDataPointValues>
+                                    <ChartDataLabel>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                        <FontWeight>SemiBold</FontWeight>
+                                        <TextDecoration>Overline</TextDecoration>
+                                        <Color>Blue</Color>
+                                      </Style>
+                                      <Label>=Fields!StartTime.Value</Label>
+                                      <Position>Center</Position>
+                                      <Rotation>-35</Rotation>
+                                    </ChartDataLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>Black</Color>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                      <Color>White</Color>
+                                    </Style>
+                                    <ChartMarker>
+                                      <Size>6pt</Size>
+                                      <Style />
+                                    </ChartMarker>
+                                  </ChartDataPoint>
+                                </ChartDataPoints>
+                                <Type>Bar</Type>
+                                <Subtype>Stacked</Subtype>
+                                <Style />
+                                <ChartEmptyPoints>
+                                  <Style />
+                                  <ChartMarker>
+                                    <Style />
+                                  </ChartMarker>
+                                  <ChartDataLabel>
+                                    <Style />
+                                  </ChartDataLabel>
+                                </ChartEmptyPoints>
+                                <CustomProperties>
+                                  <CustomProperty>
+                                    <Name>PointWidth</Name>
+                                    <Value>0.6</Value>
+                                  </CustomProperty>
+                                </CustomProperties>
+                                <ValueAxisName>Primary</ValueAxisName>
+                                <CategoryAxisName>Primary</CategoryAxisName>
+                                <ChartSmartLabel>
+                                  <Disabled>true</Disabled>
+                                </ChartSmartLabel>
+                              </ChartSeries>
+                              <ChartSeries Name="Series3">
+                                <ChartDataPoints>
+                                  <ChartDataPoint>
+                                    <ChartDataPointValues>
+                                      <Y>=(Fields!RunTime.Value/60)</Y>
+                                    </ChartDataPointValues>
+                                    <ChartDataLabel>
+                                      <Style>
+                                        <FontSize>7pt</FontSize>
+                                      </Style>
+                                      <Label>=Fields!frequency.Value</Label>
+                                      <Position>Center</Position>
+                                    </ChartDataLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>Black</Color>
+                                        <Width>0.376pt</Width>
+                                      </Border>
+                                      <Color>PaleGreen</Color>
+                                    </Style>
+                                    <ChartMarker>
+                                      <Size>6pt</Size>
+                                      <Style />
+                                    </ChartMarker>
+                                  </ChartDataPoint>
+                                </ChartDataPoints>
+                                <Type>Bar</Type>
+                                <Subtype>Stacked</Subtype>
+                                <Style />
+                                <ChartEmptyPoints>
+                                  <Style />
+                                  <ChartMarker>
+                                    <Style />
+                                  </ChartMarker>
+                                  <ChartDataLabel>
+                                    <Style />
+                                  </ChartDataLabel>
+                                </ChartEmptyPoints>
+                                <CustomProperties>
+                                  <CustomProperty>
+                                    <Name>PointWidth</Name>
+                                    <Value>0.6</Value>
+                                  </CustomProperty>
+                                </CustomProperties>
+                                <ValueAxisName>Primary</ValueAxisName>
+                                <CategoryAxisName>Primary</CategoryAxisName>
+                                <ChartSmartLabel>
+                                  <Disabled>true</Disabled>
+                                </ChartSmartLabel>
+                              </ChartSeries>
+                              <ChartSeries Name="Series4">
+                                <ChartDataPoints>
+                                  <ChartDataPoint>
+                                    <ChartDataPointValues>
+                                      <Y>=0.005</Y>
+                                    </ChartDataPointValues>
+                                    <ChartDataLabel>
+                                      <Style>
+                                        <FontSize>8pt</FontSize>
+                                        <FontWeight>SemiBold</FontWeight>
+                                        <TextDecoration>Overline</TextDecoration>
+                                        <Color>Blue</Color>
+                                      </Style>
+                                      <Label>=Fields!EndTime.Value</Label>
+                                      <Position>Left</Position>
+                                      <Rotation>-35</Rotation>
+                                    </ChartDataLabel>
+                                    <Style />
+                                    <ChartMarker>
+                                      <Size>6pt</Size>
+                                      <Style />
+                                    </ChartMarker>
+                                  </ChartDataPoint>
+                                </ChartDataPoints>
+                                <Type>Bar</Type>
+                                <Subtype>Stacked</Subtype>
+                                <Style />
+                                <ChartEmptyPoints>
+                                  <Style />
+                                  <ChartMarker>
+                                    <Style />
+                                  </ChartMarker>
+                                  <ChartDataLabel>
+                                    <Style />
+                                  </ChartDataLabel>
+                                </ChartEmptyPoints>
+                                <CustomProperties>
+                                  <CustomProperty>
+                                    <Name>PointWidth</Name>
+                                    <Value>0.6</Value>
+                                  </CustomProperty>
+                                </CustomProperties>
+                                <ValueAxisName>Primary</ValueAxisName>
+                                <CategoryAxisName>Primary</CategoryAxisName>
+                                <ChartSmartLabel>
+                                  <Disabled>true</Disabled>
+                                </ChartSmartLabel>
+                              </ChartSeries>
+                              <ChartSeries Name="Series5">
+                                <ChartDataPoints>
+                                  <ChartDataPoint>
+                                    <ChartDataPointValues>
+                                      <Y>=(Fields!RightBuffer.Value/60)</Y>
+                                    </ChartDataPointValues>
+                                    <ChartDataLabel>
+                                      <Style>
+                                        <Format>d</Format>
+                                      </Style>
+                                      <Label>=Fields!RightBuffer.Value</Label>
+                                    </ChartDataLabel>
+                                    <Style>
+                                      <Border>
+                                        <Color>Black</Color>
+                                        <Width>0.376pt</Width>
+                                      </Border>
+                                      <Color>White</Color>
+                                    </Style>
+                                    <ChartMarker>
+                                      <Size>6pt</Size>
+                                      <Style />
+                                    </ChartMarker>
+                                  </ChartDataPoint>
+                                </ChartDataPoints>
+                                <Type>Bar</Type>
+                                <Subtype>Stacked</Subtype>
+                                <Style />
+                                <ChartEmptyPoints>
+                                  <Style />
+                                  <ChartMarker>
+                                    <Style />
+                                  </ChartMarker>
+                                  <ChartDataLabel>
+                                    <Style />
+                                  </ChartDataLabel>
+                                </ChartEmptyPoints>
+                                <CustomProperties>
+                                  <CustomProperty>
+                                    <Name>PointWidth</Name>
+                                    <Value>0.6</Value>
+                                  </CustomProperty>
+                                </CustomProperties>
+                                <ValueAxisName>Primary</ValueAxisName>
+                                <CategoryAxisName>Primary</CategoryAxisName>
+                                <ChartSmartLabel>
+                                  <CalloutLineColor>Black</CalloutLineColor>
+                                  <MinMovingDistance>0pt</MinMovingDistance>
+                                </ChartSmartLabel>
+                              </ChartSeries>
+                            </ChartSeriesCollection>
+                          </ChartData>
+                          <ChartAreas>
+                            <ChartArea Name="Default">
+                              <ChartCategoryAxes>
+                                <ChartAxis Name="Primary">
+                                  <Style>
+                                    <Border>
+                                      <Style>None</Style>
+                                      <Width>0.75pt</Width>
+                                    </Border>
+                                    <FontSize>7pt</FontSize>
+                                  </Style>
+                                  <ChartAxisTitle>
+                                    <Caption />
+                                    <Style>
+                                      <FontSize>8pt</FontSize>
+                                    </Style>
+                                  </ChartAxisTitle>
+                                  <Margin>True</Margin>
+                                  <ChartMajorGridLines>
+                                    <Enabled>False</Enabled>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>NaN</Interval>
+                                    <IntervalOffset>1</IntervalOffset>
+                                  </ChartMajorGridLines>
+                                  <ChartMinorGridLines>
+                                    <Enabled>False</Enabled>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>NaN</Interval>
+                                  </ChartMinorGridLines>
+                                  <ChartMajorTickMarks>
+                                    <Enabled>True</Enabled>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>NaN</Interval>
+                                    <IntervalOffset>1</IntervalOffset>
+                                  </ChartMajorTickMarks>
+                                  <ChartMinorTickMarks>
+                                    <Type>None</Type>
+                                  </ChartMinorTickMarks>
+                                  <Reverse>true</Reverse>
+                                  <Minimum>NaN</Minimum>
+                                  <Maximum>NaN</Maximum>
+                                  <PreventFontShrink>true</PreventFontShrink>
+                                  <PreventFontGrow>true</PreventFontGrow>
+                                  <IncludeZero>false</IncludeZero>
+                                  <ChartAxisScaleBreak>
+                                    <Style />
+                                  </ChartAxisScaleBreak>
+                                </ChartAxis>
+                                <ChartAxis Name="Secondary">
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                  <ChartAxisTitle>
+                                    <Caption />
+                                    <Style>
+                                      <FontSize>8pt</FontSize>
+                                    </Style>
+                                  </ChartAxisTitle>
+                                  <CrossAt>NaN</CrossAt>
+                                  <Location>Opposite</Location>
+                                  <Minimum>NaN</Minimum>
+                                  <Maximum>NaN</Maximum>
+                                  <ChartAxisScaleBreak>
+                                    <Style />
+                                  </ChartAxisScaleBreak>
+                                </ChartAxis>
+                              </ChartCategoryAxes>
+                              <ChartValueAxes>
+                                <ChartAxis Name="Primary">
+                                  <Style>
+                                    <Border>
+                                      <Style>None</Style>
+                                      <Width>0.75pt</Width>
+                                    </Border>
+                                    <FontSize>7pt</FontSize>
+                                    <Format>0;(0)</Format>
+                                  </Style>
+                                  <ChartAxisTitle>
+                                    <Caption />
+                                    <Style>
+                                      <FontSize>8pt</FontSize>
+                                    </Style>
+                                  </ChartAxisTitle>
+                                  <Margin>True</Margin>
+                                  <Interval>1</Interval>
+                                  <IntervalType>Default</IntervalType>
+                                  <ChartMajorGridLines>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>1</Interval>
+                                  </ChartMajorGridLines>
+                                  <ChartMinorGridLines>
+                                    <Enabled>True</Enabled>
+                                    <Style>
+                                      <Border>
+                                        <Color>Silver</Color>
+                                        <Style>Dotted</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>0.5</Interval>
+                                  </ChartMinorGridLines>
+                                  <ChartMajorTickMarks>
+                                    <Enabled>True</Enabled>
+                                    <Style>
+                                      <Border>
+                                        <Style>Solid</Style>
+                                        <Width>0.75pt</Width>
+                                      </Border>
+                                    </Style>
+                                    <Interval>1</Interval>
+                                    <IntervalType>Auto</IntervalType>
+                                  </ChartMajorTickMarks>
+                                  <ChartMinorTickMarks>
+                                    <Type>None</Type>
+                                  </ChartMinorTickMarks>
+                                  <Scalar>true</Scalar>
+                                  <Minimum>0</Minimum>
+                                  <Maximum>24</Maximum>
+                                  <PreventFontShrink>true</PreventFontShrink>
+                                  <PreventFontGrow>true</PreventFontGrow>
+                                  <IncludeZero>false</IncludeZero>
+                                  <ChartAxisScaleBreak>
+                                    <Style />
+                                  </ChartAxisScaleBreak>
+                                  <rd:SyncScope>table1</rd:SyncScope>
+                                </ChartAxis>
+                                <ChartAxis Name="Secondary">
+                                  <Style>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                  <ChartAxisTitle>
+                                    <Caption />
+                                    <Style>
+                                      <FontSize>8pt</FontSize>
+                                    </Style>
+                                  </ChartAxisTitle>
+                                  <CrossAt>NaN</CrossAt>
+                                  <Location>Opposite</Location>
+                                  <Minimum>NaN</Minimum>
+                                  <Maximum>NaN</Maximum>
+                                  <ChartAxisScaleBreak>
+                                    <Style />
+                                  </ChartAxisScaleBreak>
+                                </ChartAxis>
+                              </ChartValueAxes>
+                              <ChartThreeDProperties>
+                                <ProjectionMode>Perspective</ProjectionMode>
+                                <Shading>Simple</Shading>
+                                <WallThickness>15</WallThickness>
+                                <Clustered>true</Clustered>
+                              </ChartThreeDProperties>
+                              <Style>
+                                <Border>
+                                  <Width>0.75pt</Width>
+                                </Border>
+                                <BackgroundColor>White</BackgroundColor>
+                              </Style>
+                            </ChartArea>
+                          </ChartAreas>
+                          <ChartBorderSkin>
+                            <Style>
+                              <BackgroundColor>Gray</BackgroundColor>
+                              <BackgroundGradientType>None</BackgroundGradientType>
+                              <Color>White</Color>
+                            </Style>
+                          </ChartBorderSkin>
+                          <ChartNoDataMessage Name="NoDataMessage">
+                            <Caption>No Data Available</Caption>
+                            <Style>
+                              <BackgroundGradientType>None</BackgroundGradientType>
+                              <TextAlign>General</TextAlign>
+                              <VerticalAlign>Top</VerticalAlign>
+                            </Style>
+                          </ChartNoDataMessage>
+                          <DataSetName>DataSet</DataSetName>
+                          <ZIndex>8</ZIndex>
+                          <CustomProperties>
+                            <CustomProperty>
+                              <Name>__Upgraded2005__</Name>
+                              <Value>__Upgraded2005__</Value>
+                            </CustomProperty>
+                          </CustomProperties>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>White</BackgroundColor>
+                            <FontSize>8pt</FontSize>
+                          </Style>
+                        </Chart>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.63492cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="txtstep_id">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!step_id.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>7</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox18">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!step_name.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox18</rd:DefaultName>
+                          <ZIndex>6</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Image Name="imgStatusStep">
+                          <Source>Embedded</Source>
+                          <Value>=IIF(Isnothing(Fields!run_status.Value), nothing, Choose((Fields!run_status.Value + 1),"failed","succeeded","retry","canceled","in_progress"))</Value>
+                          <Sizing>Clip</Sizing>
+                          <ZIndex>5</ZIndex>
+                          <Style>
+                            <Border>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>5pt</PaddingLeft>
+                            <PaddingTop>3pt</PaddingTop>
+                          </Style>
+                        </Image>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox19">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!run_status_desc.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox19</rd:DefaultName>
+                          <ZIndex>4</ZIndex>
+                          <Style>
+                            <Border>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!run_duration_format.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>3</ZIndex>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox22">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!run_time_format.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                    <Format>dd-MMM-yyyy</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox22</rd:DefaultName>
+                          <ZIndex>2</ZIndex>
+                          <ToolTip>=Fields!run_time_format.Value</ToolTip>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox13">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!run_time_format.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>=IIF(ReportItems("txtstep_id").value = 0, "Bold", "Normal")</FontWeight>
+                                    <Format>HH:mm:ss</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <ZIndex>1</ZIndex>
+                          <ToolTip>=Fields!run_time_format.Value</ToolTip>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox26">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!message.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox26</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+                <TablixMember />
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <FixedData>true</FixedData>
+                  <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
+                  <KeepTogether>true</KeepTogether>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="table1_Group1">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!job_name.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!category_name.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!job_name.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!step_id.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember>
+                      <KeepWithGroup>After</KeepWithGroup>
+                      <RepeatOnNewPage>true</RepeatOnNewPage>
+                      <KeepTogether>true</KeepTogether>
+                    </TablixMember>
+                    <TablixMember>
+                      <Group Name="table1_Details_Group">
+                        <DataElementName>Detail</DataElementName>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!instance_id.Value</Value>
+                          <Direction>Descending</Direction>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Visibility>
+                            <Hidden>=IIf(Parameters!Is_Collasped.Value=1, True, False)</Hidden>
+                            <ToggleItem>txtcategory_name</ToggleItem>
+                          </Visibility>
+                        </TablixMember>
+                      </TablixMembers>
+                      <DataElementName>Detail_Collection</DataElementName>
+                      <DataElementOutput>Output</DataElementOutput>
+                      <KeepTogether>true</KeepTogether>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <DataSetName>DataSet</DataSetName>
+            <Height>2.63492cm</Height>
+            <Width>38.77646cm</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+                <Width>0.75pt</Width>
+              </Border>
+              <FontFamily>Tahoma</FontFamily>
+              <FontSize>8pt</FontSize>
+            </Style>
+          </Tablix>
+        </ReportItems>
+        <Height>2.63492cm</Height>
+        <Style />
+      </Body>
+      <Width>38.77646cm</Width>
+      <Page>
+        <PageFooter>
+          <Height>1cm</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Textbox Name="txtPrintedBy">
+              <CanGrow>true</CanGrow>
+              <CanShrink>true</CanShrink>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>="Produced By: " + Variables!UserName.Value
+ + " @ " + Variables!ReportRunDateTime.Value
+ + Environment.NewLine 
+ + "Execution Time: " + Variables!ReportExecutionTime.Value
+ + Environment.NewLine 
+ + "Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <Left>22.5cm</Left>
+              <Height>1cm</Height>
+              <Width>16.25cm</Width>
+              <Style>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="txtCriteria">
+              <CanGrow>true</CanGrow>
+              <CanShrink>true</CanShrink>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>=Variables!UrlReport.Value</Value>
+                      <Style>
+                        <FontFamily>Tahoma</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <TextDecoration>Underline</TextDecoration>
+                        <Color>Blue</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style>
+                    <TextAlign>Left</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <ActionInfo>
+                <Actions>
+                  <Action>
+                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
+                  </Action>
+                </Actions>
+              </ActionInfo>
+              <Height>1cm</Height>
+              <Width>22.5cm</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style />
+        </PageFooter>
+        <PageHeight>29.7cm</PageHeight>
+        <PageWidth>42cm</PageWidth>
+        <InteractiveHeight>11in</InteractiveHeight>
+        <InteractiveWidth>8.5in</InteractiveWidth>
+        <LeftMargin>1cm</LeftMargin>
+        <RightMargin>1cm</RightMargin>
+        <TopMargin>1cm</TopMargin>
+        <BottomMargin>1cm</BottomMargin>
+        <ColumnSpacing>1cm</ColumnSpacing>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="Server">
+      <DataType>String</DataType>
+      <Prompt>Server</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Enabled">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Enabled</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>&lt;ALL&gt;</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Category_Name">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>&lt;ALL&gt;</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Category Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>Category</DataSetName>
+          <ValueField>category_name</ValueField>
+          <LabelField>category_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Is_Collasped">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>1</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Collapsed Group</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Yes</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>No</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Job_Status">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Job Status</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>&lt;ALL&gt;</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Succeeded</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Canceled</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Retry</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>Failed</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>In Progress</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>6</Value>
+            <Label>No Activity Logged</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="RunDate">
+      <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd("d", -1, Today)</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Run Date (&gt;=)</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Job_Name">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+        </Values>
+      </DefaultValue>
+      <Prompt>Job Name Like</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="Day_Of_Week">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>0</Value>
+        </Values>
+      </DefaultValue>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Day of Week</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>0</Value>
+            <Label>&lt;ALL&gt;</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>1</Value>
+            <Label>Sunday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>2</Value>
+            <Label>Monday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>3</Value>
+            <Label>Tuesday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>4</Value>
+            <Label>Wednesday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>Thursday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>6</Value>
+            <Label>Friday</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>7</Value>
+            <Label>Saturday</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>4</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>Server</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>Enabled</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Category_Name</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>Day_Of_Week</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Is_Collasped</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>Job_Status</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>RunDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>Job_Name</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <EmbeddedImages>
+    <EmbeddedImage Name="script_delete">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAK9SURBVBgZBcFLiFVlAADg7//PuXdmGp3xMeIokk1USG8jKmlRYJJU1K6NRILQopXVImoVFBGBpLteu2gVLYyiUALFRSVk0aKC0nyE5uA43pm598495/zn7/tCzhns//LSQzh867rxXYO6NahbddsaNm0Py7iGhEUs4DMcKwHapnn4vtk1u157bBMA6Fft9KBqpxdX07aqZnmUnL+24tuz/T04WAK0TbN5qhvApRtJJwRloCgZ60Q3j0VFjDoFO7dN2Do9ueGT05cPRYBU11OTJU3LchX0am6M6K3SW2VhyPxKAm98ftGuuUl3z3Q2lQCprjes7Ub9Ef3VJMagRFEQCwpBEWgR0pIfzy06c7F3uQRIVbV5eqLQGzYGoyzGrIjEFBSRQlYUyIWrSyNHjv+9hP0lQFNV2zdPdfRWswYyRQpiRqKQlTlqM6mTNFUzd/SVR69HgFSNts9Oj+lXWYgUIYiICICQyZlmNJKqUYIS9r793URZxO5YJ6pSEmVkGUkAATFSp2SlP2iwBCU0o2rT5OS4GGghEwJRkDMh4ORHhic/9MO/f3lpfF1YU11/nea9ElI1uqmc7CojRQxSG8hZixBw4mNTf37hjucPGJu7y/C3Y8Xvp46/c/yJTr/4/sbtM21Kh3Y/uOPOua0zfjnfSG2WBUXMioLRpy+6/9kXTJw9IZz6QGd4XnfDlnjl3IUdZaqq3Xj65z/+sTgsrYyyOmWjOqiaVpNaB65eMD47x1OvAijf2qJowy1lqusHnnv83ok39z0CAFKmTlnVcOanrQa/fmPyq5eNhv8ZYHmpkAqXi9l79t62fnrymYXl2sX5vvmlVUuDWt1kRYy6naAbWv+cOip2grro6y1k567ElBrvh537
+Ds/gILZjIzZiPdZjerzb6YyPd+xJp+248rW1/QVVGeeL3Bx58ljz7v/pCEpK8wRGcAAAAABJRU5ErkJggg==</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="retry">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIsSURBVDjLpVNLSJQBEP7+h6uu62vLVAJDW1KQTMrINQ1vPQzq1GOpa9EppGOHLh0kCEKL7JBEhVCHihAsESyJiE4FWShGRmauu7KYiv6Pma+DGoFrBQ7MzGFmPr5vmDFIYj1mr1WYfrHPovA9VVOqbC7e/1rS9ZlrAVDYHig5WB0oPtBI0TNrUiC5yhP9jeF4X8NPcWfopoY48XT39PjjXeF0vWkZqOjd7LJYrmGasHPCCJbHwhS9/F8M4s8baid764Xi0Ilfp5voorpJfn2wwx/r3l77TwZUvR+qajXVn8PnvocYfXYH6k2ioOaCpaIdf11ivDcayyiMVudsOYqFb60gARJYHG9DbqQFmSVNjaO3K2NpAeK90ZCqtgcrjkP9aUCXp0moetDFEeRXnYCKXhm+uTW0CkBFu4JlxzZkFlbASz4CQGQVBFeEwZm8geyiMuRVntzsL3oXV+YMkvjRsydC1U+lhwZsWXgHb+oWVAEzIwvzyVlk5igsi7DymmHlHsFQR50rjl+981Jy1Fw6Gu0ObTtnU+cgs28AKgDiy+Awpj5OACBAhZ/qh2HOo6i+NeA73jUAML4/qWux8mt6NjW1w599CS9xb0mSEqQBEDAtwqALUmBaG5FV3oYPnTHMjAwetlWksyByaukxQg2wQ9FlccaK/OXA3/uAEUDp3rNIDQ1ctSk6kHh1/jRFoaL4M4snEMeD73gQx4M4PsT1IZ5AfYH68tZY7zv/ApRMY9mnuVMvAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="in_progress">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKrSURBVDjLpdPbT9IBAMXx/qR6qNbWUy89WS5rmVtutbZalwcNgyRLLMyuoomaZpRQCt5yNRELL0TkBSXUTBT5hZSXQPwBAvor/fZGazlb6+G8nIfP0znbgG3/kz+Knsbb+xxNV63DLxVLHzqV0vCrfMluzFmw1OW8ePEwf8+WgM1UXDnapVgLePr5Nj9DJBJGFEN8+TzKqL2RzkenV4yl5ws2BXob1WVeZxXhoB+PP0xzt0Bly0fKTePozV5GphYQPA46as+gU5/K+w2w6Ev2Ol/KpNCigM01R2uPgDcQIRSJEYys4JmNoO/y0tbnY9JlxnA9M15bfHZHCnjzVN4x7TLz6fMSJqsPgLAoMvV1niSQBGIbUP3Ki93t57XhItVXjulTQHf9hfk5/xgGyzQTgQjx7xvE4nG0j3UsiiLR1VVaLN3YpkTuNLgZGzRSq8wQUoD16flkOPSF28/cLCYkwqvrrAGXC1UYWtuRX1PR5RhgTJTI1Q4wKwzwWHk4kQI6a04nQ99mUOlczMYkFhPrBMQoN+7eQ35Nhc01SvA7OEMSFzTv8c/0UXc54xfQcj/bNzNmRmNy0zctMpeEQFSio/cdvqUICz9AiEPb+DLK2gE+2MrR5qXPpoAn6mxdr1GBwz1FiclDcAPCEkTXIboByz8guA75eg8WxxDtFZloZIdNKaDu5rnt9UVHE5POep6Zh7llmsQlLBNLSMTiEm5hGXXDJ6qb3zJiLaIiJy1Zpjy587ch1ahOKJ6XHGGiv5KeQSfFun4ulb/josZOYY0di/0tw9YCquX7KZVnFW46Ze2V4wU1ivRYe1UWI1Y1vgkDvo9PGLIoabp7kIrctJXSS8eKtjyTtuDErrK8jIYHuQf8VbK0
+RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="succeeded">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKfSURBVDjLpZPrS1NhHMf9O3bOdmwDCWREIYKEUHsVJBI7mg3FvCxL09290jZj2EyLMnJexkgpLbPUanNOberU5taUMnHZUULMvelCtWF0sW/n7MVMEiN64AsPD8/n83uucQDi/id/DBT4Dolypw/qsz0pTMbj/WHpiDgsdSUyUmeiPt2+V7SrIM+bSss8ySGdR4abQQv6lrui6VxsRonrGCS9VEjSQ9E7CtiqdOZ4UuTqnBHO1X7YXl6Daa4yGq7vWO1D40wVDtj4kWQbn94myPGkCDPdSesczE2sCZShwl8CzcwZ6NiUs6n2nYX99T1cnKqA2EKui6+TwphA5k4yqMayopU5mANV3lNQTBdCMVUA9VQh3GuDMHiVcLCS3J4jSLhCGmKCjBEx0xlshjXYhApfMZRP5CyYD+UkG08+xt+4wLVQZA1tzxthm2tEfD3JxARH7QkbD1ZuozaggdZbxK5kAIsf5qGaKMTY2lAU/rH5HW3PLsEwUYy+YCcERmIjJpDcpzb6l7th9KtQ69fi09ePUej9l7cx2DJbD7UrG3r3afQHOyCo+V3QQzE35pvQvnAZukk5zL5qRL59jsKbPzdheXoBZc4saFhBS6AO7V4zqCpiawuptwQG+UAa7Ct3UT0hh9p9EnXT5Vh6t4C22QaUDh6HwnECOmcO7K+6kW49DKqS2DrEZCtfuI+9GrNHg4fMHVSO5kE7nAPVkAxKBxcOzsajpS4Yh4ohUPPWKTUh3PaQEptIOr6BiJjcZXCwktaAGfrRIpwblqOV3YKdhfXOIvBLeREWpnd8ynsaSJoyESFphwTtfjN6X1jRO2+FxWtCWksqBApeiFIR9K6fiTpPiigDoadqCEag5YUFKl6Yrciw
+0VOlhOivv/Ff8wtn0KzlebrUYwAAAABJRU5ErkJggg==</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="failed">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJPSURBVDjLpZPLS5RhFMYfv9QJlelTQZwRb2OKlKuINuHGLlBEBEOLxAu46oL0F0QQFdWizUCrWnjBaDHgThCMoiKkhUONTqmjmDp2GZ0UnWbmfc/ztrC+GbM2dXbv4ZzfeQ7vefKMMfifyP89IbevNNCYdkN2kawkCZKfSPZTOGTf6Y/m1uflKlC3LvsNTWArr9BT2LAf+W73dn5jHclIBFZyfYWU3or7T4K7AJmbl/yG7EtX1BQXNTVCYgtgbAEAYHlqYHlrsTEVQWr63RZFuqsfDAcdQPrGRR/JF5nKGm9xUxMyr0YBAEXXHgIANq/3ADQobD2J9fAkNiMTMSFb9z8ambMAQER3JC1XttkYGGZXoyZEGyTHRuBuPgBTUu7VSnUAgAUAWutOV2MjZGkehgYUA6O5A0AlkAyRnotiX3MLlFKduYCqAtuGXpyH0XQmOj+TIURt51OzURTYZdBKV2UBSsOIcRp/TVTT4ewK6idECAihtUKOArWcjq/B8tQ6UkUR31+OYXP4sTOdisivrkMyHodWejlXwcC38Fvs8dY5xaIId89VlJy7ACpCNCFCuOp8+BJ6A631gANQSg1mVmOxxGQYRW2nHMha4B5WA3chsv22T5/B13AIicWZmNZ6cMchTXUe81Okzz54pLi0uQWp+TmkZqMwxsBV74Or3od4OISPr0e3SHa3PX0f3HXKofNH/UIG9pZ5PeUth+CyS2EMkEqs4fPEOBJLsyske48/+xD8oxcAYPzs4QaS7RR2kbLTTOTQieczfzfTv8QPldGvTGoF6/8AAAAASUVORK5CYII=</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="canceled">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHdSURBVDjLpZNraxpBFIb3a0ggISmmNISWXmOboKihxpgUNGWNSpvaS6RpKL3Ry//Mh1wgf6PElaCyzq67O09nVjdVlJbSDy8Lw77PmfecMwZg/I/GDw3DCo8HCkZl/RlgGA0e3Yfv7+DbAfLrW+SXOvLTG+SHV/gPbuMZRnsyIDL/OASziMxkkKkUQTJJsLaGn8/iHz6nd+8mQv87Ahg2H9Th/BxZqxEkEgSrq/iVCvLsDK9awtvfxb2zjD2ARID+lVVlbabTgWYTv1rFL5fBUtHbbeTJCb3EQ3ovCnRC6xAgzJtOE+ztheYIEkqbFaS3vY2zuIj77AmtYYDusPy8/zuvunJkDKXM7tYWTiyGWFjAqeQnAD6+7ueNx/FLpRGAru7mcoj5ebqzszil7DggeF/DX1nBN82rzPqrzbRayIsLhJqMPT2N83Sdy2GApwFqRN7jFPL0tF+10cDd3MTZ2AjNUkGCoyO6y9cRxfQowFUbpufr1ct4ZoHg+Dg067zduTmEbq4yi/UkYidDe+kaTcP4ObJIajksPd/eyx3c+N2rvPbMDPbUFPZSLKzcGjKPrbJaDsu+dQO3msfZzeGY2TCvKGYQhdSYeeJjUt21dIcjXQ7U7Kv599f4j/oF55W4g/2e3b8AAAAASUVORK5CYII=</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>en-US</Language>
+  <Variables>
+    <Variable Name="ColorTableHeader">
+      <Value>Gainsboro</Value>
+    </Variable>
+    <Variable Name="FormatDate">
+      <Value>dd-MMM-yyyy</Value>
+    </Variable>
+    <Variable Name="FormatDateTime">
+      <Value>dd-MMM-yyyy  hh:mm tt</Value>
+    </Variable>
+    <Variable Name="ReportExecutionTime">
+      <Value>
+        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+      </Value>
+    </Variable>
+    <Variable Name="ReportRunDateTime">
+      <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
+    </Variable>
+    <Variable Name="UrlReport">
+      <Value>
+        =Globals!ReportServerUrl + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
+    </Variable>
+    <Variable Name="UrlReportWithParameters">
+      <Value>=Variables!UrlReport.Value
+ + "&amp;Server=" + Parameters!Server.Value
+ + "&amp;Enabled=" + Parameters!Enabled.Value
+ + "&amp;Category_Name=" + Join(Parameters!Category_Name.Value, "&amp;Category_Name=")
+ + "&amp;Day_Of_Week=" + Parameters!Day_Of_Week.Value
+ + "&amp;Is_Collasped=" + Parameters!Is_Collasped.Value
+ + "&amp;Job_Status=" + Join(Parameters!Job_Status.Value, "&amp;Job_Status=")
+ + IIf(IsNothing(Parameters!RunDate.Value), "&amp;RunDate:IsNull=True", "&amp;RunDate=" + Format(Parameters!RunDate.Value, Variables!FormatDate.Value))
+ + IIf(IsNothing(Parameters!Job_Name.Value), "&amp;Job_Name:IsNull=True", "&amp;Job_Name=" + Parameters!Job_Name.Value)</Value>
+    </Variable>
+    <Variable Name="UserName">
+      <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+  </Variables>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>83036679-a77a-400c-bce9-3fbcfe4dca09</rd:ReportID>
+</Report>

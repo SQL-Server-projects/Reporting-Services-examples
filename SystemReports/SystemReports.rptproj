@@ -15,6 +15,14 @@
   </DataSets>
   <Reports>
     <ProjectItem>
+      <Name>Execution Log.rdl</Name>
+      <FullPath>Execution Log.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Subscriptions.rdl</Name>
+      <FullPath>Subscriptions.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
       <Name>Activity Moniter.rdl</Name>
       <FullPath>Activity Moniter.rdl</FullPath>
     </ProjectItem>
@@ -27,24 +35,8 @@
       <FullPath>Database Dictionary.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
-      <Name>Execution Log.rdl</Name>
-      <FullPath>Execution Log.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
       <Name>Job Search.rdl</Name>
       <FullPath>Job Search.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Report List.rdl</Name>
-      <FullPath>Report List.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Scheduled Jobs.rdl</Name>
-      <FullPath>Scheduled Jobs.rdl</FullPath>
-    </ProjectItem>
-    <ProjectItem>
-      <Name>Subscriptions.rdl</Name>
-      <FullPath>Subscriptions.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Permissions.rdl</Name>
@@ -77,6 +69,14 @@
     <ProjectItem>
       <Name>Report Documentation.rdl</Name>
       <FullPath>Report Documentation.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Report List.rdl</Name>
+      <FullPath>Report List.rdl</FullPath>
+    </ProjectItem>
+    <ProjectItem>
+      <Name>Scheduled Jobs.rdl</Name>
+      <FullPath>Scheduled Jobs.rdl</FullPath>
     </ProjectItem>
   </Reports>
   <Configurations>
