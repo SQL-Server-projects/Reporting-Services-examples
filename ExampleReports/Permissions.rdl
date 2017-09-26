@@ -32,17 +32,6 @@
 |				SQLCmdMode Script
 |--------------------------------------------------------------------------------------------------
 
-:setvar _server "PR-MIS1"
-:setvar _database "ReportServer"
---:setvar _user "***username***"
---:setvar _password "***password***"
---:connect $(_server) -U $(_user) -P $(_password)
-:connect $(_server)
-
-USE [$(_database)];
-GO
-
-
 DECLARE @all_value AS VARCHAR(50)
 DECLARE @UserName AS VARCHAR(50)
 
