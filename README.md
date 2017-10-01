@@ -39,7 +39,7 @@
         </td>
         <td>
             <kbd>
-                Activity Monitor
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerDatabase/Activity Monitor.rdl">Activity Monitor</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/image-not-available.png" align="top" width="256px" title="Activity Monitor" />
