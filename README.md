@@ -13,7 +13,7 @@
     <tr valign="top">
         <td>
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/SystemReports/Database%20Dictionary.rdl">Data Dictionary</a>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerDatabase/Database%20Dictionary.rdl">Data Dictionary</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/ssrsdatadictionary.png" align="top" width="256px" title="Data Dictionary" />
@@ -26,7 +26,7 @@
         </td>
         <td>
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/SystemReports/Scheduled%20Jobs.rdl">Scheduled Jobs Gantt Chart</a>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerDatabase/Scheduled%20Jobs.rdl">Scheduled Jobs Gantt Chart</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/ssrsscheduledjobs.png" align="top" width="256px" title="Scheduled Jobs Gantt Chart" />
@@ -54,7 +54,7 @@
     <tr valign="top">
         <td>
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/SystemReports/Report%20List.rdl">Report Listing</a>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Report%20List.rdl">Report Listing</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/ssrsreportlisting.png" align="top" width="256px" title="Report Listing" />
@@ -69,7 +69,7 @@
         </td>
         <td>
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/SystemReports/Subscriptions.rdl">Report Subscriptions</a>
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Subscriptions.rdl">Report Subscriptions</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/ssrsreportsubscriptions.png" align="top" width="256px" title="Report Subscriptions" />
@@ -82,7 +82,7 @@
         </td>
         <td>
             <kbd>
-                Execution Log
+                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Execution Log.rdl">Execution Log</a>
                 <br>
                 <br>
                 <img src="Images/ReadMe/image-not-available.png" align="top" width="256px" title="Execution Log" />
