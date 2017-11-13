@@ -10,10 +10,10 @@ The following examples are used to query the database & report server. I have in
 * Report Style Guide.docx
 * Report Unit Testing Checklist.docx
 #### Scripts          
-* CandyStripe.vb
-* HeatMapColor.vb
-* HeatMapColorGradate.vb
-* UpdateSubscriptionOwner.sql
+* [CandyStripe](Miscellaneous/Scripts/CandyStripe.vb)
+* [HeatMapColor](Miscellaneous/Scripts/HeatMapColor.vb)
+* [HeatMapColorGradate](Miscellaneous/Scripts/HeatMapColorGradate.vb)
+* [UpdateSubscriptionOwner](Miscellaneous/Scripts/UpdateSubscriptionOwner.sql)
 ### Reports                       
 #### Database Server      
 * Activity Moniter
