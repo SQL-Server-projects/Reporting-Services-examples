@@ -5,8 +5,6 @@ The following examples are used to query the database & report server. I have in
 
 ## File List
 ### [Miscellaneous](/Miscellaneous)
-<img src="Images/ReadMe/App.png" width="16px" > 
-
 #### [Documentation](/Miscellaneous/Documentation)
 * [Report Requirements](/Miscellaneous/Documentation/Report%20Requirements.docx)
 * [Report Style Guide](/Miscellaneous/Documentation/Report%20Style%20Guide.docx)
@@ -16,13 +14,13 @@ The following examples are used to query the database & report server. I have in
 * [HeatMapColor](/Miscellaneous/Scripts/HeatMapColor.vb)
 * [HeatMapColorGradate](/Miscellaneous/Scripts/HeatMapColorGradate.vb)
 * [UpdateSubscriptionOwner](/Miscellaneous/Scripts/UpdateSubscriptionOwner.sql)
-### Reports                       
-#### Database Server      
+### Reports
+#### [Database Server](/ServerDatabase)
 * [Activity Moniter](/ServerDatabase/Activity%20Moniter.rdl)
 * [Database Dictionary](/ServerDatabase/Database%20Dictionary.rdl) <kbd><img src="Images/ReadMe/ssrsdatadictionary.png" width="32px"></kbd>
 * [Job Search](/ServerDatabase/Job%20Search.rdl)
 * [Scheduled Jobs](/ServerDatabase/Scheduled%20Jobs.rdl)  <kbd><img src="Images/ReadMe/ssrsscheduledjobs.png" width="32px"></kbd>
-#### Report Server           
+#### [Report Server](/ServerReports)
 * [Data Sources](/ServerReports/Data%20Sources.rdl)
 * [Execution Log](/ServerReports/Execution%20Log.rdl)
 * [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log) <kbd><img src="Images/ReadMe/ssrsheatmap_calendar.png" width="32px"></kbd>
