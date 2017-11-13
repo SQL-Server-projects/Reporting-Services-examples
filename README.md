@@ -16,10 +16,10 @@ The following examples are used to query the database & report server. I have in
 * [UpdateSubscriptionOwner](Miscellaneous/Scripts/UpdateSubscriptionOwner.sql)
 ### Reports                       
 #### Database Server      
-* Activity Moniter
-* Database Dictionary <kbd><img src="Images/ReadMe/ssrsdatadictionary.png" width="32px"></kbd>
-* Job Search
-* Scheduled Jobs  <kbd><img src="Images/ReadMe/ssrsscheduledjobs.png" width="32px"></kbd>
+* [Activity Moniter](ServerDatabase/Activity%20Moniter.rdl)
+* [Database Dictionary](ServerDatabase/Database%20Dictionary.rdl) <kbd><img src="Images/ReadMe/ssrsdatadictionary.png" width="32px"></kbd>
+* [Job Search](ServerDatabase/Job%20Search.rdl)
+* [Scheduled Jobs](ServerDatabase/Scheduled%20Jobs.rdl)  <kbd><img src="Images/ReadMe/ssrsscheduledjobs.png" width="32px"></kbd>
 #### Report Server           
 * [Data Sources](/ServerReports/Data%20Sources.rdl)
 * [Execution Log](/ServerReports/Execution%20Log.rdl)
