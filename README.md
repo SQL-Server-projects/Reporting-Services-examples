@@ -4,7 +4,7 @@
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 
 ## File List
-### [Miscellaneous](/Miscellaneous)                        
+### [Miscellaneous](/Miscellaneous)
 <img src="Images/ReadMe/App.png" width="16px" > 
 
 #### [Documentation](/Miscellaneous/Documentation)
