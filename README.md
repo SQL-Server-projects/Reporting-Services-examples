@@ -21,9 +21,9 @@ The following examples are used to query the database & report server. I have in
 * Job Search
 * Scheduled Jobs  <kbd><img src="Images/ReadMe/ssrsscheduledjobs.png" width="32px"></kbd>
 #### Report Server           
-* Data Sources
-* Execution Log
-* Heat Map Calendar (using execution log) <kbd><img src="Images/ReadMe/ssrsheatmap_calendar.png" width="32px"></kbd>
+* [Data Sources](/ServerReports/Data%20Sources.rdl)
+* [Execution Log](/ServerReports/Execution%20Log.rdl)
+* [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log) <kbd><img src="Images/ReadMe/ssrsheatmap_calendar.png" width="32px"></kbd>
 * Permissions
 * Report Documentation  <kbd><img src="Images/ReadMe/ssrsreportdocumentation.png" width="32px"></kbd>
 * Report List  <kbd><img src="Images/ReadMe/ssrsreportlisting.png" width="32px"></kbd>
