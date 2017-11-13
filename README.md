@@ -1,11 +1,7 @@
-<table style="width:100%">
-    <caption>
-        <h2>
-            <img align="left" src="Images/ReadMe/App.png" width="32px">
-            Microsoft SQL Server Reporting Services (SSRS)
-        </h2>
-    </caption>
-</table>
+<img align="left" src="Images/ReadMe/App.png" width="64px" >
+
+# Microsoft SQL Server Reporting Services (SSRS)
+The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 
 ## File List
 - Miscellaneous                          
