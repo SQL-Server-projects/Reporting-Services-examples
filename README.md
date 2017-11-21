@@ -3,6 +3,8 @@
 # Microsoft SQL Server Reporting Services (SSRS)
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2017 Anthony Duguid")
+
 ## File List
 ### [Miscellaneous](/Miscellaneous)
 #### [Documentation](/Miscellaneous/Documentation)
