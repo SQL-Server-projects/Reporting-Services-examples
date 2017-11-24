@@ -1,15 +1,15 @@
 <img align="left" src="Images/ReadMe/App.png" width="64px" >
 
 # Microsoft SQL Server Reporting Services (SSRS)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2017 Anthony Duguid")
 ![current_build SSRS_2016](https://img.shields.io/badge/current_build-SSRS_2016-red.svg)
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
-
+<!---
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2017 Anthony Duguid")
 [![star this repo](http://githubbadges.com/star.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices)
 [![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
-
+--->
 ## File List
 ### [Miscellaneous](/Miscellaneous)
 #### [Documentation](/Miscellaneous/Documentation)
