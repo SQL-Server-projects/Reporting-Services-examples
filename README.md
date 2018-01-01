@@ -1,7 +1,7 @@
 <img align="left" src="Images/ReadMe/App.png" width="64px" >
 
 # Microsoft SQL Server Reporting Services (SSRS)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2017 Anthony Duguid")
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © Anthony Duguid")
 ![current_build SSRS_2016](https://img.shields.io/badge/current_build-SSRS_2016-red.svg)
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
