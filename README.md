@@ -1,6 +1,8 @@
 <img align="left" src="Images/ReadMe/App.png" width="64px" >
 
 # Microsoft SQL Server Reporting Services (SSRS)
+
+[![Join the chat at https://gitter.im/SqlServerReportingServices/Lobby](https://badges.gitter.im/SqlServerReportingServices/Lobby.svg)](https://gitter.im/SqlServerReportingServices/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © Anthony Duguid")
 ![current_build SSRS_2016](https://img.shields.io/badge/current_build-SSRS_2016-red.svg)
 
