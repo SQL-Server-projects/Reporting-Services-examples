@@ -41,4 +41,5 @@ The following examples are used to query the database & report server. I have in
 * [Subscriptions](/ServerReports/Subscriptions.rdl)  <kbd><img src="Images/ReadMe/ssrsreportsubscriptions.png" width="32px"></kbd>
 
 ### Stack Overflow Answers
-https://stackoverflow.com/questions/48072252/ssrs-button-to-go-to-subreport-in-excel-export/48209472#48209472
+https://stackoverflow.com/q/48072252/9059424
+https:
