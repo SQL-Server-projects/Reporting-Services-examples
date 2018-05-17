@@ -39,3 +39,6 @@ The following examples are used to query the database & report server. I have in
 * [Report Documentation](/ServerReports/Report%20Documentation.rdl)  <kbd><img src="Images/ReadMe/ssrsreportdocumentation.png" width="32px"></kbd>
 * [Report List](/ServerReports/Report%20List.rdl)  <kbd><img src="Images/ReadMe/ssrsreportlisting.png" width="32px"></kbd>
 * [Subscriptions](/ServerReports/Subscriptions.rdl)  <kbd><img src="Images/ReadMe/ssrsreportsubscriptions.png" width="32px"></kbd>
+
+### Stack Overflow Answers
+https://stackoverflow.com/questions/48072252/ssrs-button-to-go-to-subreport-in-excel-export/48209472#48209472
