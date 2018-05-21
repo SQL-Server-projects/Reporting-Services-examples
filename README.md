@@ -42,4 +42,3 @@ The following examples are used to query the database & report server. I have in
 
 ### Stack Overflow Answers
 https://stackoverflow.com/q/48072252/9059424
-https:
