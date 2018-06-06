@@ -4,7 +4,7 @@ Public Sub Main()
     '            Save file as .rss extension and run using rs.exe from command line.
     ' Reference: http://bhushan.extreme-advice.com/back-up-of-ssrs-reports-using-rs-utility/
     '			 https://docs.microsoft.com/en-us/sql/reporting-services/tools/rs-exe-utility-ssrs?view=sql-server-2017
-    ' Example:   rs -s http://localhost/reportserver -i D:\Scripts\Backup_Reports.rss -e Mgmt2010 -v backupFolder="D:\Scripts\BackupReports" -v parentFolder="/Salesforce"
+    ' Example:   rs -s http://localhost/reportserver -i D:\Scripts\Backup_Reports.rss -e Mgmt2010 -v backupFolder="D:\Scripts\BackupReports" -v parentFolder="/YourReportFolder"
     '            rs -s http://localhost/reportserver -i D:\Scripts\Backup_Reports.rss -e Mgmt2010 -v backupFolder="D:\Scripts\BackupReports" -v parentFolder=""
     '--------------------------------------------------------------------------------------------------------------------
     Try
