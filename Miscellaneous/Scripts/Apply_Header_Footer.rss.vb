@@ -52,6 +52,39 @@
                     Console.WriteLine("Update Header: " + item.Path)
                 Catch ex As NullReferenceException
                     Console.WriteLine("Add Header: " + item.Path)
+
+                    '----------TESTING----------
+            		'Dim elem As XmlElement = reportDoc.CreateElement("PageHeader")
+					'Dim root As XmlNode = reportDoc.DocumentElement
+					'root.AppendChild(elem)
+					'reportDoc.Save(outstream2)
+					'reportHeader = reportDoc.SelectSingleNode("/rd:Report/rd:ReportSections/rd:ReportSection/rd:Page/rd:PageHeader", nsmanager)
+					'reportHeader.InnerXml = templateHeader.InnerXml
+					
+					'Dim newHeader As XmlNode = reportDoc.ImportNode(templateHeader.InnerXml, True)
+					'reportPage.DocumentElement.AppendChild(newHeader)
+					'reportDoc.Save(outstream2)
+					
+					'Dim newHeader As XmlNode = reportDoc.ImportNode(templateHeader.InnerXml, True)
+					'reportPage.InsertAfter(templateHeader, reportPage.LastChild) 
+					
+					'Dim root As XmlNode = reportDoc.DocumentElement
+					'root.AppendChild(templateHeader)
+					'Dim elem As System.XML.XmlElement = reportDoc.CreateElement("rd:PageHeader")
+					'reportDoc.DocumentElement.AppendChild(elem)
+					'reportDoc.Save(Console.Out)
+					'----------------------------------------------------------------------------------
+					'Dim elem As System.XML.XmlElement = reportDoc.CreateElement("rd:PageHeader")
+					'Dim docNodes As System.XML.XmlNodeList = reportDoc.LastChild.ChildNodes()
+
+					'For Each node As System.XML.XmlNode In docNodes
+					'	If node.Name = "rd:Page" Then
+					'		node.AppendChild(elem)
+					'	End If
+					'Next
+					'reportDoc.Save(Console.Out)
+                    '----------END TESTING----------
+            
                 End Try
                 Try
                     reportFooter.InnerXml = templateFooter.InnerXml
