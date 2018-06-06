@@ -5,7 +5,7 @@
     '            Save file as .rss extension and run using rs.exe from command line.
     ' Reference: https://jaredzagelbaum.wordpress.com/2014/11/14/update-all-ssrs-reportheaders/
     '			 https://docs.microsoft.com/en-us/sql/reporting-services/tools/rs-exe-utility-ssrs?view=sql-server-2017
-    ' Example:   rs -s http://localhost/reportserver -i D:\Scripts\Apply_Header_Footer.rss -e Mgmt2010 -v parentFolder="Salesforce_Test"
+    ' Example:   rs -s http://localhost/reportserver -i D:\Scripts\Apply_Header_Footer.rss -e Mgmt2010 -v parentFolder="YourReportFolder"
     '--------------------------------------------------------------------------------------------------------------------
     Dim reportDefinition As Byte() = Nothing
     Dim templateDoc As New System.Xml.XmlDocument
