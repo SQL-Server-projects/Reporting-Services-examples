@@ -36,7 +36,6 @@ Public Sub Main()
 
 				rdlReport.Load(Stream)
 				rdlReport.Save(Path.Combine(backupPath, item.Name + ".rdl"))
-
 				Console.WriteLine(item.Name + ".rdl")
 			End If
         Next
