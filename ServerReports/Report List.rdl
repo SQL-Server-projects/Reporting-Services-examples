@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>A list of reporting services reports</Description>
   <Author>Anthony Duguid</Author>
@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet">
+    <DataSet Name="Reports">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
@@ -105,8 +105,8 @@ AS
 		, ModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.ModifiedDate, 13))
 		, ReportFolder = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
 		, rpt.[Path]
-		, URL_ReportFolder = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-		, URL_Report = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
+		, URL_ReportFolder = 'http://' + Host_Name() + '/Reports/browse/'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)
+		, URL_Report = 'http://' + Host_Name() + '/Reports/report/'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
 		, ReportDefinition = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
 	FROM 
 		dbo.Catalog AS rpt
@@ -226,7 +226,7 @@ WHERE
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="ReportFolder">
+    <DataSet Name="ReportFolders">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
@@ -235,21 +235,26 @@ WHERE
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT 
-	Report_Folder = SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2)   
+	[ReportFolder] = SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
+	, [OrderNumber] = 2
 FROM 
-	ReportServer.dbo.Catalog AS c WITH (NOLOCK) 
+	[ReportServer].[dbo].[Catalog] AS c WITH (NOLOCK) 
 WHERE
 	1=1
 	AND c.[Type] = 2
 UNION 
-SELECT @all_value
-ORDER BY 1</CommandText>
+SELECT @all_value, 1
+ORDER BY 2, 1</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="Report_Folder">
-          <DataField>Report_Folder</DataField>
+        <Field Name="ReportFolder">
+          <DataField>ReportFolder</DataField>
           <rd:TypeName>System.Object</rd:TypeName>
+        </Field>
+        <Field Name="OrderNumber">
+          <DataField>OrderNumber</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
       </Fields>
     </DataSet>
@@ -292,13 +297,13 @@ ORDER BY 1</CommandText>
                   <Width>2.77646cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.02646cm</Width>
+                  <Width>3.37042cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.75cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3.02646cm</Width>
+                  <Width>3.37042cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>13cm</Width>
@@ -321,6 +326,8 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -376,7 +383,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -430,6 +439,8 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -485,7 +496,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -542,7 +555,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -601,7 +616,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -659,7 +676,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -713,7 +732,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -766,7 +787,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -819,7 +842,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -872,7 +897,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -922,7 +949,9 @@ ORDER BY 1</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -975,7 +1004,7 @@ ORDER BY 1</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_ReportFolder.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -1001,7 +1030,7 @@ ORDER BY 1</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe(True)</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(True, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -1037,7 +1066,7 @@ ORDER BY 1</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1057,7 +1086,7 @@ ORDER BY 1</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL_Report.Value</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_Report.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -1083,7 +1112,7 @@ ORDER BY 1</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -1119,7 +1148,7 @@ ORDER BY 1</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1160,7 +1189,7 @@ ORDER BY 1</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingTop>3pt</PaddingTop>
                           </Style>
@@ -1217,7 +1246,7 @@ ORDER BY 1</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -1254,7 +1283,7 @@ ORDER BY 1</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingTop>3pt</PaddingTop>
                           </Style>
@@ -1320,7 +1349,7 @@ ORDER BY 1</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -1353,7 +1382,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1390,7 +1419,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1428,7 +1457,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1465,7 +1494,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1503,7 +1532,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1537,7 +1566,7 @@ ORDER BY 1</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1617,12 +1646,10 @@ ORDER BY 1</CommandText>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet</DataSetName>
-            <PageBreak>
-              <BreakLocation>Start</BreakLocation>
-            </PageBreak>
+            <KeepTogether>true</KeepTogether>
+            <DataSetName>Reports</DataSetName>
             <Height>1.18521cm</Height>
-            <Width>54.09292cm</Width>
+            <Width>54.78084cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1636,7 +1663,7 @@ ORDER BY 1</CommandText>
         <Height>1.18521cm</Height>
         <Style />
       </Body>
-      <Width>54.09292cm</Width>
+      <Width>54.78084cm</Width>
       <Page>
         <PageFooter>
           <Height>1.00001cm</Height>
@@ -1750,17 +1777,12 @@ ORDER BY 1</CommandText>
     </ReportParameter>
     <ReportParameter Name="ReportFolder">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Report Folder</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>ReportFolder</DataSetName>
-          <ValueField>Report_Folder</ValueField>
-          <LabelField>Report_Folder</LabelField>
+          <DataSetName>ReportFolders</DataSetName>
+          <ValueField>ReportFolder</ValueField>
+          <LabelField>ReportFolder</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -1918,12 +1940,13 @@ ORDER BY 1</CommandText>
   </ReportParametersLayout>
   <Code>Private Alt As Boolean
 
-Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional ByVal OddColor as String = "Beige", Optional ByVal EvenColor as String = "White") As String
+Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
 '------------------------------------------------------------------------------------------------
 ' Purpose:  To candy stripe the detail rows of a report
 ' Example:  BackgroundColor = Code.CandyStripe()
 ' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
 '------------------------------------------------------------------------------------------------
+
 	If NewRow Then 
 		Alt = Not Alt
 	End If
@@ -1956,8 +1979,14 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
+    <Variable Name="ColorCandyStripeEvenRow">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeOddRow">
+      <Value>WhiteSmoke</Value>
+    </Variable>
     <Variable Name="ColorTableHeader">
-      <Value>Gainsboro</Value>
+      <Value>WhiteSmoke</Value>
     </Variable>
     <Variable Name="FormatDate">
       <Value>dd-MMM-yyyy</Value>
