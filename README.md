@@ -21,6 +21,8 @@ The following examples are used to query the database & report server. I have in
 * [Report Style Guide](/Miscellaneous/Documentation/Report%20Style%20Guide.docx)
 * [Report Unit Testing Checklist](/Miscellaneous/Documentation/Report%20Unit%20Testing%20Checklist.docx)
 #### [Scripts](/Miscellaneous/Scripts)
+* [Apply Standard Header and Footer](/Miscellaneous/Scripts/Apply_Header_Footer.rss.vb)
+* [Backup Deployed Reports](/Miscellaneous/Scripts/Backup_Reports.rss.vb)
 * [CandyStripe](/Miscellaneous/Scripts/CandyStripe.vb)
 * [HeatMapColor](/Miscellaneous/Scripts/HeatMapColor.vb)
 * [HeatMapColorGradate](/Miscellaneous/Scripts/HeatMapColorGradate.vb)
