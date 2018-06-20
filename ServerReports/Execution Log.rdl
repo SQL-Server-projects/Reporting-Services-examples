@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>An event list of reporting services reports and their status</Description>
   <Author>Anthony Duguid</Author>
@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet">
+    <DataSet Name="ExecutionLogs">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
@@ -55,7 +55,7 @@ DECLARE @EndDate AS DATETIME
 
 SET @all_value = '&lt;ALL&gt;'
 SET @LogStatus = '&lt;ALL&gt;'
-SET @ReportFolder = '&lt;ALL&gt;' 
+SET @ReportFolder = 'System'
 SET @ReportName = '&lt;ALL&gt;' 
 SET @UserName = '&lt;ALL&gt;'
 SET @GroupByColumn = 'Report Folder'
@@ -69,29 +69,28 @@ SET @EndDate = NULL
 report_users 
 AS
 (
-	SELECT UserID, UserName, SimpleUserName = UPPER(RIGHT(UserName, (LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
 )
 ,
 report_catalog
 AS
 (
 	SELECT    
-		  rpt.ItemID
-		, rpt.CreatedById
-		, rpt.ModifiedById
+		  rpt.[ItemID]
+		, rpt.[CreatedById]
+		, rpt.[ModifiedById]
 		, rpt.[Type]
 		, rpt.[Name] 
-		, ReportName = rpt.[Name] 
+		, [ReportName] = rpt.[Name] 
 		, rpt.[Description]
-		, rpt.Parameter
-		, CreationDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.CreationDate, 13))
-		, ModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.ModifiedDate, 13))
-		, ReportFolder = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
+		, rpt.[Parameter]
+		, [CreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[CreationDate], 13))
+		, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
+		, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
 		, rpt.[Path]
-		, URL_ReportFolder = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-		, URL_Report = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-		, ReportDefinition = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
-		, HostName = Host_Name()
+		, [URL_ReportFolder] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
+		, [URL_Report] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
+		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
 	FROM 
 		dbo.Catalog AS rpt
 	WHERE 
@@ -101,41 +100,41 @@ AS
 SELECT 
  	GroupBy1 = 
  		CASE  
-			WHEN @GroupByColumn = 'Report Name' THEN rpt.ReportName
-			WHEN @GroupByColumn = 'Report Folder' THEN rpt.ReportFolder
-			WHEN @GroupByColumn = 'User Id' THEN usr.SimpleUserName
+			WHEN @GroupByColumn = 'Report Name' THEN rpt.[ReportName]
+			WHEN @GroupByColumn = 'Report Folder' THEN rpt.[ReportFolder]
+			WHEN @GroupByColumn = 'User Id' THEN usr.[SimpleUserName]
 			ELSE '&lt;N/A&gt;' 
 		END
 	, rpt.[Path]
-	, rpt.ReportFolder
+	, rpt.[ReportFolder]
 	, rpt.[Name]
-	, rpt.URL_ReportFolder
-	, rpt.URL_Report 
-	, URL_Report_Filtered = rpt.URL_Report + '&amp;rs:Command=Render&amp;' + CONVERT(VARCHAR(2000), el.[Parameters])
-	, UserName = usr.SimpleUserName
+	, rpt.[URL_ReportFolder]
+	, rpt.[URL_Report]
+	, [URL_Report_Filtered] = rpt.URL_Report + '&amp;rs:Command=Render&amp;' + CONVERT(VARCHAR(2000), el.[Parameters])
+	, [UserName] = usr.[SimpleUserName]
 	, el.[Status]
 	, el.TimeStart
 	, el.[RowCount]
-	, el.ByteCount
+	, el.[ByteCount]
 	, el.[Format]
 	, el.[Parameters]
-	, TotalSeconds = CONVERT(CHAR(8),DATEADD(ms,(el.TimeDataRetrieval + el.TimeProcessing + el.TimeRendering),0),108)
-	, TimeDataRetrieval = CONVERT(CHAR(8),DATEADD(ms,el.TimeDataRetrieval,0),108) 
-	, TimeProcessing = CONVERT(CHAR(8),DATEADD(ms,el.TimeProcessing,0),108)  
-	, TimeRendering = CONVERT(CHAR(8),DATEADD(ms,el.TimeRendering,0),108) 
-	, OrderbyDate = CAST(TimeStart AS DATETIME) 
+	, [TotalSeconds] = CONVERT(CHAR(8),DATEADD(ms, (el.[TimeDataRetrieval] + el.[TimeProcessing] + el.[TimeRendering]), 0), 108)
+	, [TimeDataRetrieval] = CONVERT(CHAR(8),DATEADD(ms, el.[TimeDataRetrieval], 0), 108) 
+	, [TimeProcessing] = CONVERT(CHAR(8),DATEADD(ms, el.[TimeProcessing], 0), 108)  
+	, [TimeRendering] = CONVERT(CHAR(8),DATEADD(ms, el.[TimeRendering], 0), 108) 
+	, [OrderbyDate] = CAST([TimeStart] AS DATETIME) 
 FROM 
 	report_catalog AS rpt 
-	LEFT JOIN dbo.ExecutionLog AS el ON el.ReportID = rpt.ItemID
-	LEFT JOIN report_users AS usr ON el.UserName = usr.UserName
+	LEFT JOIN dbo.[ExecutionLog] AS el ON el.[ReportID] = rpt.[ItemID]
+	LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
 WHERE 
 	1=1
 	AND (@all_value IN(@LogStatus) OR el.[Status] IN(@LogStatus))
-	AND (@all_value IN (@ReportFolder) OR rpt.ReportFolder IN(@ReportFolder))
-	AND (@all_value IN(@ReportName) OR rpt.ReportName IN(@ReportName))
-	AND (@all_value IN(@UserName) OR usr.SimpleUserName IN(@UserName))
-	AND (@StartDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11),el.TimeStart,13)) &gt;= @StartDate)
-	AND (@EndDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11),el.TimeStart,13)) &lt;= @EndDate)</CommandText>
+	AND (@all_value IN (@ReportFolder) OR rpt.[ReportFolder] IN(@ReportFolder))
+	AND (@all_value IN(@ReportName) OR rpt.[ReportName] IN(@ReportName))
+	AND (@all_value IN(@UserName) OR usr.[SimpleUserName] IN(@UserName))
+	AND (@StartDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11), el.[TimeStart], 13)) &gt;= @StartDate)
+	AND (@EndDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11), el.[TimeStart], 13)) &lt;= @EndDate)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -449,7 +448,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -507,7 +508,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -560,7 +563,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -618,7 +623,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -676,7 +683,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -726,7 +735,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -776,7 +787,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -826,7 +839,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -876,7 +891,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -926,7 +943,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -976,7 +995,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1026,7 +1047,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1076,7 +1099,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1126,7 +1151,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1176,7 +1203,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1226,7 +1255,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2393,7 +2424,7 @@ WHERE
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet</DataSetName>
+            <DataSetName>ExecutionLogs</DataSetName>
             <PageBreak>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
@@ -2797,8 +2828,14 @@ WHERE
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
+    <Variable Name="ColorCandyStripeEvenRow">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeOddRow">
+      <Value>WhiteSmoke</Value>
+    </Variable>
     <Variable Name="ColorTableHeader">
-      <Value>Gainsboro</Value>
+      <Value>WhiteSmoke</Value>
     </Variable>
     <Variable Name="FormatDate">
       <Value>dd-MMM-yyyy</Value>
