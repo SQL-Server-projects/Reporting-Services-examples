@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>A list of reporting services reports that have subscriptions</Description>
   <Author>Anthony Duguid</Author>
@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet">
+    <DataSet Name="Subscriptions">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
@@ -57,13 +57,13 @@ DECLARE @Current AS VARCHAR(50)
 DECLARE @LastSubscriptionDate AS DATETIME
 
 SET @all_value = '&lt;ALL&gt;'
-SET @ReportFolder = '&lt;ALL&gt;'
+SET @ReportFolder = 'System'
 SET @ReportName = '&lt;ALL&gt;'
 SET @EmailLike = NULL 
 SET @ModifiedBy = NULL
 SET @SubcriptionOwner = NULL
 SET @SubscriptionStatus = 'A' -- Y=Sent, N=Fail, A=All
-SET @EventStatus = '&lt;ALL&gt;'  -- status from ReportServer.dbo.ExecutionLog 
+SET @EventStatus = '&lt;ALL&gt;'  -- status from ReportServer.dbo.[ExecutionLog] 
 SET @Current = '&lt;ALL&gt;' 
 SET @LastSubscriptionDate = NULL --getdate()-1
 
@@ -73,32 +73,32 @@ SET @LastSubscriptionDate = NULL --getdate()-1
 report_users 
 AS
 (
-	SELECT UserID, UserName, SimpleUserName = UPPER(RIGHT(UserName,(LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
 )
 ,
 report_catalog
 AS
 (
 	SELECT    
-		  c.ItemID
-		, c.CreatedById
-		, c.ModifiedById
+		  c.[ItemID]
+		, c.[CreatedById]
+		, c.[ModifiedById]
 		, c.[Type]
 		, c.[Name]
 		, c.[Description]
-		, c.Parameter
-		, ReportCreationDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.CreationDate, 13))
-		, ReportModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.ModifiedDate, 13))
-		, ReportFolder = 
+		, c.[Parameter]
+		, [ReportCreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[CreationDate], 13))
+		, [ReportModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[ModifiedDate], 13))
+		, [ReportFolder] = 
 			CASE
 				WHEN c.Path = '/' + c.Name THEN ''
 				ELSE SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) 
 			END 
-		, ReportPath = c.[Path]
-		, UrlPath = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
-		, ReportDefinition = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX),c.content))  
+		, [ReportPath] = c.[Path]
+		, [UrlPath] = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+		, [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))  
 	FROM 
-		dbo.Catalog AS c
+		dbo.[Catalog] AS c
 	WHERE c.[Type] = 2
 )
 , 
@@ -192,63 +192,63 @@ subscription_schedule
 AS
 (
 	SELECT 
-		  ScheduleID
-		, SchDaySun = Sun
-		, SchDayMon = Mon
-		, SchDayTue = Tue
-		, SchDayWed = Wed
-		, SchDayThr = Thr
-		, SchDayFri = Fri
-		, SchDaySat = Sat
-		, ScheduleName
-		, ScheduleStartDate 
-		, ScheduleEndDate 
-		, Flags
-		, RecurrenceType
+		  [ScheduleID]
+		, [SchDaySun] = Sun
+		, [SchDayMon] = Mon
+		, [SchDayTue] = Tue
+		, [SchDayWed] = Wed
+		, [SchDayThr] = Thr
+		, [SchDayFri] = Fri
+		, [SchDaySat] = Sat
+		, [ScheduleName]
+		, [ScheduleStartDate]
+		, [ScheduleEndDate]
+		, [Flags]
+		, [RecurrenceType]
 		, [State]
-		, MinutesInterval
-		, DaysInterval
-		, WeeksInterval
-		, DaysOfWeek
-		, DaysOfMonth
+		, [MinutesInterval]
+		, [DaysInterval]
+		, [WeeksInterval]
+		, [DaysOfWeek]
+		, [DaysOfMonth]
 		, [Month]
-		, MonthlyWeek 
-		, ScheduleDays 
+		, [MonthlyWeek]
+		, [ScheduleDays]
 	FROM
 		(
 		SELECT 
-			  sc.ScheduleID 
-			, sd.CodeNbr
-			, sd.Label
-			, ScheduleName = sc.name
-			, ScheduleStartDate = sc.StartDate
-			, ScheduleEndDate = sc.EndDate
-			, sc.Flags
-			, sc.RecurrenceType
+			  sc.[ScheduleID]
+			, sd.[CodeNbr]
+			, sd.[Label]
+			, [ScheduleName] = sc.[name]
+			, [ScheduleStartDate] = sc.[StartDate]
+			, [ScheduleEndDate] = sc.[EndDate]
+			, sc.[Flags]
+			, sc.[RecurrenceType]
 			, sc.[State]
-			, sc.MinutesInterval
-			, sc.DaysInterval
-			, sc.WeeksInterval
-			, sc.DaysOfWeek
-			, sc.DaysOfMonth
+			, sc.[MinutesInterval]
+			, sc.[DaysInterval]
+			, sc.[WeeksInterval]
+			, sc.[DaysOfWeek]
+			, sc.[DaysOfMonth]
 			, sc.[Month]
-			, sc.MonthlyWeek 
-			, ScheduleDays = 
+			, sc.[MonthlyWeek] 
+			, [ScheduleDays] = 
 				CASE
-					WHEN sc.DaysOfMonth IS NOT NULL THEN COALESCE(dom.Label, '(' + CAST(sc.DaysOfMonth AS VARCHAR(20)) + ') NOT CODED')
-					WHEN sc.DaysOfWeek IS NOT NULL THEN COALESCE(dow.Label, '(' + CAST(sc.DaysOfWeek AS VARCHAR(20)) + ') NOT CODED')
+					WHEN sc.[DaysOfMonth] IS NOT NULL THEN COALESCE(dom.[Label], '(' + CAST(sc.[DaysOfMonth] AS VARCHAR(20)) + ') NOT CODED')
+					WHEN sc.[DaysOfWeek] IS NOT NULL THEN COALESCE(dow.[Label], '(' + CAST(sc.[DaysOfWeek] AS VARCHAR(20)) + ') NOT CODED')
 				END 
-			--, sc.RecurrenceType
+			--, sc.[RecurrenceType]
 		FROM 
-			dbo.Schedule sc 
-			LEFT JOIN subscription_days sd ON sc.DaysOfWeek = sd.CodeNbr AND sd.GroupName = 'DayOfWeek'
-			LEFT JOIN subscription_days AS dom ON sc.DaysOfMonth = dom.CodeNbr AND dom.GroupName = 'DaysOfMonth'
-			LEFT JOIN subscription_days AS dow ON sc.DaysOfWeek = dow.CodeNbr AND dow.GroupName = 'DaysOfWeek'
+			dbo.[Schedule] sc 
+			LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
+			LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
+			LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
 		) sch
 		PIVOT
 		(
-			COUNT(sch.Label) 
-			FOR sch.Label
+			COUNT(sch.[Label]) 
+			FOR sch.[Label]
 			IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
 		) AS pvt
 )
@@ -257,163 +257,173 @@ report_subscription
 AS
 (
 	SELECT     
-		  s.SubscriptionID
-		, s.Report_OID
-		, SubscriptionDescription = s.[Description]
-		, s.ExtensionSettings
-		, s.EventType
-		, s.OwnerID
-		, s.ModifiedByID
-		, s.ModifiedDate		
-		, RunTime = CONVERT(VARCHAR(5), s.LastRunTime, 8)
-		, LastRunDate = CONVERT(VARCHAR(11),s.LastRunTime,13)
-		, s.LastRunTime
-		, s.DeliveryExtension		
-		, s.MatchData		
-		, SubscriptionLastStatus = s.LastStatus		
-		, StatusFail = CASE WHEN s.LastStatus  LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END		
-		, EmailSubject = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, EmailTo = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
-		, EmailCc = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
-		, EmailBcc = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, EmailComment = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, EmailIncludeLink = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
-		, EmailRenderFormat = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, EmailPriority = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, sch.MinutesInterval
-		, sch.DaysInterval
-		, sch.WeeksInterval
-		, sch.DaysOfWeek
-		, sch.DaysOfMonth
+		  s.[SubscriptionID]
+		, s.[Report_OID]
+		, [SubscriptionDescription] = s.[Description]
+		, s.[ExtensionSettings]
+		, s.[EventType]
+		, s.[OwnerID]
+		, s.[ModifiedByID]
+		, s.[ModifiedDate]	
+		, [RunTime] = CONVERT(VARCHAR(5), s.[LastRunTime], 8)
+		, [LastRunDate] = CONVERT(VARCHAR(11), s.[LastRunTime], 13)
+		--, s.[LastRunTime]
+		, [LastRunTime] = CAST(CONVERT(CHAR(16), s.[LastRunTime], 113) AS DATETIME)
+		, s.[DeliveryExtension]		
+		, s.[MatchData]	
+		, [SubscriptionLastStatus] = s.[LastStatus]		
+		, [StatusFail] = CASE WHEN s.[LastStatus] LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END		
+		, [EmailSubject] = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, [EmailTo] = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
+		, [EmailCc] = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
+		, [EmailBcc] = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, [EmailComment] = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, [EmailIncludeLink] = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
+		, [EmailRenderFormat] = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, [EmailPriority] = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+		, sch.[MinutesInterval]
+		, sch.[DaysInterval]
+		, sch.[WeeksInterval]
+		, sch.[DaysOfWeek]
+		, sch.[DaysOfMonth]
 		, sch.[Month]
-		, sch.MonthlyWeek 
-		--, JobName = sj.name 
-		, sch.ScheduleName 
-		, sch.ScheduleDays 
-		, sch.SchDaySun
-		, sch.SchDayMon
-		, sch.SchDayTue
-		, sch.SchDayWed
-		, sch.SchDayThr
-		, sch.SchDayFri
-		, sch.SchDaySat
-		, sch.ScheduleStartDate 
-		, sch.ScheduleEndDate 
-		, sch.Flags
-		, sch.RecurrenceType
+		, sch.[MonthlyWeek] 
+		--, [JobName] = sj.[name] 
+		, sch.[ScheduleName]
+		, sch.[ScheduleDays]
+		, sch.[SchDaySun]
+		, sch.[SchDayMon]
+		, sch.[SchDayTue]
+		, sch.[SchDayWed]
+		, sch.[SchDayThr]
+		, sch.[SchDayFri]
+		, sch.[SchDaySat]
+		, sch.[ScheduleStartDate]
+		, sch.[ScheduleEndDate] 
+		, sch.[Flags]
+		, sch.[RecurrenceType]
 		, sch.[State]
 	FROM  
-		dbo.Subscriptions AS s 
-		LEFT JOIN dbo.Notifications AS n ON n.SubscriptionID = s.SubscriptionID AND s.Report_OID = n.ReportID
-		LEFT JOIN dbo.ReportSchedule AS rs ON s.SubscriptionID = rs.SubscriptionID 
-		--LEFT JOIN MSDB.dbo.sysjobs AS sj ON sj.name = CAST(rs.ScheduleID AS VARCHAR(255))
-		LEFT JOIN subscription_schedule AS sch ON rs.ScheduleID = sch.ScheduleID 
+		dbo.[Subscriptions] AS s 
+		LEFT JOIN dbo.[Notifications] AS n ON n.[SubscriptionID] = s.[SubscriptionID] AND s.[Report_OID] = n.[ReportID]
+		LEFT JOIN dbo.[ReportSchedule] AS rs ON s.[SubscriptionID] = rs.[SubscriptionID] 
+		--LEFT JOIN MSDB.dbo.[sysjobs] AS sj ON sj.[name] = CAST(rs.[ScheduleID] AS VARCHAR(255))
+		LEFT JOIN subscription_schedule AS sch ON rs.[ScheduleID] = sch.[ScheduleID]
 	WHERE 
 		1=1
-		--AND sch.RecurrenceType IN(4,5) -- 1 = is one off, 4 = daily, 5 = monthly
-		--AND s.EventType = 'TimedSubscription' 
+		--AND sch.[RecurrenceType] IN(4,5) -- 1 = is one off, 4 = daily, 5 = monthly
+		--AND s.[EventType] = 'TimedSubscription' 
 )
 SELECT     
-	  c.Name 
-	, c.Description 
-	, c.Parameter 	
-	, c.ReportFolder 
-	, c.ReportPath 
-	, URL_ReportFolder = c.UrlPath + c.ReportFolder + '&amp;ViewMode=List'
-	, URL_Report = c.UrlPath + c.ReportFolder + '%2f' + c.Name 
-	, URL = 'http://' + Host_Name() + '/Reports/Pages/SubscriptionProperties.aspx?ItemPath=' + c.ReportPath + '&amp;IsDataDriven=False&amp;SubscriptionID=' + CAST(s.SubscriptionID AS VARCHAR(80)) 
-	, URL2 = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.ReportPath + '&amp;SelectedTabId=SubscriptionsTab'  
-	, ReportCreatedBy = urc.SimpleUserName
-	, c.ReportCreationDate
-	, ReportModifiedBy = urm.SimpleUserName
-	, c.ReportModifiedDate 	
-	, SubscriptionOwner = usc.SimpleUserName
-	, SubscriptionModifiedBy = usm.SimpleUserName
-	, SubscriptionModifiedDate = s.ModifiedDate 	
-	, s.SubscriptionID
-	, s.SubscriptionDescription 
-	, s.ExtensionSettings
-	, s.EventType
-	, s.EmailSubject 
-	, s.EmailTo 
-	, s.EmailCc 
-	, s.EmailBcc 
-	, s.EmailComment 
-	, s.EmailIncludeLink 
-	, s.EmailRenderFormat 
-	, s.EmailPriority 
-	, s.DeliveryExtension	
-	, s.SubscriptionLastStatus
-	, s.StatusFail 
-	, s.MatchData	
-	, s.RunTime 
-	, s.LastRunDate
-	, s.LastRunTime	
-	, s.MinutesInterval
-	, s.DaysInterval
-	, s.WeeksInterval
-	, s.DaysOfWeek
-	, s.DaysOfMonth
+	  c.[Name] 
+	, c.[Description] 
+	, c.[Parameter] 	
+	, c.[ReportFolder]
+	, c.[ReportPath] 
+	, [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
+	, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+	, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80)) 
+	, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'  
+	, [ReportCreatedBy] = urc.[SimpleUserName]
+	, c.[ReportCreationDate]
+	, [ReportModifiedBy] = urm.[SimpleUserName]
+	, c.[ReportModifiedDate]	
+	, [SubscriptionOwner] = usc.[SimpleUserName]
+	, [SubscriptionModifiedBy] = usm.[SimpleUserName]
+	, [SubscriptionModifiedDate] = s.[ModifiedDate] 	
+	, s.[SubscriptionID]
+	, s.[SubscriptionDescription] 
+	, s.[ExtensionSettings]
+	, s.[EventType]
+	, s.[EmailSubject] 
+	, s.[EmailTo] 
+	, s.[EmailCc] 
+	, s.[EmailBcc] 
+	, s.[EmailComment] 
+	, s.[EmailIncludeLink] 
+	, s.[EmailRenderFormat] 
+	, s.[EmailPriority] 
+	, s.[DeliveryExtension]	
+	, s.[SubscriptionLastStatus]
+	, s.[StatusFail] 
+	, s.[MatchData]	
+	, s.[RunTime] 
+	, s.[LastRunDate]
+	, s.[LastRunTime]	
+	, s.[MinutesInterval]
+	, s.[DaysInterval]
+	, s.[WeeksInterval]
+	, s.[DaysOfWeek]
+	, s.[DaysOfMonth]
 	, s.[Month]
-	, s.MonthlyWeek 	
-	, JobName = NULL  --, s.JobName 	
-	, s.ScheduleName 
-	, s.ScheduleDays
-	, s.SchDaySun
-	, s.SchDayMon
-	, s.SchDayTue
-	, s.SchDayWed
-	, s.SchDayThr
-	, s.SchDayFri
-	, s.SchDaySat
-	, s.ScheduleStartDate
-	, s.ScheduleEndDate
-	, s.Flags
-	, s.RecurrenceType
+	, s.[MonthlyWeek] 	
+	, [JobName] = NULL  --, s.[JobName] 	
+	, s.[ScheduleName] 
+	, s.[ScheduleDays]
+	, s.[SchDaySun]
+	, s.[SchDayMon]
+	, s.[SchDayTue]
+	, s.[SchDayWed]
+	, s.[SchDayThr]
+	, s.[SchDayFri]
+	, s.[SchDaySat]
+	, s.[ScheduleStartDate]
+	, s.[ScheduleEndDate]
+	, s.[Flags]
+	, s.[RecurrenceType]
 	, s.[State]
-	, EventStatus = el.[Status]
-	, EventDateTime = el.TimeEnd 
+	, [EventStatus] = el.[Status]
+	, [EventDateTime] = el.[TimeEnd] 
 FROM  
 	report_catalog AS c
-	INNER JOIN	report_subscription AS s ON s.Report_OID = c.ItemID 
-	LEFT OUTER JOIN	(SELECT b.ReportID, b.[Status], b.TimeEnd
-					FROM dbo.ExecutionLog b 
-					INNER JOIN (SELECT ReportID, MAX(TimeEnd) AS TimeEnd
-								FROM dbo.ExecutionLog 
-								GROUP BY ReportID) a ON b.ReportID = a.ReportID AND b.TimeEnd = a.TimeEnd
-					)AS el ON el.ReportID = c.ItemID
-	LEFT OUTER JOIN report_users AS urc ON c.CreatedById = urc.UserID 
-	LEFT OUTER JOIN report_users AS urm ON c.ModifiedById = urm.UserID 
-	LEFT OUTER JOIN report_users AS usc ON s.OwnerID = usc.UserID 
-	LEFT OUTER JOIN report_users AS usm ON s.ModifiedByID = usm.UserID 
+	INNER JOIN report_subscription AS s ON s.[Report_OID] = c.[ItemID] 
+	LEFT JOIN 
+			(
+			SELECT 
+				  b.[ReportID]
+				, b.[Status]
+				, b.[TimeEnd]
+				, [LastRunTime] = CAST(CONVERT(CHAR(16), b.[TimeEnd], 113) AS DATETIME)
+			FROM 
+				dbo.[ExecutionLog] b 
+				INNER JOIN (SELECT [ReportID], MAX([TimeEnd]) AS [TimeEnd] FROM dbo.[ExecutionLog] GROUP BY [ReportID]) a ON b.[ReportID] = a.[ReportID] AND b.[TimeEnd] = a.[TimeEnd]
+			GROUP BY
+				  b.[ReportID]
+				, b.[Status]
+				, b.[TimeEnd]
+			)AS el ON el.[ReportID] = c.[ItemID]
+	LEFT JOIN report_users AS urc ON c.[CreatedById] = urc.[UserID] 
+	LEFT JOIN report_users AS urm ON c.[ModifiedById] = urm.[UserID] 
+	LEFT JOIN report_users AS usc ON s.[OwnerID] = usc.[UserID] 
+	LEFT JOIN report_users AS usm ON s.[ModifiedByID] = usm.[UserID] 
 WHERE 
 	1=1
 	AND c.[Type] = 2
-	AND (@all_value IN (@ReportFolder) OR c.ReportFolder IN(@ReportFolder))
-	AND (@all_value IN (@ReportFolder) OR CHARINDEX(@ReportFolder, c.ReportPath) &gt; 0)
+	AND (@all_value IN (@ReportFolder) OR c.[ReportFolder] IN(@ReportFolder))
+	AND (@all_value IN (@ReportFolder) OR CHARINDEX(@ReportFolder, c.[ReportPath]) &gt; 0)
 	AND (@all_value IN(@ReportName) OR c.[Name] IN(@ReportName))
 	AND (@all_value IN(@EventStatus) OR el.[Status] IN(@EventStatus))
-	AND (@all_value IN(@Current) OR CASE WHEN s.ScheduleEndDate IS NULL THEN 'Current' WHEN s.ScheduleEndDate IS NOT NULL THEN 'Non Current' END = @Current)
-	AND (@all_value IN(@SubscriptionStatus) OR s.SubscriptionLastStatus LIKE '%' + @SubscriptionStatus + '%')
-	AND (s.LastRunTime &gt;= @LastSubscriptionDate OR @LastSubscriptionDate IS NULL)	
+	AND (@all_value IN(@Current) OR CASE WHEN s.[ScheduleEndDate] IS NULL THEN 'Current' WHEN s.[ScheduleEndDate] IS NOT NULL THEN 'Non Current' END = @Current)
+	AND (@all_value IN(@SubscriptionStatus) OR s.[SubscriptionLastStatus] LIKE '%' + @SubscriptionStatus + '%')
+	AND (s.[LastRunTime] &gt;= @LastSubscriptionDate OR @LastSubscriptionDate IS NULL)	
 	AND 
 		(
-			(SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
+			(SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
 			LIKE '%' + @EmailLike + '%' OR @EmailLike IS NULL
 		)
 		OR
 		( 
-			CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) 
+			CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) 
 				WHEN 0 THEN '' 
-				ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) 
+				ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]))) 
 			END 
 		LIKE '%' + @EmailLike + '%'
 		)
 		OR 
 		(
-			CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) 
+			CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) 
 				WHEN 0 THEN '' 
-				ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) 
+				ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]))) 
 			END 
 		LIKE '%' + @EmailLike + '%')
 		)</CommandText>
@@ -763,6 +773,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <Width>0.55cm</Width>
                 </TablixColumn>
                 <TablixColumn>
+                  <Width>9.485cm</Width>
+                </TablixColumn>
+                <TablixColumn>
                   <Width>3cm</Width>
                 </TablixColumn>
                 <TablixColumn>
@@ -867,6 +880,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -922,7 +937,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -976,6 +993,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1031,7 +1050,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1085,6 +1106,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1137,6 +1160,8 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1178,6 +1203,56 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox43">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Description</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
+                                    <Color>#5b5b5b</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox43</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <TopBorder>
+                              <Color>Gray</Color>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>Black</Color>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Color>Black</Color>
+                            </RightBorder>
+                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="textbox62">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -1189,7 +1264,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1239,7 +1316,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1289,7 +1368,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1338,7 +1419,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1387,7 +1470,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1436,7 +1521,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1485,7 +1572,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1534,7 +1623,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1583,7 +1674,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1635,7 +1728,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1685,7 +1780,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1738,7 +1835,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1792,7 +1891,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1842,7 +1943,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1892,7 +1995,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1942,7 +2047,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1992,7 +2099,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2042,7 +2151,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2092,7 +2203,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2142,7 +2255,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2192,7 +2307,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2242,7 +2359,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2292,7 +2411,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2342,7 +2463,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2395,7 +2518,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2445,7 +2570,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2498,7 +2625,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2548,7 +2677,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2601,7 +2732,9 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -2654,7 +2787,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_ReportFolder.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2680,7 +2813,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe(True)</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(True, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -2714,7 +2847,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <LeftBorder>
                               <Style>None</Style>
                             </LeftBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2734,7 +2867,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL_Report.Value</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_Report.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2760,7 +2893,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -2798,7 +2931,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2818,7 +2951,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL.Value</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2848,7 +2981,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
                       </CellContents>
@@ -2916,9 +3049,45 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                             <RightBorder>
                               <Style>None</Style>
                             </RightBorder>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                           </Style>
                         </Rectangle>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="SubscriptionDescription">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SubscriptionDescription.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>SubscriptionDescription</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -2949,7 +3118,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -2986,7 +3155,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3023,7 +3192,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3059,7 +3228,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3095,7 +3264,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3131,7 +3300,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3167,7 +3336,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3203,7 +3372,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3239,7 +3408,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3277,7 +3446,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3315,7 +3484,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3350,7 +3519,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3385,7 +3554,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3420,7 +3589,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3455,7 +3624,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3490,7 +3659,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3525,7 +3694,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3560,7 +3729,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3595,7 +3764,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3630,7 +3799,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3665,7 +3834,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3700,7 +3869,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3737,7 +3906,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3774,7 +3943,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3812,7 +3981,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3849,7 +4018,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3887,7 +4056,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3924,7 +4093,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3961,7 +4130,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Code.CandyStripe()</BackgroundColor>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -3976,6 +4145,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -4085,12 +4255,12 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                 </TablixMember>
               </TablixMembers>
             </TablixRowHierarchy>
-            <DataSetName>DataSet</DataSetName>
+            <DataSetName>Subscriptions</DataSetName>
             <PageBreak>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>1.5cm</Height>
-            <Width>120.85899cm</Width>
+            <Width>130.34399cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -4104,7 +4274,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
         <Height>1.5cm</Height>
         <Style />
       </Body>
-      <Width>120.85899cm</Width>
+      <Width>130.34399cm</Width>
       <Page>
         <PageFooter>
           <Height>1cm</Height>
@@ -4226,7 +4396,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
-          <Value>ALL</Value>
+          <Value>&lt;ALL&gt;</Value>
         </Values>
       </DefaultValue>
       <AllowBlank>true</AllowBlank>
@@ -4443,12 +4613,13 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
   </ReportParametersLayout>
   <Code>Private Alt As Boolean
 
-Public Function CandyStripe(Optional ByVal NewRow As Boolean = False, Optional ByVal OddColor as String = "Beige", Optional ByVal EvenColor as String = "White") As String
+Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
 '------------------------------------------------------------------------------------------------
 ' Purpose:  To candy stripe the detail rows of a report
 ' Example:  BackgroundColor = Code.CandyStripe()
 ' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
 '------------------------------------------------------------------------------------------------
+
 	If NewRow Then 
 		Alt = Not Alt
 	End If
@@ -4481,8 +4652,14 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
+    <Variable Name="ColorCandyStripeEvenRow">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeOddRow">
+      <Value>WhiteSmoke</Value>
+    </Variable>
     <Variable Name="ColorTableHeader">
-      <Value>Gainsboro</Value>
+      <Value>WhiteSmoke</Value>
     </Variable>
     <Variable Name="FormatDate">
       <Value>dd-MMM-yyyy</Value>
@@ -4515,6 +4692,7 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
  + IIf(IsNothing(Parameters!EmailLike.Value), "&amp;EmailLike:IsNull=True", "&amp;EmailLike=" &amp; Parameters!EmailLike.Value)
  + IIf(IsNothing(Parameters!LastSubscriptionDate.Value), "&amp;LastSubscriptionDate:IsNull=True", "&amp;LastSubscriptionDate=" + Format(Parameters!LastSubscriptionDate.Value, Variables!FormatDate.Value))
  + "&amp;SubscriptionStatus=" + Parameters!SubscriptionStatus.Value
+ + "&amp;Current=" + Parameters!Current.Value
  + "&amp;ShowParameters=" + Parameters!ShowParameters.Value
  + "&amp;ShowEmailDetails=" + Parameters!ShowEmailDetails.Value</Value>
     </Variable>
