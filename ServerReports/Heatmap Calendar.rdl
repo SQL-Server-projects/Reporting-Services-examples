@@ -1,13 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
-  <Description>Campus Booking Calendar Report</Description>
+  <Description>Execution Log Heatmap Report</Description>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="ReportServer">
       <DataSourceReference>ReportServer</DataSourceReference>
       <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>cc67775e-6c62-4d4d-bff8-15202ff5f91a</rd:DataSourceID>
+      <rd:DataSourceID>9c5d5e18-ddee-41b3-ae49-8d83f261caf6</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
@@ -70,9 +70,9 @@ week_list
 AS
 (
 	SELECT 
-		  week_date = DATEADD(d, 1, DATEADD(wk, wks.[number], DATEADD(yy, DATEDIFF(yy, 0, @StartDate), 0)))
+		  [week_date] = DATEADD(d, 1, DATEADD(wk, wks.[number], DATEADD(yy, DATEDIFF(yy, 0, @StartDate), 0)))
 	FROM 
-		master.dbo.spt_values AS wks
+		master.dbo.[spt_values] AS wks
 	WHERE 
 		1=1 -- used in testing to be able to comment out other clauses below
 		AND wks.[type] = 'P'
@@ -83,13 +83,13 @@ week_list_format
 AS
 (
 	SELECT
-		  front_end_week_number = DATEPART(wk, yw.week_date)
-		, yw.week_date
+		  [front_end_week_number] = DATEPART(wk, yw.[week_date])
+		, yw.[week_date]
 	FROM
 		week_list AS yw
 	WHERE 
 		1=1 -- used in testing to be able to comment out other clauses below
-		AND (yw.week_date BETWEEN @StartDate AND @EndDate)
+		AND (yw.[week_date] BETWEEN @StartDate AND @EndDate)
 )
 , 
 day_list
@@ -109,31 +109,31 @@ AS
 report_users 
 AS
 (
-	SELECT UserID, UserName, SimpleUserName = UPPER(RIGHT(UserName, (LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
 )
 ,
 report_catalog
 AS
 (
 	SELECT    
-		  rpt.ItemID
-		, rpt.CreatedById
-		, rpt.ModifiedById
+		  rpt.[ItemID]
+		, rpt.[CreatedById]
+		, rpt.[ModifiedById]
 		, rpt.[Type]
 		, rpt.[Name] 
-		, ReportName = rpt.[Name] 
+		, [ReportName] = rpt.[Name] 
 		, rpt.[Description]
-		, rpt.Parameter
-		, CreationDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.CreationDate, 13))
-		, ModifiedDate = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.ModifiedDate, 13))
-		, ReportFolder = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
+		, rpt.[Parameter]
+		, [CreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[CreationDate], 13))
+		, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
+		, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
 		, rpt.[Path]
-		, URL_ReportFolder = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-		, URL_Report = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-		, ReportDefinition = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
-		, HostName = Host_Name()
+		, [URL_ReportFolder] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
+		, [URL_Report] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
+		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
+		, [HostName] = Host_Name()
 	FROM 
-		dbo.Catalog AS rpt
+		dbo.[Catalog] AS rpt
 	WHERE 
 		1=1
 		AND rpt.[Type] = 2
@@ -156,46 +156,46 @@ FROM
 WHERE 
 	1=1
 	AND (@all_value IN(@LogStatus) OR el.[Status] IN(@LogStatus))
-	AND (@all_value IN (@ReportFolder) OR rpt.ReportFolder IN(@ReportFolder))
-	AND (@all_value IN(@ReportName) OR rpt.ReportName IN(@ReportName))
-	AND (@all_value IN(@UserName) OR usr.SimpleUserName IN(@UserName))
-	AND (@StartDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11),el.TimeStart,13)) &gt;= @StartDate)
-	AND (@EndDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11),el.TimeStart,13)) &lt;= @EndDate)
+	AND (@all_value IN (@ReportFolder) OR rpt.[ReportFolder] IN(@ReportFolder))
+	AND (@all_value IN(@ReportName) OR rpt.[ReportName] IN(@ReportName))
+	AND (@all_value IN(@UserName) OR usr.[SimpleUserName] IN(@UserName))
+	AND (@StartDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11), el.[TimeStart], 13)) &gt;= @StartDate)
+	AND (@EndDate IS NULL OR CONVERT(DATETIME, CONVERT(VARCHAR(11), el.[TimeStart], 13)) &lt;= @EndDate)
 )
 SELECT 
-	  el.ReportName
-	, el.day_name
-	, el.day_of_week 
-	, el.front_end_week_number
-	, el.week_date
-	, el.day_event_count
+	  el.[ReportName]
+	, el.[day_name]
+	, el.[day_of_week]
+	, el.[front_end_week_number]
+	, el.[week_date]
+	, el.[day_event_count]
 FROM 
 	execution_log AS el
 UNION
 SELECT 
-	  ReportName = 'Week Date'
-	, day_name = NULL
-	, day_of_week = NULL
-	, wlf.front_end_week_number
-	, wlf.week_date
-	, day_event_count = 0
+	  [ReportName] = 'Week Date'
+	, [day_name] = NULL
+	, [day_of_week] = NULL
+	, wlf.[front_end_week_number]
+	, wlf.[week_date]
+	, [day_event_count] = 0
 FROM 
 	  week_list_format AS wlf
 	  , execution_log
 UNION
 SELECT 
-	  ReportName = 'Day Name'
-	, dl.day_name
-	, dl.day_of_week
-	, front_end_week_number = NULL
-	, week_date = NULL
-	, day_event_count = 0
+	  [ReportName] = 'Day Name'
+	, dl.[day_name]
+	, dl.[day_of_week]
+	, [front_end_week_number] = NULL
+	, [week_date] = NULL
+	, [day_event_count] = 0
 FROM 
 	  day_list AS dl
 	  , execution_log
 WHERE 
 	1=1 -- change to 1=2 to hide the filler records during testing
-	AND (dl.day_of_week IN (@day_of_week)) </CommandText>
+	AND (dl.[day_of_week] IN (@day_of_week)) </CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -257,15 +257,15 @@ current_year
 AS
 (
 	SELECT 
-		  year_first_date = DATEADD(yy, DATEDIFF(yy, 0, GETDATE()), 0)
+		  [year_first_date] = DATEADD(yy, DATEDIFF(yy, 0, GETDATE()), 0)
 )
 , 
 year_end_date
 AS
 (
 	SELECT
-		  year_first_date
-		, year_last_date  =  DATEADD(yy, DATEDIFF(yy, 0, year_first_date) + 1, -1)
+		  [year_first_date]
+		, [year_last_date]  =  DATEADD(yy, DATEDIFF(yy, 0, [year_first_date]) + 1, -1)
 	FROM 
 		current_year
 )
@@ -274,31 +274,31 @@ default_values
 AS
 (
 	SELECT
-		  year_first_date
-		, year_last_date
-		, year_first_monday = DATEADD(wk, DATEDIFF(wk,0, year_first_date), 0)
-		, year_last_monday = DATEADD(wk, DATEDIFF(wk,0, year_last_date), 0)
+		  [year_first_date]
+		, [year_last_date]
+		, [year_first_monday] = DATEADD(wk, DATEDIFF(wk,0, [year_first_date]), 0)
+		, [year_last_monday] = DATEADD(wk, DATEDIFF(wk,0, [year_last_date]), 0)
 	FROM 
 		year_end_date
 )
 SELECT
-	  year_date = YEAR(year_first_date)
-	, year_first_date
-	, year_last_date
-	, year_first_monday = 
+	  [year_date] = YEAR([year_first_date])
+	, [year_first_date]
+	, [year_last_date]
+	, [year_first_monday] = 
 		CASE 
-			WHEN YEAR(year_first_date) != YEAR(year_first_monday) THEN DATEADD(d, 7, year_first_monday)
-			ELSE year_first_monday
+			WHEN YEAR([year_first_date]) != YEAR([year_first_monday]) THEN DATEADD(d, 7, [year_first_monday])
+			ELSE [year_first_monday]
 		END 
-	, year_last_monday = 
+	, [year_last_monday] = 
 		CASE 
-			WHEN YEAR(year_first_date) != YEAR(year_last_monday) THEN DATEADD(d, -7, year_last_monday)
-			ELSE year_last_monday
+			WHEN YEAR([year_first_date]) != YEAR([year_last_monday]) THEN DATEADD(d, -7, [year_last_monday])
+			ELSE [year_last_monday]
 		END 
-	, current_week_monday = DATEADD(wk, DATEDIFF(wk,0, GETDATE()), 0)
-	, null_string = '&lt;Undefined&gt;'
-	, all_value = '&lt;ALL&gt;'
-	, no_selection = '&lt;NONE&gt;'
+	, [current_week_monday] = DATEADD(wk, DATEDIFF(wk,0, GETDATE()), 0)
+	, [null_string] = '&lt;Undefined&gt;'
+	, [all_value] = '&lt;ALL&gt;'
+	, [no_selection] = '&lt;NONE&gt;'
 FROM 
 	default_values</CommandText>
       </Query>
@@ -375,13 +375,13 @@ AS
 	, ( 8, 'Shared Dataset')
 	, ( 9, 'Report Part')
 	) tbl ([TypeID], [TypeDescription]) 
-	WHERE TypeID = 2
+	WHERE [TypeID] = 2
 )
 SELECT 
-	Report_Folder = SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2)   
+	[Report_Folder] = SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)   
 FROM 
-	ReportServer.dbo.Catalog AS c WITH (NOLOCK) 
-	INNER JOIN catalog_type_description AS ctd ON ctd.TypeID = c.[Type]
+	ReportServer.dbo.[Catalog] AS c WITH (NOLOCK) 
+	INNER JOIN catalog_type_description AS ctd ON ctd.[TypeID] = c.[Type]
 UNION 
 SELECT @all_value
 ORDER BY 1</CommandText>
@@ -448,13 +448,13 @@ ORDER BY 1</CommandText>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT DISTINCT	
-	UserName = RIGHT(el.UserName,(LEN(el.UserName)-CHARINDEX('\',el.UserName)))  
+	[UserName] = RIGHT(el.[UserName],(LEN(el.[UserName])-CHARINDEX('\',el.[UserName])))  
 FROM 
-	ReportServer.dbo.ExecutionLog el 
-	INNER JOIN ReportServer.dbo.Catalog c ON el.ReportID = c.ItemID
+	ReportServer.dbo.[ExecutionLog] el 
+	INNER JOIN ReportServer.dbo.[Catalog] c ON el.[ReportID] = c.[ItemID]
 WHERE 
 	c.[TYPE] = 2
-	AND (@all_value IN (@ReportFolder) OR SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2) IN(@ReportFolder))
+	AND (@all_value IN (@ReportFolder) OR SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) IN(@ReportFolder))
 	AND (@all_value IN(@ReportName) OR c.Name  IN(@ReportName))
 UNION SELECT @all_value</CommandText>
       </Query>
@@ -474,8 +474,8 @@ UNION SELECT @all_value</CommandText>
           </QueryParameter>
         </QueryParameters>
         <CommandText>SELECT DISTINCT	
-el.Status
-FROM ReportServer.dbo.ExecutionLog el 
+el.[Status]
+FROM ReportServer.dbo.[ExecutionLog] el 
 UNION SELECT @all_value</CommandText>
       </Query>
       <Fields>
