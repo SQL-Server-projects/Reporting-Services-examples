@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Description>A list of the data sources and the reports that relate to them</Description>
   <Author>Anthony Duguid</Author>
@@ -11,7 +11,7 @@
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="DataSet">
+    <DataSet Name="DataSources">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <CommandText>/*'-------------------------------------------------------------------------
@@ -32,40 +32,42 @@ shared_datasource
 AS 
 (
 	SELECT 
-		  DsnSharedName = sds.[Name]
-		, DsnPath = sds.[Path] 
-		, DEF = CONVERT(xml, CONVERT(varbinary(max), content)) 
+		  [DsnSharedName] = sds.[Name]
+		, [DsnPath] = sds.[Path] 
+		, [DEF] = CONVERT(xml, CONVERT(varbinary(max), sds.[Content])) 
 	FROM 
 		dbo.[Catalog] AS sds 
-	WHERE sds.[Type] = 5) --&gt; 5 = Shared Datasource 
+	WHERE sds.[Type] = 5 --&gt; 5 = Shared Datasource 
+) 
 , 
-data_source_name (DsnPath, DsnSharedName, DsnConnString)
+data_source_name ([DsnPath], [DsnSharedName], [DsnConnString])
 AS
 (
 	SELECT 
-		  cn.DsnPath
-		, cn.DsnSharedName 
-		, cn.DsnConnString 
+		  cn.[DsnPath]
+		, cn.[DsnSharedName] 
+		, cn.[DsnConnString]
 	FROM 
 		(SELECT
-			  sd.DsnPath
-			, sd.DsnSharedName 
-			, DsnConnString = dsn.value('ConnectString[1]', 'varchar(150)')
+			  sd.[DsnPath]
+			, sd.[DsnSharedName]
+			, [DsnConnString] = dsn.value('ConnectString[1]', 'varchar(150)')
 		FROM 
 			shared_datasource AS sd 
 			CROSS APPLY sd.DEF.nodes('/DataSourceDefinition') AS R(dsn) 
 		) AS cn 
 )
 SELECT 
-	  DataSource = lk.[Name]
-	, dsn.DsnPath
-	, dsn.DsnConnString
-	, ReportName = c.[Name]
+	  [DataSource] = lk.[Name]
+	, dsn.[DsnPath]
+	, dsn.[DsnConnString]
+	, [ReportName] = c.[Name]
+	, [FolderUrl] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/properties/Data%20Sources/' + lk.[Name]
 FROM 
 	dbo.[Catalog] c
-	INNER JOIN dbo.DataSource ds ON c.ItemID = ds.ItemID
-	INNER JOIN dbo.[Catalog] lk ON ds.Link = lk.ItemID
-	INNER JOIN data_source_name dsn ON dsn.DsnSharedName = lk.[Name]
+	INNER JOIN dbo.[DataSource] ds ON c.[ItemID] = ds.[ItemID]
+	INNER JOIN dbo.[Catalog] lk ON ds.[Link] = lk.[ItemID]
+	INNER JOIN data_source_name dsn ON dsn.[DsnSharedName] = lk.[Name]
 WHERE 
 	c.[Type] = 2  --&gt; 2 = Reports
 	--AND dsn.DsnConnString LIKE '%Initial Catalog%=%DatabaseNameHere%' </CommandText>
@@ -86,6 +88,10 @@ WHERE
         </Field>
         <Field Name="DsnConnString">
           <DataField>DsnConnString</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FolderUrl">
+          <DataField>FolderUrl</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
@@ -131,7 +137,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -187,7 +195,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -240,7 +250,9 @@ WHERE
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <FontWeight>Medium</FontWeight>
                                     <Format>#,#.00</Format>
+                                    <Color>#5b5b5b</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -287,11 +299,19 @@ WHERE
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image8">
+                        <Image Name="imgDataSource">
                           <Source>Embedded</Source>
                           <Value>datasource</Value>
                           <Sizing>Clip</Sizing>
+                          <ActionInfo>
+                            <Actions>
+                              <Action>
+                                <Hyperlink>="javascript:void(window.open('"+ Fields!FolderUrl.Value + "','_blank'))"</Hyperlink>
+                              </Action>
+                            </Actions>
+                          </ActionInfo>
                           <ZIndex>15</ZIndex>
+                          <ToolTip>Go to the datasource</ToolTip>
                           <Style>
                             <Border>
                               <Width>0.5pt</Width>
@@ -478,7 +498,7 @@ WHERE
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
-                        <Image Name="image9">
+                        <Image Name="imgReport">
                           <Source>Embedded</Source>
                           <Value>report</Value>
                           <Sizing>Clip</Sizing>
@@ -503,6 +523,7 @@ WHERE
                             <PaddingTop>1.5pt</PaddingTop>
                           </Style>
                         </Image>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                     <TablixCell>
@@ -663,7 +684,7 @@ WHERE
               </TablixMembers>
             </TablixRowHierarchy>
             <KeepTogether>true</KeepTogether>
-            <DataSetName>DataSet</DataSetName>
+            <DataSetName>DataSources</DataSetName>
             <Height>2.17354cm</Height>
             <Width>24.95098cm</Width>
             <Style>
@@ -788,8 +809,14 @@ dQAAAABJRU5ErkJggg==</ImageData>
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
+    <Variable Name="ColorCandyStripeEvenRow">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeOddRow">
+      <Value>WhiteSmoke</Value>
+    </Variable>
     <Variable Name="ColorTableHeader">
-      <Value>Gainsboro</Value>
+      <Value>WhiteSmoke</Value>
     </Variable>
     <Variable Name="FormatDate">
       <Value>dd-MMM-yyyy</Value>
