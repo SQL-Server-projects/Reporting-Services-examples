@@ -1,6 +1,7 @@
 /*------------------------------------------------------------------------------+
 | Purpose:	How to Update the owner of deployed reports and subscriptions 
 | Note:		SQLCmdMode Script
+| Reference: 	http://www.andrewjbillings.com/ssrs-migration-subscriptions-dont-work-if-owner-no-longer-exists/
 +--------------------------------------------------------------------------------
 :setvar _server "Server1"
 :setvar _user "***username***"
@@ -18,164 +19,47 @@ SET XACT_ABORT ON
 BEGIN TRANSACTION
 
 PRINT '====================================================================='
-PRINT 'Find subscriptions for user...'
-PRINT '====================================================================='
-
-;WITH 
-user_list
-AS
-(
-	SELECT UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
-)
---SELECT 'BEFORE', * FROM user_list
-SELECT 
-	  'BEFORE'
-	, ul.UserName
-	, sb.*
-FROM 
-dbo.Subscriptions sb
-INNER JOIN user_list ul ON sb.OwnerID = ul.UserID
-
-PRINT '====================================================================='
 PRINT 'Update subscriptions...'
 PRINT '====================================================================='
 
 ;WITH 
-user_old
+new_owner
 AS
 (
-	SELECT Old_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
+    SELECT UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
 )
 , 
-user_new
+subscription_source
 AS
 (
-	SELECT New_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
+    SELECT DISTINCT
+          s.[Report_OID]
+        , [OldOwner] = ou.UserName
+        , [OldOwnerID] = ou.UserID
+        , [NewOwner] = nu.UserName
+        , [NewOwnerID] = nu.UserID
+    FROM 
+        dbo.Subscriptions AS s
+        INNER JOIN dbo.Users AS ou ON ou.[UserID] = s.[OwnerID]
+        , new_owner AS nu
+    WHERE 
+        1=1
+        AND ou.[UserName] =  N'$(OldUser)'
 )
---SELECT 
---	  uo.UserName 
---	, un.UserName 
-UPDATE 
-	dbo.Subscriptions 
-SET 
-	OwnerID = un.New_UserID 
-FROM 
-	dbo.Subscriptions sb
-	INNER JOIN user_old uo ON sb.OwnerID = uo.Old_UserID
-	, user_new un
-
-PRINT '====================================================================='
-PRINT 'Update reports...'
-PRINT '====================================================================='
-
-;WITH 
-user_old
-AS
-(
-	SELECT Old_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
-)
-, 
-user_new
-AS
-(
-	SELECT New_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
-)
-UPDATE 
-	dbo.Catalog 
-SET 
-	CreatedById = un.New_UserID 
-FROM  
-	dbo.Catalog AS c
-	INNER JOIN user_old uo ON c.CreatedById = uo.Old_UserID
-	, user_new un
---WHERE c.Type = 2
-
-;WITH 
-user_old
-AS
-(
-	SELECT Old_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
-)
-, 
-user_new
-AS
-(
-	SELECT New_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
-)
-UPDATE 
-	dbo.Catalog 
-SET 
-	ModifiedById = un.New_UserID 
-FROM  
-	dbo.Catalog AS c
-	INNER JOIN user_old uo ON c.ModifiedById = uo.Old_UserID
-	, user_new un
---WHERE c.Type = 2
-
-;WITH 
-user_old
-AS
-(
-	SELECT Old_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
-)
-, 
-user_new
-AS
-(
-	SELECT New_UserID = UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
-)
-SELECT 
-	  c.CreatedById
-	, c.ModifiedById
-	, uo.UserName 
-	, un.UserName 
-	, c.*
-FROM  
-	dbo.Catalog AS c
-	INNER JOIN user_old uo ON c.CreatedById = uo.Old_UserID
-	, user_new un
-
-PRINT '====================================================================='
-PRINT 'Find OLD subscriptions for user...'
-PRINT '====================================================================='
-
-;WITH 
-user_list
-AS
-(
-	SELECT UserID, UserName FROM dbo.Users WHERE UserName =  N'$(OldUser)'
-)
---SELECT 'BEFORE', * FROM user_list
-SELECT 
-	  'AFTER'
-	, ul.UserName
-	, sb.*
-FROM 
-dbo.Subscriptions sb
-INNER JOIN user_list ul ON sb.OwnerID = ul.UserID
-
-PRINT '====================================================================='
-PRINT 'Find NEW subscriptions for user...'
-PRINT '====================================================================='
-
-;WITH 
-user_list
-AS
-(
-	SELECT UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
-)
---SELECT 'BEFORE', * FROM user_list
-SELECT 
-	  'AFTER'
-	, ul.UserName
-	, sb.*
-FROM 
-dbo.Subscriptions sb
-INNER JOIN user_list ul ON sb.OwnerID = ul.UserID
+--SELECT * FROM subscription_source
+MERGE dbo.Subscriptions AS T
+USING subscription_source AS S ON T.[Report_OID] = S.[Report_OID]
+WHEN MATCHED 
+THEN UPDATE SET 
+        T.[OwnerID] = S.[NewOwnerID] 
+OUTPUT @@ServerName AS ServerName, db_name() AS DatabaseName, $action, inserted.*, deleted.*; 
 
 
-ROLLBACK TRANSACTION
---COMMIT TRANSACTION   
+PRINT '******* ROLLBACK TRANSACTION ******* ';
+ROLLBACK TRANSACTION;
+
+--PRINT '******* COMMIT TRANSACTION ******* ';
+--COMMIT TRANSACTION;
 
 PRINT '====================================================================='
 PRINT 'Finished...'
