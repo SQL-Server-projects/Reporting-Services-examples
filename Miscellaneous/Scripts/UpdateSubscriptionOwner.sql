@@ -34,20 +34,20 @@ AS
 (
     SELECT DISTINCT
           s.[Report_OID]
-        , [OldOwner] = ou.UserName
-        , [OldOwnerID] = ou.UserID
-        , [NewOwner] = nu.UserName
-        , [NewOwnerID] = nu.UserID
+        , [OldOwner] = ou.[UserName]
+        , [OldOwnerID] = ou.[UserID]
+        , [NewOwner] = nu.[UserName]
+        , [NewOwnerID] = nu.[UserID]
     FROM 
-        dbo.Subscriptions AS s
-        INNER JOIN dbo.Users AS ou ON ou.[UserID] = s.[OwnerID]
+        [dbo].[Subscriptions] AS s
+        INNER JOIN [dbo].[Users] AS ou ON ou.[UserID] = s.[OwnerID]
         , new_owner AS nu
     WHERE 
         1=1
         AND ou.[UserName] =  N'$(OldUser)'
 )
 --SELECT * FROM subscription_source
-MERGE dbo.Subscriptions AS T
+MERGE [dbo].[Subscriptions] AS T
 USING subscription_source AS S ON T.[Report_OID] = S.[Report_OID]
 WHEN MATCHED 
 THEN UPDATE SET 
