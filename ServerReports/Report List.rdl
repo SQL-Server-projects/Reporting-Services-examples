@@ -986,6 +986,7 @@ ORDER BY 2, 1</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1573,6 +1574,7 @@ ORDER BY 2, 1</CommandText>
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -1612,7 +1614,7 @@ ORDER BY 2, 1</CommandText>
                 <TablixMember />
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowSql.Value = "N", True, False)</Hidden>
+                    <Hidden>=Not(Parameters!ShowSql.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
               </TablixMembers>
@@ -1864,25 +1866,13 @@ ORDER BY 2, 1</CommandText>
       <Prompt>Search For</Prompt>
     </ReportParameter>
     <ReportParameter Name="ShowSql">
-      <DataType>String</DataType>
+      <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>N</Value>
+          <Value>false</Value>
         </Values>
       </DefaultValue>
       <Prompt>Show SQL</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Y</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>N</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -2020,7 +2010,7 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
  + IIf(IsNothing(Parameters!ModifiedDate.Value), "&amp;ModifiedDate:IsNull=True", "&amp;ModifiedDate=" + Format(Parameters!ModifiedDate.Value, Variables!FormatDate.Value))
  + IIf(IsNothing(Parameters!CreatedBy.Value), "&amp;CreatedBy:IsNull=True", "&amp;CreatedBy=" + Parameters!CreatedBy.Value)
  + IIf(IsNothing(Parameters!ModifiedBy.Value), "&amp;ModifiedBy:IsNull=True", "&amp;ModifiedBy=" + Parameters!ModifiedBy.Value)
- + "&amp;ShowSql=" + Parameters!ShowSql.Value</Value>
+ + "&amp;ShowSql=" + CStr(Parameters!ShowSql.Value)</Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
