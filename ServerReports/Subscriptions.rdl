@@ -4166,52 +4166,52 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                 <TablixMember />
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowParameters.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowParameters.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember>
                   <Visibility>
-                    <Hidden>=IIF(Parameters!ShowEmailDetails.Value = "Y", False, True)</Hidden>
+                    <Hidden>=Not(Parameters!ShowEmailDetails.Value)</Hidden>
                   </Visibility>
                 </TablixMember>
                 <TablixMember />
@@ -4466,26 +4466,13 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
       <Prompt>Email Address Like</Prompt>
     </ReportParameter>
     <ReportParameter Name="ShowParameters">
-      <DataType>String</DataType>
+      <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>N</Value>
+          <Value>false</Value>
         </Values>
       </DefaultValue>
-      <AllowBlank>true</AllowBlank>
       <Prompt>Show Parameters</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Y</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>N</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="Current">
       <DataType>String</DataType>
@@ -4510,26 +4497,13 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
       </ValidValues>
     </ReportParameter>
     <ReportParameter Name="ShowEmailDetails">
-      <DataType>String</DataType>
+      <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>N</Value>
+          <Value>false</Value>
         </Values>
       </DefaultValue>
-      <AllowBlank>true</AllowBlank>
       <Prompt>Show Email Details</Prompt>
-      <ValidValues>
-        <ParameterValues>
-          <ParameterValue>
-            <Value>Y</Value>
-            <Label>Yes</Label>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>N</Value>
-            <Label>No</Label>
-          </ParameterValue>
-        </ParameterValues>
-      </ValidValues>
     </ReportParameter>
     <ReportParameter Name="LastSubscriptionDate">
       <DataType>DateTime</DataType>
@@ -4693,8 +4667,8 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
  + IIf(IsNothing(Parameters!LastSubscriptionDate.Value), "&amp;LastSubscriptionDate:IsNull=True", "&amp;LastSubscriptionDate=" + Format(Parameters!LastSubscriptionDate.Value, Variables!FormatDate.Value))
  + "&amp;SubscriptionStatus=" + Parameters!SubscriptionStatus.Value
  + "&amp;Current=" + Parameters!Current.Value
- + "&amp;ShowParameters=" + Parameters!ShowParameters.Value
- + "&amp;ShowEmailDetails=" + Parameters!ShowEmailDetails.Value</Value>
+ + "&amp;ShowParameters=" + CStr(Parameters!ShowParameters.Value)
+ + "&amp;ShowEmailDetails=" + CStr(Parameters!ShowEmailDetails.Value)</Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
