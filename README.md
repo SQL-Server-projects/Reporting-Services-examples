@@ -7,7 +7,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © Anthony Duguid")
 [![Latest Release](https://img.shields.io/github/release/SQL-Server-projects/Reporting-Services-examples.svg?label=latest%20release)](https://github.com/SQL-Server-projects/Reporting-Services-examples/releases)
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/SQL-Server-projects/Reporting-Services-examples/latest.svg)](https://github.com/SQL-Server-projects/Reporting-Services-examples)
-![current_build SSRS_2016](https://img.shields.io/badge/current_build-SSRS_2016-red.svg)
+![current_build 2016](https://img.shields.io/badge/current_build-2016-red.svg)
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 <!---
