@@ -100,7 +100,7 @@ AS
 		, rpt.[Type]
 		, rpt.[Name] 
 		, rpt.[Description]
-		, rpt.Parameter
+		, rpt.[Parameter]
 		, [CreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[CreationDate], 13))
 		, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
 		, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
@@ -115,7 +115,7 @@ AS
 		AND rpt.[Type] = 2
 )
 SELECT    
-	  rpt.ItemID
+	  rpt.[ItemID]
 	, rpt.[Name]
 	, rpt.[Description]
 	, rpt.[Parameter]
