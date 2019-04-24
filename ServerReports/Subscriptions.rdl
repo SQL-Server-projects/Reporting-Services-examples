@@ -99,7 +99,7 @@ SET @Current = '&lt;ALL&gt;'
           --, [UrlPath] = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
           --, [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))
           FROM
-          dbo.[Catalog] AS c
+          ReportServer.dbo.[Catalog] AS c
           WHERE c.[Type] = 2
           )
           ,
@@ -241,7 +241,7 @@ SET @Current = '&lt;ALL&gt;'
           END
           --, sc.[RecurrenceType]
           FROM
-          dbo.[Schedule] sc
+          ReportServer.dbo.[Schedule] sc
           LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
           LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
           LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
@@ -282,129 +282,129 @@ SET @Current = '&lt;ALL&gt;'
 		, [EmailIncludeLink] = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
 		, [EmailRenderFormat] = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
 		, [EmailPriority] = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, sch.[MinutesInterval]
-		, sch.[DaysInterval]
-		, sch.[WeeksInterval]
-		, sch.[DaysOfWeek]
-		, sch.[DaysOfMonth]
-		, sch.[Month]
-		, sch.[MonthlyWeek] 
-		--, [JobName] = sj.[name] 
-		, sch.[ScheduleName]
-		, sch.[ScheduleDays]
-		, sch.[SchDaySun]
-		, sch.[SchDayMon]
-		, sch.[SchDayTue]
-		, sch.[SchDayWed]
-		, sch.[SchDayThr]
-		, sch.[SchDayFri]
-		, sch.[SchDaySat]
-		, sch.[ScheduleStartDate]
-		, sch.[ScheduleEndDate] 
-		, sch.[Flags]
-		, sch.[RecurrenceType]
-		, sch.[State]
-	FROM  
-		dbo.[Subscriptions] AS s 
-		LEFT JOIN dbo.[Notifications] AS n ON n.[SubscriptionID] = s.[SubscriptionID] AND s.[Report_OID] = n.[ReportID]
-		LEFT JOIN dbo.[ReportSchedule] AS rs ON s.[SubscriptionID] = rs.[SubscriptionID] 
-		--LEFT JOIN MSDB.dbo.[sysjobs] AS sj ON sj.[name] = CAST(rs.[ScheduleID] AS VARCHAR(255))
-		LEFT JOIN subscription_schedule AS sch ON rs.[ScheduleID] = sch.[ScheduleID]
-	WHERE 
-		1=1
-		--AND sch.[RecurrenceType] IN(4,5) -- 1 = is one off, 4 = daily, 5 = monthly
-		--AND s.[EventType] = 'TimedSubscription' 
-)
-SELECT     
-	  c.[Name] 
-	, c.[Description] 
-	, c.[Parameter] 	
-	, c.[ReportFolder]
-	, c.[ReportPath] 
-	, [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
+          , sch.[MinutesInterval]
+          , sch.[DaysInterval]
+          , sch.[WeeksInterval]
+          , sch.[DaysOfWeek]
+          , sch.[DaysOfMonth]
+          , sch.[Month]
+          , sch.[MonthlyWeek]
+          --, [JobName] = sj.[name]
+          , sch.[ScheduleName]
+          , sch.[ScheduleDays]
+          , sch.[SchDaySun]
+          , sch.[SchDayMon]
+          , sch.[SchDayTue]
+          , sch.[SchDayWed]
+          , sch.[SchDayThr]
+          , sch.[SchDayFri]
+          , sch.[SchDaySat]
+          , sch.[ScheduleStartDate]
+          , sch.[ScheduleEndDate]
+          , sch.[Flags]
+          , sch.[RecurrenceType]
+          , sch.[State]
+          FROM
+          ReportServer.dbo.[Subscriptions] AS s
+          LEFT JOIN ReportServer.dbo.[Notifications] AS n ON n.[SubscriptionID] = s.[SubscriptionID] AND s.[Report_OID] = n.[ReportID]
+          LEFT JOIN ReportServer.dbo.[ReportSchedule] AS rs ON s.[SubscriptionID] = rs.[SubscriptionID]
+          --LEFT JOIN MSDB.dbo.[sysjobs] AS sj ON sj.[name] = CAST(rs.[ScheduleID] AS VARCHAR(255))
+          LEFT JOIN subscription_schedule AS sch ON rs.[ScheduleID] = sch.[ScheduleID]
+          WHERE
+          1=1
+          --AND sch.[RecurrenceType] IN(4,5) -- 1 = is one off, 4 = daily, 5 = monthly
+          --AND s.[EventType] = 'TimedSubscription'
+          )
+          SELECT
+          c.[Name]
+          , c.[Description]
+          , c.[Parameter]
+          , c.[ReportFolder]
+          , c.[ReportPath]
+          , [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
   , [URL_Report] = '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
   , [URL] = '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
   , [URL2] = '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
   --, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
   --, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
   --, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
-	, [ReportCreatedBy] = urc.[SimpleUserName]
-	, c.[ReportCreationDate]
-	, [ReportModifiedBy] = urm.[SimpleUserName]
-	, c.[ReportModifiedDate]	
-	, [SubscriptionOwner] = usc.[SimpleUserName]
-	, [SubscriptionModifiedBy] = usm.[SimpleUserName]
-	, [SubscriptionModifiedDate] = s.[ModifiedDate] 	
-	, s.[SubscriptionID]
-	, s.[SubscriptionDescription] 
-	, s.[ExtensionSettings]
-	, s.[EventType]
-	, s.[EmailSubject] 
-	, s.[EmailTo] 
-	, s.[EmailCc] 
-	, s.[EmailBcc] 
-	, s.[EmailComment] 
-	, s.[EmailIncludeLink] 
-	, s.[EmailRenderFormat] 
-	, s.[EmailPriority] 
-	, s.[DeliveryExtension]	
-	, s.[SubscriptionLastStatus]
-	, s.[StatusFail] 
-	, s.[MatchData]	
-	, s.[RunTime] 
-	, s.[LastRunDate]
-	, s.[LastRunTime]	
-	, s.[MinutesInterval]
-	, s.[DaysInterval]
-	, s.[WeeksInterval]
-	, s.[DaysOfWeek]
-	, s.[DaysOfMonth]
-	, s.[Month]
-	, s.[MonthlyWeek] 	
-	, [JobName] = NULL  --, s.[JobName] 	
-	, s.[ScheduleName] 
-	, s.[ScheduleDays]
-	, s.[SchDaySun]
-	, s.[SchDayMon]
-	, s.[SchDayTue]
-	, s.[SchDayWed]
-	, s.[SchDayThr]
-	, s.[SchDayFri]
-	, s.[SchDaySat]
-	, s.[ScheduleStartDate]
-	, s.[ScheduleEndDate]
-	, s.[Flags]
-	, s.[RecurrenceType]
-	, s.[State]
-	, [EventStatus] = el.[Status]
-	, [EventDateTime] = el.[TimeEnd] 
-FROM  
-	report_catalog AS c
-	INNER JOIN report_subscription AS s ON s.[Report_OID] = c.[ItemID] 
-	LEFT JOIN 
-			(
-			SELECT 
-				  b.[ReportID]
-				, b.[Status]
-				, b.[TimeEnd]
-				, [LastRunTime] = CAST(CONVERT(CHAR(16), b.[TimeEnd], 113) AS DATETIME)
-			FROM 
-				dbo.[ExecutionLog] b 
-				INNER JOIN (SELECT [ReportID], MAX([TimeEnd]) AS [TimeEnd] FROM dbo.[ExecutionLog] GROUP BY [ReportID]) a ON b.[ReportID] = a.[ReportID] AND b.[TimeEnd] = a.[TimeEnd]
-			GROUP BY
-				  b.[ReportID]
-				, b.[Status]
-				, b.[TimeEnd]
-			)AS el ON el.[ReportID] = c.[ItemID]
-	LEFT JOIN report_users AS urc ON c.[CreatedById] = urc.[UserID] 
-	LEFT JOIN report_users AS urm ON c.[ModifiedById] = urm.[UserID] 
-	LEFT JOIN report_users AS usc ON s.[OwnerID] = usc.[UserID] 
-	LEFT JOIN report_users AS usm ON s.[ModifiedByID] = usm.[UserID] 
-WHERE 
-	1=1
-	AND c.[Type] = 2
-	AND (@all_value IN (@ReportFolder) OR c.[ReportFolder] IN(@ReportFolder))
-	AND (@all_value IN (@ReportFolder) OR CHARINDEX(@ReportFolder, c.[ReportPath]) &gt; 0)
+          , [ReportCreatedBy] = urc.[SimpleUserName]
+          , c.[ReportCreationDate]
+          , [ReportModifiedBy] = urm.[SimpleUserName]
+          , c.[ReportModifiedDate]
+          , [SubscriptionOwner] = usc.[SimpleUserName]
+          , [SubscriptionModifiedBy] = usm.[SimpleUserName]
+          , [SubscriptionModifiedDate] = s.[ModifiedDate]
+          , s.[SubscriptionID]
+          , s.[SubscriptionDescription]
+          , s.[ExtensionSettings]
+          , s.[EventType]
+          , s.[EmailSubject]
+          , s.[EmailTo]
+          , s.[EmailCc]
+          , s.[EmailBcc]
+          , s.[EmailComment]
+          , s.[EmailIncludeLink]
+          , s.[EmailRenderFormat]
+          , s.[EmailPriority]
+          , s.[DeliveryExtension]
+          , s.[SubscriptionLastStatus]
+          , s.[StatusFail]
+          , s.[MatchData]
+          , s.[RunTime]
+          , s.[LastRunDate]
+          , s.[LastRunTime]
+          , s.[MinutesInterval]
+          , s.[DaysInterval]
+          , s.[WeeksInterval]
+          , s.[DaysOfWeek]
+          , s.[DaysOfMonth]
+          , s.[Month]
+          , s.[MonthlyWeek]
+          , [JobName] = NULL  --, s.[JobName]
+          , s.[ScheduleName]
+          , s.[ScheduleDays]
+          , s.[SchDaySun]
+          , s.[SchDayMon]
+          , s.[SchDayTue]
+          , s.[SchDayWed]
+          , s.[SchDayThr]
+          , s.[SchDayFri]
+          , s.[SchDaySat]
+          , s.[ScheduleStartDate]
+          , s.[ScheduleEndDate]
+          , s.[Flags]
+          , s.[RecurrenceType]
+          , s.[State]
+          , [EventStatus] = el.[Status]
+          , [EventDateTime] = el.[TimeEnd]
+          FROM
+          report_catalog AS c
+          INNER JOIN report_subscription AS s ON s.[Report_OID] = c.[ItemID]
+          LEFT JOIN
+          (
+          SELECT
+          b.[ReportID]
+          , b.[Status]
+          , b.[TimeEnd]
+          , [LastRunTime] = CAST(CONVERT(CHAR(16), b.[TimeEnd], 113) AS DATETIME)
+          FROM
+          ReportServer.dbo.[ExecutionLog] b
+          INNER JOIN (SELECT [ReportID], MAX([TimeEnd]) AS [TimeEnd] FROM ReportServer.dbo.[ExecutionLog] GROUP BY [ReportID]) a ON b.[ReportID] = a.[ReportID] AND b.[TimeEnd] = a.[TimeEnd]
+          GROUP BY
+          b.[ReportID]
+          , b.[Status]
+          , b.[TimeEnd]
+          )AS el ON el.[ReportID] = c.[ItemID]
+          LEFT JOIN report_users AS urc ON c.[CreatedById] = urc.[UserID]
+          LEFT JOIN report_users AS urm ON c.[ModifiedById] = urm.[UserID]
+          LEFT JOIN report_users AS usc ON s.[OwnerID] = usc.[UserID]
+          LEFT JOIN report_users AS usm ON s.[ModifiedByID] = usm.[UserID]
+          WHERE
+          1=1
+          AND c.[Type] = 2
+          AND (@all_value IN (@ReportFolder) OR c.[ReportFolder] IN(@ReportFolder))
+          AND (@all_value IN (@ReportFolder) OR CHARINDEX(@ReportFolder, c.[ReportPath]) &gt; 0)
 	AND (@all_value IN(@ReportName) OR c.[Name] IN(@ReportName))
 	AND (@all_value IN(@EventStatus) OR el.[Status] IN(@EventStatus))
 	AND (@all_value IN(@Current) OR CASE WHEN s.[ScheduleEndDate] IS NULL THEN 'Current' WHEN s.[ScheduleEndDate] IS NOT NULL THEN 'Non Current' END = @Current)
