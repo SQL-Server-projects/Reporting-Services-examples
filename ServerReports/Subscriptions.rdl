@@ -417,7 +417,7 @@ WHERE
 				WHEN 0 THEN '' 
 				ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]))) 
 			END 
-		LIKE '%' + @EmailLike + '%'
+			LIKE '%' + @EmailLike + '%'
 		)
 		OR 
 		(
@@ -425,8 +425,9 @@ WHERE
 				WHEN 0 THEN '' 
 				ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]))) 
 			END 
-		LIKE '%' + @EmailLike + '%')
-		)</CommandText>
+			LIKE '%' + @EmailLike + '%'
+		)
+		</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
