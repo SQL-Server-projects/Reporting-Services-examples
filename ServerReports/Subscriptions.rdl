@@ -64,216 +64,217 @@ SET @ModifiedBy = NULL
 SET @SubcriptionOwner = NULL
 SET @SubscriptionStatus = 'A' -- Y=Sent, N=Fail, A=All
 SET @EventStatus = '&lt;ALL&gt;'  -- status from ReportServer.dbo.[ExecutionLog] 
-SET @Current = '&lt;ALL&gt;' 
-SET @LastSubscriptionDate = NULL --getdate()-1
+SET @Current = '&lt;ALL&gt;'
+          SET @LastSubscriptionDate = NULL --getdate()-1
 
-*/
+          */
 
-;WITH
-report_users 
-AS
-(
-	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
-)
-,
-report_catalog
-AS
-(
-	SELECT    
-		  c.[ItemID]
-		, c.[CreatedById]
-		, c.[ModifiedById]
-		, c.[Type]
-		, c.[Name]
-		, c.[Description]
-		, c.[Parameter]
-		, [ReportCreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[CreationDate], 13))
-		, [ReportModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[ModifiedDate], 13))
-		, [ReportFolder] = 
-			CASE
-				WHEN c.Path = '/' + c.Name THEN ''
-				ELSE SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) 
-			END 
-		, [ReportPath] = c.[Path]
-		, [UrlPath] = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
-		, [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))  
-	FROM 
-		dbo.[Catalog] AS c
-	WHERE c.[Type] = 2
-)
-, 
-subscription_days
-AS
-(
-	SELECT tbl.* FROM (VALUES
-	  ( 'DaysOfMonth', 1, '1')
-	, ( 'DaysOfMonth', 2, '2')
-	, ( 'DaysOfMonth', 4, '3')
-	, ( 'DaysOfMonth', 8, '4')
-	, ( 'DaysOfMonth', 16, '5')
-	, ( 'DaysOfMonth', 32, '6')
-	, ( 'DaysOfMonth', 64, '7')
-	, ( 'DaysOfMonth', 128, '8')
-	, ( 'DaysOfMonth', 256, '9')
-	, ( 'DaysOfMonth', 512, '10')
-	, ( 'DaysOfMonth', 1024, '11')
-	, ( 'DaysOfMonth', 2048, '12')
-	, ( 'DaysOfMonth', 4096, '13')
-	, ( 'DaysOfMonth', 8192, '14')
-	, ( 'DaysOfMonth', 16384, '15')
-	, ( 'DaysOfMonth', 32768, '16')
-	, ( 'DaysOfMonth', 65536, '17')
-	, ( 'DaysOfMonth', 131072, '18')
-	, ( 'DaysOfMonth', 262144, '19')
-	, ( 'DaysOfMonth', 524288, '20')
-	, ( 'DaysOfMonth', 1048576, '21')
-	, ( 'DaysOfMonth', 2097152, '22')
-	, ( 'DaysOfMonth', 4194304, '23')
-	, ( 'DaysOfMonth', 8388608, '24')
-	, ( 'DaysOfMonth', 16777216, '25')
-	, ( 'DaysOfMonth', 33554432, '26')
-	, ( 'DaysOfMonth', 67108864, '27')
-	, ( 'DaysOfMonth', 134217728, '28')
-	, ( 'DaysOfMonth', 268435456, '29')
-	, ( 'DaysOfMonth', 536870912, '30')
-	, ( 'DaysOfMonth', 1073741824, '31')
-	, ( 'DaysOfMonth', 8193, '1st and 14th')
-	, ( 'DaysOfWeek', 1, 'Sun')
-	, ( 'DaysOfWeek', 2, 'Mon')
-	, ( 'DaysOfWeek', 4, 'Tues')
-	, ( 'DaysOfWeek', 8, 'Wed')
-	, ( 'DaysOfWeek', 16, 'Thurs')
-	, ( 'DaysOfWeek', 32, 'Fri')
-	, ( 'DaysOfWeek', 64, 'Sat')
-	, ( 'DaysOfWeek', 62, 'Mon - Fri')
-	, ( 'DaysOfWeek', 10, 'Mon - Wed')
-	, ( 'DaysOfWeek', 24, 'Wed - Thurs')
-	, ( 'DaysOfWeek', 120, 'Wed - Sat')
-	, ( 'DaysOfWeek', 126, 'Mon - Sat')
-	, ( 'DaysOfWeek', 127, 'Daily')
-	, ( 'DayOfWeek', 1, 'Sun')
-	, ( 'DayOfWeek', 127, 'Sun')
-	, ( 'DayOfWeek', 2, 'Mon')
-	, ( 'DayOfWeek', 10, 'Mon')
-	, ( 'DayOfWeek', 62, 'Mon')
-	, ( 'DayOfWeek', 126, 'Mon')
-	, ( 'DayOfWeek', 127, 'Mon')
-	, ( 'DayOfWeek', 4, 'Tue')
-	, ( 'DayOfWeek', 10, 'Tue')
-	, ( 'DayOfWeek', 62, 'Tue')
-	, ( 'DayOfWeek', 126, 'Tue')
-	, ( 'DayOfWeek', 127, 'Tue')
-	, ( 'DayOfWeek', 8, 'Wed')
-	, ( 'DayOfWeek', 10, 'Wed')
-	, ( 'DayOfWeek', 24, 'Wed')
-	, ( 'DayOfWeek', 62, 'Wed')
-	, ( 'DayOfWeek', 120, 'Wed')
-	, ( 'DayOfWeek', 126, 'Wed')
-	, ( 'DayOfWeek', 127, 'Wed')
-	, ( 'DayOfWeek', 16, 'Thr')
-	, ( 'DayOfWeek', 24, 'Thr')
-	, ( 'DayOfWeek', 62, 'Thr')
-	, ( 'DayOfWeek', 120, 'Thr')
-	, ( 'DayOfWeek', 126, 'Thr')
-	, ( 'DayOfWeek', 127, 'Thr')
-	, ( 'DayOfWeek', 32, 'Fri')
-	, ( 'DayOfWeek', 62, 'Fri')
-	, ( 'DayOfWeek', 120, 'Fri')
-	, ( 'DayOfWeek', 126, 'Fri')
-	, ( 'DayOfWeek', 127, 'Fri')
-	, ( 'DayOfWeek', 64, 'Sat')
-	, ( 'DayOfWeek', 120, 'Sat')
-	, ( 'DayOfWeek', 126, 'Sat')
-	, ( 'DayOfWeek', 127, 'Sat')
-	) tbl ([GroupName], [CodeNbr], [Label]) 
-)
-,
-subscription_schedule
-AS
-(
-	SELECT 
-		  [ScheduleID]
-		, [SchDaySun] = Sun
-		, [SchDayMon] = Mon
-		, [SchDayTue] = Tue
-		, [SchDayWed] = Wed
-		, [SchDayThr] = Thr
-		, [SchDayFri] = Fri
-		, [SchDaySat] = Sat
-		, [ScheduleName]
-		, [ScheduleStartDate]
-		, [ScheduleEndDate]
-		, [Flags]
-		, [RecurrenceType]
-		, [State]
-		, [MinutesInterval]
-		, [DaysInterval]
-		, [WeeksInterval]
-		, [DaysOfWeek]
-		, [DaysOfMonth]
-		, [Month]
-		, [MonthlyWeek]
-		, [ScheduleDays]
-	FROM
-		(
-		SELECT 
-			  sc.[ScheduleID]
-			, sd.[CodeNbr]
-			, sd.[Label]
-			, [ScheduleName] = sc.[name]
-			, [ScheduleStartDate] = sc.[StartDate]
-			, [ScheduleEndDate] = sc.[EndDate]
-			, sc.[Flags]
-			, sc.[RecurrenceType]
-			, sc.[State]
-			, sc.[MinutesInterval]
-			, sc.[DaysInterval]
-			, sc.[WeeksInterval]
-			, sc.[DaysOfWeek]
-			, sc.[DaysOfMonth]
-			, sc.[Month]
-			, sc.[MonthlyWeek] 
-			, [ScheduleDays] = 
-				CASE
-					WHEN sc.[DaysOfMonth] IS NOT NULL THEN COALESCE(dom.[Label], '(' + CAST(sc.[DaysOfMonth] AS VARCHAR(20)) + ') NOT CODED')
-					WHEN sc.[DaysOfWeek] IS NOT NULL THEN COALESCE(dow.[Label], '(' + CAST(sc.[DaysOfWeek] AS VARCHAR(20)) + ') NOT CODED')
-				END 
-			--, sc.[RecurrenceType]
-		FROM 
-			dbo.[Schedule] sc 
-			LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
-			LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
-			LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
-		) sch
-		PIVOT
-		(
-			COUNT(sch.[Label]) 
-			FOR sch.[Label]
-			IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
-		) AS pvt
-)
-,
-report_subscription
-AS
-(
-	SELECT     
-		  s.[SubscriptionID]
-		, s.[Report_OID]
-		, [SubscriptionDescription] = s.[Description]
-		, s.[ExtensionSettings]
-		, s.[EventType]
-		, s.[OwnerID]
-		, s.[ModifiedByID]
-		, s.[ModifiedDate]	
-		, [RunTime] = CONVERT(VARCHAR(5), s.[LastRunTime], 8)
-		, [LastRunDate] = CONVERT(VARCHAR(11), s.[LastRunTime], 13)
-		--, s.[LastRunTime]
-		, [LastRunTime] = CAST(CONVERT(CHAR(16), s.[LastRunTime], 113) AS DATETIME)
-		, s.[DeliveryExtension]		
-		, s.[MatchData]	
-		, [SubscriptionLastStatus] = s.[LastStatus]		
-		, [StatusFail] = CASE WHEN s.[LastStatus] LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END		
-		, [EmailSubject] = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+          ;WITH
+          report_users
+          AS
+          (
+          SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
+          )
+          ,
+          report_catalog
+          AS
+          (
+          SELECT
+          c.[ItemID]
+          , c.[CreatedById]
+          , c.[ModifiedById]
+          , c.[Type]
+          , c.[Name]
+          , c.[Description]
+          , c.[Parameter]
+          , [ReportCreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[CreationDate], 13))
+          , [ReportModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), c.[ModifiedDate], 13))
+          , [ReportFolder] =
+          CASE
+          WHEN c.Path = '/' + c.Name THEN ''
+          ELSE SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
+          END
+          , [ReportPath] = c.[Path]
+          , [UrlPath] = '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+          --, [UrlPath] = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+          --, [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))
+          FROM
+          dbo.[Catalog] AS c
+          WHERE c.[Type] = 2
+          )
+          ,
+          subscription_days
+          AS
+          (
+          SELECT tbl.* FROM (VALUES
+          ( 'DaysOfMonth', 1, '1')
+          , ( 'DaysOfMonth', 2, '2')
+          , ( 'DaysOfMonth', 4, '3')
+          , ( 'DaysOfMonth', 8, '4')
+          , ( 'DaysOfMonth', 16, '5')
+          , ( 'DaysOfMonth', 32, '6')
+          , ( 'DaysOfMonth', 64, '7')
+          , ( 'DaysOfMonth', 128, '8')
+          , ( 'DaysOfMonth', 256, '9')
+          , ( 'DaysOfMonth', 512, '10')
+          , ( 'DaysOfMonth', 1024, '11')
+          , ( 'DaysOfMonth', 2048, '12')
+          , ( 'DaysOfMonth', 4096, '13')
+          , ( 'DaysOfMonth', 8192, '14')
+          , ( 'DaysOfMonth', 16384, '15')
+          , ( 'DaysOfMonth', 32768, '16')
+          , ( 'DaysOfMonth', 65536, '17')
+          , ( 'DaysOfMonth', 131072, '18')
+          , ( 'DaysOfMonth', 262144, '19')
+          , ( 'DaysOfMonth', 524288, '20')
+          , ( 'DaysOfMonth', 1048576, '21')
+          , ( 'DaysOfMonth', 2097152, '22')
+          , ( 'DaysOfMonth', 4194304, '23')
+          , ( 'DaysOfMonth', 8388608, '24')
+          , ( 'DaysOfMonth', 16777216, '25')
+          , ( 'DaysOfMonth', 33554432, '26')
+          , ( 'DaysOfMonth', 67108864, '27')
+          , ( 'DaysOfMonth', 134217728, '28')
+          , ( 'DaysOfMonth', 268435456, '29')
+          , ( 'DaysOfMonth', 536870912, '30')
+          , ( 'DaysOfMonth', 1073741824, '31')
+          , ( 'DaysOfMonth', 8193, '1st and 14th')
+          , ( 'DaysOfWeek', 1, 'Sun')
+          , ( 'DaysOfWeek', 2, 'Mon')
+          , ( 'DaysOfWeek', 4, 'Tues')
+          , ( 'DaysOfWeek', 8, 'Wed')
+          , ( 'DaysOfWeek', 16, 'Thurs')
+          , ( 'DaysOfWeek', 32, 'Fri')
+          , ( 'DaysOfWeek', 64, 'Sat')
+          , ( 'DaysOfWeek', 62, 'Mon - Fri')
+          , ( 'DaysOfWeek', 10, 'Mon - Wed')
+          , ( 'DaysOfWeek', 24, 'Wed - Thurs')
+          , ( 'DaysOfWeek', 120, 'Wed - Sat')
+          , ( 'DaysOfWeek', 126, 'Mon - Sat')
+          , ( 'DaysOfWeek', 127, 'Daily')
+          , ( 'DayOfWeek', 1, 'Sun')
+          , ( 'DayOfWeek', 127, 'Sun')
+          , ( 'DayOfWeek', 2, 'Mon')
+          , ( 'DayOfWeek', 10, 'Mon')
+          , ( 'DayOfWeek', 62, 'Mon')
+          , ( 'DayOfWeek', 126, 'Mon')
+          , ( 'DayOfWeek', 127, 'Mon')
+          , ( 'DayOfWeek', 4, 'Tue')
+          , ( 'DayOfWeek', 10, 'Tue')
+          , ( 'DayOfWeek', 62, 'Tue')
+          , ( 'DayOfWeek', 126, 'Tue')
+          , ( 'DayOfWeek', 127, 'Tue')
+          , ( 'DayOfWeek', 8, 'Wed')
+          , ( 'DayOfWeek', 10, 'Wed')
+          , ( 'DayOfWeek', 24, 'Wed')
+          , ( 'DayOfWeek', 62, 'Wed')
+          , ( 'DayOfWeek', 120, 'Wed')
+          , ( 'DayOfWeek', 126, 'Wed')
+          , ( 'DayOfWeek', 127, 'Wed')
+          , ( 'DayOfWeek', 16, 'Thr')
+          , ( 'DayOfWeek', 24, 'Thr')
+          , ( 'DayOfWeek', 62, 'Thr')
+          , ( 'DayOfWeek', 120, 'Thr')
+          , ( 'DayOfWeek', 126, 'Thr')
+          , ( 'DayOfWeek', 127, 'Thr')
+          , ( 'DayOfWeek', 32, 'Fri')
+          , ( 'DayOfWeek', 62, 'Fri')
+          , ( 'DayOfWeek', 120, 'Fri')
+          , ( 'DayOfWeek', 126, 'Fri')
+          , ( 'DayOfWeek', 127, 'Fri')
+          , ( 'DayOfWeek', 64, 'Sat')
+          , ( 'DayOfWeek', 120, 'Sat')
+          , ( 'DayOfWeek', 126, 'Sat')
+          , ( 'DayOfWeek', 127, 'Sat')
+          ) tbl ([GroupName], [CodeNbr], [Label])
+          )
+          ,
+          subscription_schedule
+          AS
+          (
+          SELECT
+          [ScheduleID]
+          , [SchDaySun] = Sun
+          , [SchDayMon] = Mon
+          , [SchDayTue] = Tue
+          , [SchDayWed] = Wed
+          , [SchDayThr] = Thr
+          , [SchDayFri] = Fri
+          , [SchDaySat] = Sat
+          , [ScheduleName]
+          , [ScheduleStartDate]
+          , [ScheduleEndDate]
+          , [Flags]
+          , [RecurrenceType]
+          , [State]
+          , [MinutesInterval]
+          , [DaysInterval]
+          , [WeeksInterval]
+          , [DaysOfWeek]
+          , [DaysOfMonth]
+          , [Month]
+          , [MonthlyWeek]
+          , [ScheduleDays]
+          FROM
+          (
+          SELECT
+          sc.[ScheduleID]
+          , sd.[CodeNbr]
+          , sd.[Label]
+          , [ScheduleName] = sc.[name]
+          , [ScheduleStartDate] = sc.[StartDate]
+          , [ScheduleEndDate] = sc.[EndDate]
+          , sc.[Flags]
+          , sc.[RecurrenceType]
+          , sc.[State]
+          , sc.[MinutesInterval]
+          , sc.[DaysInterval]
+          , sc.[WeeksInterval]
+          , sc.[DaysOfWeek]
+          , sc.[DaysOfMonth]
+          , sc.[Month]
+          , sc.[MonthlyWeek]
+          , [ScheduleDays] =
+          CASE
+          WHEN sc.[DaysOfMonth] IS NOT NULL THEN COALESCE(dom.[Label], '(' + CAST(sc.[DaysOfMonth] AS VARCHAR(20)) + ') NOT CODED')
+          WHEN sc.[DaysOfWeek] IS NOT NULL THEN COALESCE(dow.[Label], '(' + CAST(sc.[DaysOfWeek] AS VARCHAR(20)) + ') NOT CODED')
+          END
+          --, sc.[RecurrenceType]
+          FROM
+          dbo.[Schedule] sc
+          LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
+          LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
+          LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
+          ) sch
+          PIVOT
+          (
+          COUNT(sch.[Label])
+          FOR sch.[Label]
+          IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
+          ) AS pvt
+          )
+          ,
+          report_subscription
+          AS
+          (
+          SELECT
+          s.[SubscriptionID]
+          , s.[Report_OID]
+          , [SubscriptionDescription] = s.[Description]
+          , s.[ExtensionSettings]
+          , s.[EventType]
+          , s.[OwnerID]
+          , s.[ModifiedByID]
+          , s.[ModifiedDate]
+          , [RunTime] = CONVERT(VARCHAR(5), s.[LastRunTime], 8)
+          , [LastRunDate] = CONVERT(VARCHAR(11), s.[LastRunTime], 13)
+          --, s.[LastRunTime]
+          , [LastRunTime] = CAST(CONVERT(CHAR(16), s.[LastRunTime], 113) AS DATETIME)
+          , s.[DeliveryExtension]
+          , s.[MatchData]
+          , [SubscriptionLastStatus] = s.[LastStatus]
+          , [StatusFail] = CASE WHEN s.[LastStatus] LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END
+          , [EmailSubject] = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
 		, [EmailTo] = CASE CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
 		, [EmailCc] = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
 		, [EmailBcc] = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
@@ -321,9 +322,12 @@ SELECT
 	, c.[ReportFolder]
 	, c.[ReportPath] 
 	, [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
-	, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
-	, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80)) 
-	, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'  
+  , [URL_Report] = '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+  , [URL] = '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+  , [URL2] = '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
+  --, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+  --, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+  --, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
 	, [ReportCreatedBy] = urc.[SimpleUserName]
 	, c.[ReportCreationDate]
 	, [ReportModifiedBy] = urm.[SimpleUserName]
@@ -408,7 +412,10 @@ WHERE
 	AND (s.[LastRunTime] &gt;= @LastSubscriptionDate OR @LastSubscriptionDate IS NULL)	
 	AND 
 		(
-			(SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
+			CASE CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) 
+				WHEN 0 THEN '' 
+				ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]))) 
+			END 
 			LIKE '%' + @EmailLike + '%' OR @EmailLike IS NULL
 		)
 		OR
@@ -759,7 +766,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <Width>0.62146cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.61635cm</Width>
+                  <Width>6.78593cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.61219cm</Width>
@@ -843,22 +850,22 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   <Width>10.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.25cm</Width>
+                  <Width>2.99083cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.25cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>3.5cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>2.67333cm</Width>
+                  <Width>2.99083cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>2.77917cm</Width>
+                  <Width>2.99083cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>3.5cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.99083cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.50002cm</Width>
@@ -2788,7 +2795,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_ReportFolder.Value + "','_blank'))"</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Variables!ReportServer.Value + Fields!URL_ReportFolder.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2868,7 +2875,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL_Report.Value + "','_blank'))"</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Variables!ReportServer.Value + Fields!URL_Report.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2952,7 +2959,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>="javascript:void(window.open('" + Fields!URL.Value + "','_blank'))"</Hyperlink>
+                                    <Hyperlink>="javascript:void(window.open('" + Variables!ReportServer.Value + Fields!URL.Value + "','_blank'))"</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -4261,7 +4268,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>1.5cm</Height>
-            <Width>130.34399cm</Width>
+            <Width>134.52439cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -4275,7 +4282,7 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
         <Height>1.5cm</Height>
         <Style />
       </Body>
-      <Width>130.34399cm</Width>
+      <Width>135.39753cm</Width>
       <Page>
         <PageFooter>
           <Height>1cm</Height>
@@ -4325,7 +4332,15 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Variables!UrlReport.Value</Value>
+                      <Label>Link to this report (with supplied parameters)</Label>
+                      <Value>Link to this report (with supplied parameters)</Value>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -4339,13 +4354,6 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <ActionInfo>
-                <Actions>
-                  <Action>
-                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
-                  </Action>
-                </Actions>
-              </ActionInfo>
               <Height>1cm</Height>
               <Width>52.0823cm</Width>
               <ZIndex>1</ZIndex>
@@ -4649,12 +4657,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
         + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
       </Value>
     </Variable>
+    <Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
     <Variable Name="UrlReport">
       <Value>
-        =Globals!ReportServerUrl + "/ReportServer?"
+        =Variables!ReportServer.Value + "/ReportServer?"
         + Replace(Globals!ReportFolder, " ", "+") + "%2f"
         + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
       </Value>
