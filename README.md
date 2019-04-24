@@ -73,7 +73,7 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
-                <a href="https://github.com/aduguid/SqlServerReportingServices/blob/master/ServerDatabase/Activity%20Moniter.rdl">Activity Monitor</a>
+                <a href="https://github.com/aduguid/SqlServerReportingServices/blob/master/ServerDatabase/Activity%20Monitor.rdl">Activity Monitor</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/aduguid/SoftwarePortfolio/master/Images/ReadMe/ssrsactivitymonitor.png" align="top" width="256px" title="Activity Monitor" />
