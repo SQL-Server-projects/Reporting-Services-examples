@@ -322,12 +322,12 @@ SET @Current = '&lt;ALL&gt;'
           , c.[ReportFolder]
           , c.[ReportPath]
           , [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
-  , [URL_Report] = '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
-  , [URL] = '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
-  , [URL2] = '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
-  --, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
-  --, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
-  --, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
+		  , [URL_Report] = '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+		  , [URL] = '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+		  , [URL2] = '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
+		  --, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+		  --, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+		  --, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
           , [ReportCreatedBy] = urc.[SimpleUserName]
           , c.[ReportCreationDate]
           , [ReportModifiedBy] = urm.[SimpleUserName]
@@ -4354,8 +4354,15 @@ UNION SELECT '&lt;ALL&gt;'</CommandText>
                   </Style>
                 </Paragraph>
               </Paragraphs>
+              <ActionInfo>
+                <Actions>
+                  <Action>
+                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
+                  </Action>
+                </Actions>
+              </ActionInfo>
               <Height>1cm</Height>
-              <Width>52.0823cm</Width>
+              <Width>20.0823cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>

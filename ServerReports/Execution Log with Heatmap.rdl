@@ -70,7 +70,7 @@
 					report_users
 					AS
 					(
-					SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
+					SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM ReportServer.dbo.[Users]
 					)
 					,
 					report_catalog
@@ -91,9 +91,9 @@
 					, rpt.[Path]
 					, [URL_ReportFolder] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
 					, [URL_Report] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-					, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))
+					--, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))
 					FROM
-					dbo.Catalog AS rpt
+					ReportServer.dbo.Catalog AS rpt
 					WHERE
 					1=1
 					AND rpt.[Type] = 2
@@ -126,7 +126,7 @@
 					, [OrderbyDate] = CAST([TimeStart] AS DATETIME)
 					FROM
 					report_catalog AS rpt
-					LEFT JOIN dbo.[ExecutionLog] AS el ON el.[ReportID] = rpt.[ItemID]
+					LEFT JOIN ReportServer.dbo.[ExecutionLog] AS el ON el.[ReportID] = rpt.[ItemID]
 					LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
 					WHERE
 					1=1
@@ -475,7 +475,7 @@ AS
 report_users 
 AS
 (
-	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM ReportServer.dbo.[Users]
 )
 ,
 report_catalog
@@ -496,10 +496,10 @@ AS
 		, rpt.[Path]
 		, [URL_ReportFolder] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
 		, [URL_Report] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
+		--, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
 		, [HostName] = Host_Name()
 	FROM 
-		dbo.[Catalog] AS rpt
+		ReportServer.dbo.[Catalog] AS rpt
 	WHERE 
 		1=1
 		AND rpt.[Type] = 2
@@ -517,7 +517,7 @@ SELECT
 	, day_event_count = COUNT(rpt.[Name]) OVER (PARTITION BY CONVERT(DATE, el.TimeStart) ORDER BY CONVERT(DATE, el.TimeStart)) 
 FROM 
 	report_catalog AS rpt 
-	LEFT JOIN dbo.ExecutionLog AS el ON el.ReportID = rpt.ItemID
+	LEFT JOIN ReportServer.dbo.ExecutionLog AS el ON el.ReportID = rpt.ItemID
 	LEFT JOIN report_users AS usr ON el.UserName = usr.UserName
 WHERE 
 	1=1
@@ -3044,7 +3044,15 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Variables!UrlReport.Value</Value>
+                      <Label>Link to this report (with supplied parameters)</Label>
+                      <Value>Link to this report (with supplied parameters)</Value>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -3066,7 +3074,7 @@ WHERE
                 </Actions>
               </ActionInfo>
               <Height>1cm</Height>
-              <Width>18.75cm</Width>
+              <Width>20.0823cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -3431,12 +3439,15 @@ End Function</Code>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="UrlReport">
       <Value>
-				=Globals!ReportServerUrl + "/ReportServer?"
-				+ Replace(Globals!ReportFolder, " ", "+") + "%2f"
-				+ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
-			</Value>
+        =Variables!ReportServer.Value + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>

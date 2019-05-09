@@ -32,7 +32,7 @@ AS
 				ELSE usr.UserName 
 			END 
 	FROM 
-		dbo.Users AS usr
+		ReportServer.dbo.Users AS usr
 )
 SELECT 
 	  cat.ItemID
@@ -40,10 +40,10 @@ SELECT
 	, rol.RoleName
 	, usr.user_name_format
 FROM 
-	dbo.[Catalog] AS cat
-	LEFT JOIN dbo.PolicyUserRole AS urol ON urol.PolicyID = cat.PolicyID
-	LEFT JOIN dbo.Roles AS rol ON urol.RoleID = rol.RoleID
-	LEFT JOIN dbo.Policies AS pol ON urol.PolicyID = pol.PolicyID
+	ReportServer.dbo.[Catalog] AS cat
+	LEFT JOIN ReportServer.dbo.PolicyUserRole AS urol ON urol.PolicyID = cat.PolicyID
+	LEFT JOIN ReportServer.dbo.Roles AS rol ON urol.RoleID = rol.RoleID
+	LEFT JOIN ReportServer.dbo.Policies AS pol ON urol.PolicyID = pol.PolicyID
 	LEFT JOIN user_list AS usr ON urol.UserID = usr.UserID
 WHERE 
 	1=1
@@ -119,13 +119,13 @@ WHERE
                                           </Paragraph>
                                         </Paragraphs>
                                         <rd:DefaultName>user_name_format</rd:DefaultName>
-                                        <ActionInfo>
-                                          <Actions>
-                                            <Action>
-                                              <Hyperlink>="https://staffapps.federationtraining.edu.au/directory/staff/" + Fields!user_name_format.Value</Hyperlink>
-                                            </Action>
-                                          </Actions>
-                                        </ActionInfo>
+                                        <!-- <ActionInfo> -->
+                                          <!-- <Actions> -->
+                                            <!-- <Action> -->
+                                              <!-- <Hyperlink>="https://staffapps.federationtraining.edu.au/directory/staff/" + Fields!user_name_format.Value</Hyperlink> -->
+                                            <!-- </Action> -->
+                                          <!-- </Actions> -->
+                                        <!-- </ActionInfo> -->
                                         <Style>
                                           <Border>
                                             <Style>Solid</Style>
@@ -363,10 +363,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     <Variable Name="FormatDateTime">
       <Value>dd-MMM-yyyy  hh:mm tt</Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="UrlReport">
-      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
-+ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
-+ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+      <Value>
+        =Variables!ReportServer.Value + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>=Variables!UrlReport.Value

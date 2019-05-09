@@ -69,7 +69,7 @@ SET @EndDate = NULL
 report_users 
 AS
 (
-	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM ReportServer.dbo.[Users]
 )
 ,
 report_catalog
@@ -88,11 +88,10 @@ AS
 		, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
 		, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
 		, rpt.[Path]
-		, [URL_ReportFolder] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-		, [URL_Report] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
+		, [URL_ReportFolder] = '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
+		, [URL_Report] = '/Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
 	FROM 
-		dbo.Catalog AS rpt
+		ReportServer.dbo.Catalog AS rpt
 	WHERE 
 		1=1
 		AND rpt.[Type] = 2
@@ -125,7 +124,7 @@ SELECT
 	, [OrderbyDate] = CAST([TimeStart] AS DATETIME) 
 FROM 
 	report_catalog AS rpt 
-	LEFT JOIN dbo.[ExecutionLog] AS el ON el.[ReportID] = rpt.[ItemID]
+	LEFT JOIN ReportServer.dbo.[ExecutionLog] AS el ON el.[ReportID] = rpt.[ItemID]
 	LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
 WHERE 
 	1=1
@@ -386,7 +385,7 @@ WHERE
                   <Width>0.55cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>4.77646cm</Width>
+                  <Width>5.64958cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.55cm</Width>
@@ -1688,7 +1687,7 @@ WHERE
                           <ActionInfo>
                             <Actions>
                               <Action>
-                                <Hyperlink>=Fields!URL_ReportFolder.Value</Hyperlink>
+                                <Hyperlink>=Variables!ReportServer.Value + Fields!URL_ReportFolder.Value</Hyperlink>
                               </Action>
                             </Actions>
                           </ActionInfo>
@@ -1770,7 +1769,7 @@ WHERE
                           <ActionInfo>
                             <Actions>
                               <Action>
-                                <Hyperlink>=IIF(Isnothing(Fields!TimeStart.Value),Fields!URL_Report.Value, Fields!URL_Report_Filtered.Value)</Hyperlink>
+                                <Hyperlink>=IIF(Isnothing(Fields!TimeStart.Value),Variables!ReportServer.Value + Fields!URL_Report.Value, Variables!ReportServer.Value + Fields!URL_Report_Filtered.Value)</Hyperlink>
                               </Action>
                             </Actions>
                           </ActionInfo>
@@ -2429,7 +2428,7 @@ WHERE
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>2cm</Height>
-            <Width>45.53146cm</Width>
+            <Width>46.40458cm</Width>
             <Style>
               <FontFamily>Tahoma</FontFamily>
               <FontSize>8pt</FontSize>
@@ -2439,7 +2438,7 @@ WHERE
         <Height>2cm</Height>
         <Style />
       </Body>
-      <Width>45.53146cm</Width>
+      <Width>46.40458cm</Width>
       <Page>
         <PageFooter>
           <Height>1cm</Height>
@@ -2471,6 +2470,7 @@ WHERE
                   </Style>
                 </Paragraph>
               </Paragraphs>
+              <Top>0in</Top>
               <Left>26.75cm</Left>
               <Height>1cm</Height>
               <Width>8.5cm</Width>
@@ -2489,7 +2489,14 @@ WHERE
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Variables!UrlReport.Value</Value>
+                      <Value>Link to this report (with supplied parameters)</Value>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>=Variables!ReportServer.Value + Variables!UrlReport.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -2510,6 +2517,7 @@ WHERE
                   </Action>
                 </Actions>
               </ActionInfo>
+              <Top>0in</Top>
               <Height>1cm</Height>
               <Width>18.75cm</Width>
               <ZIndex>1</ZIndex>
@@ -2850,11 +2858,14 @@ WHERE
         + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
       </Value>
     </Variable>
+    <Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
     <Variable Name="UrlReport">
-      <Value>=Globals!ReportServerUrl + "/ReportServer?"
+      <Value>=Variables!ReportServer.Value + "/ReportServer?"
         + Replace(Globals!ReportFolder, " ", "+") + "%2f"
         + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
     </Variable>

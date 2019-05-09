@@ -46,16 +46,6 @@
 | Note:		SQLCmdMode Script
 +-----------------------------------------------------------------------------
 
-:setvar _server "YourServerNameHere"
-:setvar _database "ReportServer"
---:setvar _user "***username***"
---:setvar _password "***password***"
---:connect $(_server) -U $(_user) -P $(_password)
-:connect $(_server)
-
-USE [$(_database)];
-GO
-
 
 DECLARE @ReportFolder AS VARCHAR(100)
 DECLARE @ReportName AS VARCHAR(100)
@@ -87,7 +77,7 @@ SET @all_value = '&lt;ALL&gt;'
 report_users 
 AS
 (
-	SELECT [UserID], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
+	SELECT [UserID], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM ReportServer.dbo.[Users]
 )
 ,
 report_catalog
@@ -109,7 +99,7 @@ AS
 		, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
 		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.[Content]))  
 	FROM 
-		dbo.[Catalog] AS rpt
+		ReportServer.dbo.[Catalog] AS rpt
 	WHERE 
 		1=1
 		AND rpt.[Type] = 2
@@ -127,15 +117,15 @@ SELECT
 	, [ReportPath] = rpt.[Path]
 	, rpt.[URL_ReportFolder]
 	, rpt.[URL_Report]
-	, rpt.[ReportDefinition]
-	, [CommandText] = rpt.[ReportDefinition]
+	--, rpt.[ReportDefinition]
+	--, [CommandText] = rpt.[ReportDefinition]
 	, el.[ExecutionLogCount]
 	, sc.[SubscriptionCount]
 	, [SearchForStr] = ISNULL(@SearchFor, ' ') 
 FROM  
 	report_catalog AS rpt 
-	LEFT JOIN (SELECT [ExecutionLogCount] = COUNT([ReportID]), [ReportID] FROM dbo.[ExecutionLog] GROUP BY [ReportID]) el ON el.[ReportID] = rpt.[ItemID]
-	LEFT JOIN (SELECT [SubscriptionCount] = COUNT([Report_OID]), [Report_OID] FROM dbo.[Subscriptions] GROUP BY [Report_OID]) sc ON sc.[Report_OID] = rpt.[ItemID]
+	LEFT JOIN (SELECT [ExecutionLogCount] = COUNT([ReportID]), [ReportID] FROM ReportServer.dbo.[ExecutionLog] GROUP BY [ReportID]) el ON el.[ReportID] = rpt.[ItemID]
+	LEFT JOIN (SELECT [SubscriptionCount] = COUNT([Report_OID]), [Report_OID] FROM ReportServer.dbo.[Subscriptions] GROUP BY [Report_OID]) sc ON sc.[Report_OID] = rpt.[ItemID]
 	LEFT JOIN report_users AS urc ON rpt.[CreatedById] = urc.[UserID] 
 	LEFT JOIN report_users AS urm ON rpt.[ModifiedById] = urm.[UserID]
 WHERE 
@@ -150,7 +140,7 @@ WHERE
 			OR (
 				(rpt.[Name] LIKE '%' + @SearchFor + '%' AND (@all_value IN(@SearchType) OR 'Report Name' IN(@SearchType)))
 				OR (rpt.[Description] LIKE '%' + @SearchFor + '%' AND (@all_value IN(@SearchType) OR 'Report Description' IN(@SearchType)) )
-				OR (PATINDEX('%' + @SearchFor + '%', rpt.[ReportDefinition]) &gt; 0 AND (@all_value IN(@SearchType) OR 'Report Definition' IN(@SearchType)) )   
+				OR (PATINDEX('%' + @SearchFor + '%', rpt.[ReportDefinition]) &gt; 0 AND (@all_value IN(@SearchType) OR 'Report Definition' IN(@SearchType)) )
 				)
 		)</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
@@ -204,14 +194,14 @@ WHERE
           <DataField>URL_Report</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="ReportDefinition">
-          <DataField>ReportDefinition</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="CommandText">
-          <DataField>CommandText</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
+        <!-- <Field Name="ReportDefinition"> -->
+          <!-- <DataField>ReportDefinition</DataField> -->
+          <!-- <rd:TypeName>System.String</rd:TypeName> -->
+        <!-- </Field> -->
+        <!-- <Field Name="CommandText"> -->
+          <!-- <DataField>CommandText</DataField> -->
+          <!-- <rd:TypeName>System.String</rd:TypeName> -->
+        <!-- </Field> -->
         <Field Name="ExecutionLogCount">
           <DataField>ExecutionLogCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -1551,7 +1541,7 @@ ORDER BY 2, 1</CommandText>
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=Fields!CommandText.Value</Value>
+                                  <Value>Fields!CommandText.Value</Value>
                                   <Style>
                                     <FontFamily>Tahoma</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -1651,7 +1641,7 @@ ORDER BY 2, 1</CommandText>
             <KeepTogether>true</KeepTogether>
             <DataSetName>Reports</DataSetName>
             <Height>1.18521cm</Height>
-            <Width>54.78084cm</Width>
+            <Width>30.78084cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1665,7 +1655,7 @@ ORDER BY 2, 1</CommandText>
         <Height>1.18521cm</Height>
         <Style />
       </Body>
-      <Width>54.78084cm</Width>
+      <Width>30.78084cm</Width>
       <Page>
         <PageFooter>
           <Height>1.00001cm</Height>
@@ -1716,7 +1706,15 @@ ORDER BY 2, 1</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>=Variables!UrlReport.Value</Value>
+                      <Label>Link to this report (with supplied parameters)</Label>
+                      <Value>Link to this report (with supplied parameters)</Value>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
                       <Style>
                         <FontFamily>Tahoma</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -1738,7 +1736,7 @@ ORDER BY 2, 1</CommandText>
                 </Actions>
               </ActionInfo>
               <Height>1cm</Height>
-              <Width>30.55042cm</Width>
+              <Width>20.0823cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -1991,12 +1989,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
         + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
       </Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
     <Variable Name="UrlReport">
       <Value>
-        =Globals!ReportServerUrl + "/ReportServer?"
+        =Variables!ReportServer.Value + "/ReportServer?"
         + Replace(Globals!ReportFolder, " ", "+") + "%2f"
         + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
       </Value>
