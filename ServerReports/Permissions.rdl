@@ -118,7 +118,7 @@ AS
 				ELSE usr.[UserName]
 			END 
 	FROM 
-		dbo.[Users] usr
+		ReportServer.dbo.[Users] usr
 )
 SELECT 
 	  [FolderName] = cat.[Name]
@@ -131,11 +131,11 @@ SELECT
 	, adu.[full_name]
 	, adu.[email]
 FROM 
-	dbo.[Catalog] cat
+	ReportServer.dbo.[Catalog] cat
 	INNER JOIN catalog_type_description tpd ON cat.[Type] = tpd.[TypeID]	
-	LEFT JOIN dbo.[PolicyUserRole] urol ON urol.[PolicyID] = cat.[PolicyID]
-	LEFT JOIN dbo.[Roles] rol ON urol.[RoleID] = rol.[RoleID]
-	LEFT JOIN dbo.[Policies] pol ON urol.[PolicyID] = pol.[PolicyID]
+	LEFT JOIN ReportServer.dbo.[PolicyUserRole] urol ON urol.[PolicyID] = cat.[PolicyID]
+	LEFT JOIN ReportServer.dbo.[Roles] rol ON urol.[RoleID] = rol.[RoleID]
+	LEFT JOIN ReportServer.dbo.[Policies] pol ON urol.[PolicyID] = pol.[PolicyID]
 	LEFT JOIN user_list usr ON urol.[UserID] = usr.[UserID]
 	LEFT JOIN nonreport_folders nrf ON nrf.[FolderName] = cat.[Name]
 	LEFT JOIN ad_users adu ON adu.[sam_account_name] = usr.[UserNameFormat]
@@ -228,11 +228,11 @@ AS
 			END 
 		, usr.[UserID]
 	FROM 
-		dbo.[Catalog] cat
-		LEFT JOIN dbo.PolicyUserRole urol ON urol.[PolicyID] = cat.[PolicyID]
-		LEFT JOIN dbo.Roles rol ON urol.[RoleID] = rol.[RoleID]
-		LEFT JOIN dbo.Policies pol ON urol.[PolicyID] = pol.[PolicyID]
-		LEFT JOIN dbo.[Users] usr ON urol.[UserID] = usr.[UserID]	
+		ReportServer.dbo.[Catalog] cat
+		LEFT JOIN ReportServer.dbo.PolicyUserRole urol ON urol.[PolicyID] = cat.[PolicyID]
+		LEFT JOIN ReportServer.dbo.Roles rol ON urol.[RoleID] = rol.[RoleID]
+		LEFT JOIN ReportServer.dbo.Policies pol ON urol.[PolicyID] = pol.[PolicyID]
+		LEFT JOIN ReportServer.dbo.[Users] usr ON urol.[UserID] = usr.[UserID]	
 )
 SELECT 
 	  [UserName] = COALESCE(adu.[full_name], '') + ' (' + LOWER(usr.[UserNameFormat]) + ')'

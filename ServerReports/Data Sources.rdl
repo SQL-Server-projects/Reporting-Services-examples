@@ -36,7 +36,7 @@ AS
 		, [DsnPath] = sds.[Path] 
 		, [DEF] = CONVERT(xml, CONVERT(varbinary(max), sds.[Content])) 
 	FROM 
-		dbo.[Catalog] AS sds 
+		ReportServer.dbo.[Catalog] AS sds 
 	WHERE sds.[Type] = 5 --&gt; 5 = Shared Datasource 
 ) 
 , 
@@ -64,9 +64,9 @@ SELECT
 	, [ReportName] = c.[Name]
 	, [FolderUrl] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/properties/Data%20Sources/' + lk.[Name]
 FROM 
-	dbo.[Catalog] c
-	INNER JOIN dbo.[DataSource] ds ON c.[ItemID] = ds.[ItemID]
-	INNER JOIN dbo.[Catalog] lk ON ds.[Link] = lk.[ItemID]
+	ReportServer.dbo.[Catalog] c
+	INNER JOIN ReportServer.dbo.[DataSource] ds ON c.[ItemID] = ds.[ItemID]
+	INNER JOIN ReportServer.dbo.[Catalog] lk ON ds.[Link] = lk.[ItemID]
 	INNER JOIN data_source_name dsn ON dsn.[DsnSharedName] = lk.[Name]
 WHERE 
 	c.[Type] = 2  --&gt; 2 = Reports
@@ -824,10 +824,15 @@ dQAAAABJRU5ErkJggg==</ImageData>
     <Variable Name="FormatDateTime">
       <Value>dd-MMM-yyyy  hh:mm tt</Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="UrlReport">
-      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
-+ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
-+ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+      <Value>
+        =Variables!ReportServer.Value + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>

@@ -437,10 +437,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     <Variable Name="FormatDateTime">
       <Value>dd-MMM-yyyy  hh:mm tt</Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="UrlReport">
-      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
-+ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
-+ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+      <Value>
+        =Variables!ReportServer.Value + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>=Variables!UrlReport.Value

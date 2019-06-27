@@ -30,7 +30,7 @@ The following examples are used to query the database & report server. I have in
 * [Update Subscription Owner](/Miscellaneous/Scripts/UpdateSubscriptionOwner.sql)
 ### Reports
 #### [Database Server](/ServerDatabase)
-* [Activity Moniter](/ServerDatabase/Activity%20Moniter.rdl)
+* [Activity Monitor](/ServerDatabase/Activity%20Monitor.rdl)
 * [Database Dictionary](/ServerDatabase/Database%20Dictionary.rdl)
 * [Job Search](/ServerDatabase/Job%20Search.rdl)
 * [Scheduled Jobs](/ServerDatabase/Scheduled%20Jobs.rdl) 
@@ -73,7 +73,7 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
-                <a href="https://github.com/aduguid/SqlServerReportingServices/blob/master/ServerDatabase/Activity%20Moniter.rdl">Activity Monitor</a>
+                <a href="https://github.com/aduguid/SqlServerReportingServices/blob/master/ServerDatabase/Activity%20Monitor.rdl">Activity Monitor</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/aduguid/SoftwarePortfolio/master/Images/ReadMe/ssrsactivitymonitor.png" align="top" width="256px" title="Activity Monitor" />

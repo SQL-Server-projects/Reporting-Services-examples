@@ -23,7 +23,7 @@
 report_users 
 AS
 (
-	SELECT UserID, SimpleUserName = UPPER(RIGHT(UserName,(LEN(UserName)-CHARINDEX('\',UserName)))) FROM dbo.Users
+	SELECT UserID, SimpleUserName = UPPER(RIGHT(UserName,(LEN(UserName)-CHARINDEX('\',UserName)))) FROM ReportServer.dbo.Users
 )
 ,
 report_catalog
@@ -45,10 +45,11 @@ AS
 				ELSE SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2) 
 			END 
 		, ReportPath = c.[Path]
-		, UrlPath = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
-		, ReportDefinition = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX),c.content))  
+		, [UrlPath] = '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+		--, UrlPath = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
+		--, ReportDefinition = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX),c.content))  
 	FROM 
-		dbo.Catalog AS c
+		ReportServer.dbo.Catalog AS c
 	WHERE 
 		1=1
 		AND c.Type = 2
@@ -193,7 +194,7 @@ AS
 				END 
 			--, sc.RecurrenceType
 		FROM 
-			dbo.Schedule sc 
+			ReportServer.dbo.Schedule sc 
 			LEFT JOIN subscription_days sd ON sc.DaysOfWeek = sd.CodeNbr AND sd.GroupName = 'DayOfWeek'
 			LEFT JOIN subscription_days AS dom ON sc.DaysOfMonth = dom.CodeNbr AND dom.GroupName = 'DaysOfMonth'
 			LEFT JOIN subscription_days AS dow ON sc.DaysOfWeek = dow.CodeNbr AND dow.GroupName = 'DaysOfWeek'
@@ -226,7 +227,7 @@ AS
 		, SubscriptionLastStatus = s.LastStatus		
 		, StatusFail = CASE WHEN s.LastStatus  LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END		
 		, EmailSubject = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-		, EmailTo = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
+		, EmailTo = CASE CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
 		, EmailCc = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END 
 		, EmailBcc = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
 		, EmailComment = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
@@ -256,9 +257,9 @@ AS
 		, sch.RecurrenceType
 		, sch.[State]
 	FROM  
-		dbo.Subscriptions AS s 
-		LEFT JOIN dbo.Notifications AS n ON n.SubscriptionID = s.SubscriptionID AND s.Report_OID = n.ReportID
-		LEFT JOIN dbo.ReportSchedule AS rs ON s.SubscriptionID = rs.SubscriptionID 
+		ReportServer.dbo.Subscriptions AS s 
+		LEFT JOIN ReportServer.dbo.Notifications AS n ON n.SubscriptionID = s.SubscriptionID AND s.Report_OID = n.ReportID
+		LEFT JOIN ReportServer.dbo.ReportSchedule AS rs ON s.SubscriptionID = rs.SubscriptionID 
 		LEFT JOIN subscription_schedule AS sch ON rs.ScheduleID = sch.ScheduleID 
 )
 SELECT     
@@ -268,9 +269,12 @@ SELECT
 	, c.ReportFolder 
 	, c.ReportPath 
 	, URL_ReportFolder = c.UrlPath + c.ReportFolder + '&amp;ViewMode=List'
-	, URL_Report = c.UrlPath + c.ReportFolder + '%2f' + c.Name 
-	, URL = 'http://' + Host_Name() + '/Reports/Pages/SubscriptionProperties.aspx?ItemPath=' + c.ReportPath + '&amp;IsDataDriven=False&amp;SubscriptionID=' + CAST(s.SubscriptionID AS VARCHAR(80)) 
-	, URL2 = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.ReportPath + '&amp;SelectedTabId=SubscriptionsTab'  
+	, [URL_Report] = '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+	, [URL] = '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+	, [URL2] = '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
+	--, [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+	--, [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+	--, [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
 	, ReportCreatedBy = urc.SimpleUserName
 	, c.ReportCreationDate
 	, ReportModifiedBy = urm.SimpleUserName
@@ -1542,7 +1546,7 @@ FROM
                               <ActionInfo>
                                 <Actions>
                                   <Action>
-                                    <Hyperlink>=Fields!URL.Value</Hyperlink>
+                                    <Hyperlink>=Variables!ReportServer.Value + Fields!URL.Value</Hyperlink>
                                   </Action>
                                 </Actions>
                               </ActionInfo>
@@ -2293,10 +2297,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     <Variable Name="FormatDateTime">
       <Value>dd-MMM-yyyy  hh:mm tt</Value>
     </Variable>
+	<Variable Name="ReportServer">
+      <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
+    </Variable>
     <Variable Name="UrlReport">
-      <Value>=Globals!ReportServerUrl + "/ReportServer?" 
-+ Replace(Globals!ReportFolder, " ", "+") + "%2f" 
-+ Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"</Value>
+      <Value>
+        =Variables!ReportServer.Value + "/ReportServer?"
+        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
+        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
+      </Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>=Variables!UrlReport.Value

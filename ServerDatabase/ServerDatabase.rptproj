@@ -10,8 +10,8 @@
   </DataSets>
   <Reports>
     <ProjectItem>
-      <Name>Activity Moniter.rdl</Name>
-      <FullPath>Activity Moniter.rdl</FullPath>
+      <Name>Activity Monitor.rdl</Name>
+      <FullPath>Activity Monitor.rdl</FullPath>
     </ProjectItem>
     <ProjectItem>
       <Name>Database Dictionary.rdl</Name>
