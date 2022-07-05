@@ -15,14 +15,23 @@
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
+          <QueryParameter Name="@ReportServerUrl">
+            <Value>=Parameters!ReportServerUrl.Value</Value>
+          </QueryParameter>
           <QueryParameter Name="@all_value">
             <Value>=Parameters!all_value.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@EmailLike">
-            <Value>=Parameters!EmailLike.Value</Value>
+          <QueryParameter Name="@DeliveryExtension">
+            <Value>=Parameters!DeliveryExtension.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@SubscriptionStatus">
-            <Value>=Parameters!SubscriptionStatus.Value</Value>
+          <QueryParameter Name="@SubscriptionType">
+            <Value>=Parameters!SubscriptionType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ReportFolder">
+            <Value>=Parameters!ReportFolder.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ReportName">
+            <Value>=Parameters!ReportName.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@StatusGroup">
             <Value>=Parameters!StatusGroup.Value</Value>
@@ -30,11 +39,8 @@
           <QueryParameter Name="@EventStatus">
             <Value>=Parameters!EventStatus.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@ReportFolder">
-            <Value>=Parameters!ReportFolder.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportName">
-            <Value>=Parameters!ReportName.Value</Value>
+          <QueryParameter Name="@SubscriptionStatus">
+            <Value>=Parameters!SubscriptionStatus.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@LastStatus">
             <Value>=Parameters!LastStatus.Value</Value>
@@ -48,401 +54,407 @@
           <QueryParameter Name="@EndDateTime">
             <Value>=Parameters!EndDateTime.Value</Value>
           </QueryParameter>
+          <QueryParameter Name="@EmailLike">
+            <Value>=Parameters!EmailLike.Value</Value>
+          </QueryParameter>
         </QueryParameters>
         <CommandText>
-          /*
-          --VALUES FOR TESTING
-
-          DECLARE @all_value		   AS VARCHAR(100) = '&lt;ALL&gt;';
-          DECLARE @ReportFolder	   AS VARCHAR(100) = '&lt;ALL&gt;';
-          DECLARE @ReportName		   AS VARCHAR(100) = '&lt;ALL&gt;';
-          DECLARE @LastStatus		   AS VARCHAR(100) = '&lt;ALL&gt;';
-          DECLARE @EmailLike		   AS VARCHAR(100) = NULL;
-          DECLARE @ModifiedBy		   AS VARCHAR(50) = NULL;
-          DECLARE @SubcriptionOwner   AS VARCHAR(50) = NULL;
-          DECLARE @SubscriptionStatus AS VARCHAR(100) = '&lt;ALL&gt;';
-          DECLARE @EventStatus	   AS VARCHAR(50) = '&lt;ALL&gt;';
-          DECLARE @StatusGroup	   AS VARCHAR(50) = '&lt;ALL&gt;';
-          DECLARE @IsDisabled		   AS BIT = NULL;
-          DECLARE @StartDateTime	   AS DATETIME = GETDATE()-1;
-          DECLARE @EndDateTime	   AS DATETIME = GETDATE();
-
-          */
-
-          WITH
-          report_status
-          AS
-          (
-          SELECT tbl.* FROM (VALUES
-          ( 'rrRenderingError', 'Failure')
-          , ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
-          , ( 'rsInternalError', 'Failure')
-          , ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
-          , ( 'rsProcessingAborted', 'Failure')
-          , ( 'rsProcessingError', 'Failure')
-          , ( 'rsRenderingExtensionNotFound', 'Failure')
-          , ( 'rsReportServerDatabaseError', 'Failure')
-          , ( 'rsSuccess', 'Success')
-          ) tbl ([StatusName], [StatusGroup])
-          )
-          ,
-          report_users
-          AS
-          (
-          SELECT [UserID], [UserName], [SimpleUserName] = LOWER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM [dbo].[Users]
-          )
-          ,
-          report_catalog
-          AS
-          (
-          SELECT
-          c.[ItemID]
-          , c.[CreatedById]
-          , c.[ModifiedById]
-          , c.[Type]
-          , c.[Name]
-          , c.[Description]
-          , c.[Parameter]
-          , [ReportCreationDate] = c.[CreationDate]
-          , [ReportModifiedDate] = c.[ModifiedDate]
-          , [ReportFolder] =
-          CASE
-          WHEN c.Path = '/' + c.Name THEN ''
-          ELSE SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
-          END
-          , [ReportPath] = c.[Path]
-          , [UrlPath] = 'http://' + Host_Name() + '/Reports/Pages/Folder.aspx?ItemPath=%2f'
-          , [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))
-          FROM
-          [dbo].[Catalog] AS c
-          WHERE c.[Type] = 2
-          )
-          ,
-          subscription_days
-          AS
-          (
-          SELECT tbl.* FROM (VALUES
-          ( 'DaysOfMonth', 1, '1')
-          , ( 'DaysOfMonth', 2, '2')
-          , ( 'DaysOfMonth', 4, '3')
-          , ( 'DaysOfMonth', 8, '4')
-          , ( 'DaysOfMonth', 16, '5')
-          , ( 'DaysOfMonth', 32, '6')
-          , ( 'DaysOfMonth', 64, '7')
-          , ( 'DaysOfMonth', 128, '8')
-          , ( 'DaysOfMonth', 256, '9')
-          , ( 'DaysOfMonth', 512, '10')
-          , ( 'DaysOfMonth', 1024, '11')
-          , ( 'DaysOfMonth', 2048, '12')
-          , ( 'DaysOfMonth', 4096, '13')
-          , ( 'DaysOfMonth', 8192, '14')
-          , ( 'DaysOfMonth', 16384, '15')
-          , ( 'DaysOfMonth', 32768, '16')
-          , ( 'DaysOfMonth', 65536, '17')
-          , ( 'DaysOfMonth', 131072, '18')
-          , ( 'DaysOfMonth', 262144, '19')
-          , ( 'DaysOfMonth', 524288, '20')
-          , ( 'DaysOfMonth', 1048576, '21')
-          , ( 'DaysOfMonth', 2097152, '22')
-          , ( 'DaysOfMonth', 4194304, '23')
-          , ( 'DaysOfMonth', 8388608, '24')
-          , ( 'DaysOfMonth', 16777216, '25')
-          , ( 'DaysOfMonth', 33554432, '26')
-          , ( 'DaysOfMonth', 67108864, '27')
-          , ( 'DaysOfMonth', 134217728, '28')
-          , ( 'DaysOfMonth', 268435456, '29')
-          , ( 'DaysOfMonth', 536870912, '30')
-          , ( 'DaysOfMonth', 1073741824, '31')
-          , ( 'DaysOfMonth', 8193, '1st and 14th')
-          , ( 'DaysOfWeek', 1, 'Sun')
-          , ( 'DaysOfWeek', 2, 'Mon')
-          , ( 'DaysOfWeek', 4, 'Tues')
-          , ( 'DaysOfWeek', 8, 'Wed')
-          , ( 'DaysOfWeek', 16, 'Thurs')
-          , ( 'DaysOfWeek', 32, 'Fri')
-          , ( 'DaysOfWeek', 64, 'Sat')
-          , ( 'DaysOfWeek', 62, 'Mon - Fri')
-          , ( 'DaysOfWeek', 10, 'Mon - Wed')
-          , ( 'DaysOfWeek', 24, 'Wed - Thurs')
-          , ( 'DaysOfWeek', 120, 'Wed - Sat')
-          , ( 'DaysOfWeek', 126, 'Mon - Sat')
-          , ( 'DaysOfWeek', 127, 'Daily')
-          , ( 'DayOfWeek', 1, 'Sun')
-          , ( 'DayOfWeek', 127, 'Sun')
-          , ( 'DayOfWeek', 2, 'Mon')
-          , ( 'DayOfWeek', 10, 'Mon')
-          , ( 'DayOfWeek', 62, 'Mon')
-          , ( 'DayOfWeek', 126, 'Mon')
-          , ( 'DayOfWeek', 127, 'Mon')
-          , ( 'DayOfWeek', 4, 'Tue')
-          , ( 'DayOfWeek', 10, 'Tue')
-          , ( 'DayOfWeek', 62, 'Tue')
-          , ( 'DayOfWeek', 126, 'Tue')
-          , ( 'DayOfWeek', 127, 'Tue')
-          , ( 'DayOfWeek', 8, 'Wed')
-          , ( 'DayOfWeek', 10, 'Wed')
-          , ( 'DayOfWeek', 24, 'Wed')
-          , ( 'DayOfWeek', 62, 'Wed')
-          , ( 'DayOfWeek', 120, 'Wed')
-          , ( 'DayOfWeek', 126, 'Wed')
-          , ( 'DayOfWeek', 127, 'Wed')
-          , ( 'DayOfWeek', 16, 'Thr')
-          , ( 'DayOfWeek', 24, 'Thr')
-          , ( 'DayOfWeek', 62, 'Thr')
-          , ( 'DayOfWeek', 120, 'Thr')
-          , ( 'DayOfWeek', 126, 'Thr')
-          , ( 'DayOfWeek', 127, 'Thr')
-          , ( 'DayOfWeek', 32, 'Fri')
-          , ( 'DayOfWeek', 62, 'Fri')
-          , ( 'DayOfWeek', 120, 'Fri')
-          , ( 'DayOfWeek', 126, 'Fri')
-          , ( 'DayOfWeek', 127, 'Fri')
-          , ( 'DayOfWeek', 64, 'Sat')
-          , ( 'DayOfWeek', 120, 'Sat')
-          , ( 'DayOfWeek', 126, 'Sat')
-          , ( 'DayOfWeek', 127, 'Sat')
-          ) tbl ([GroupName], [CodeNbr], [Label])
-          )
-          ,
-          subscription_schedule
-          AS
-          (
-          SELECT
-          [ScheduleID]
-          , [SchDaySun] = Sun
-          , [SchDayMon] = Mon
-          , [SchDayTue] = Tue
-          , [SchDayWed] = Wed
-          , [SchDayThr] = Thr
-          , [SchDayFri] = Fri
-          , [SchDaySat] = Sat
-          , [ScheduleName]
-          , [ScheduleStartDate]
-          , [ScheduleEndDate]
-          , [Flags]
-          , [RecurrenceType]
-          , [State]
-          , [MinutesInterval]
-          , [DaysInterval]
-          , [WeeksInterval]
-          , [DaysOfWeek]
-          , [DaysOfMonth]
-          , [Month]
-          , [MonthlyWeek]
-          , [ScheduleDays]
-          FROM
-          (
-          SELECT
-          sc.[ScheduleID]
-          , sd.[CodeNbr]
-          , sd.[Label]
-          , [ScheduleName] = sc.[name]
-          , [ScheduleStartDate] = sc.[StartDate]
-          , [ScheduleEndDate] = sc.[EndDate]
-          , sc.[Flags]
-          , sc.[RecurrenceType]
-          , sc.[State]
-          , sc.[MinutesInterval]
-          , sc.[DaysInterval]
-          , sc.[WeeksInterval]
-          , sc.[DaysOfWeek]
-          , sc.[DaysOfMonth]
-          , sc.[Month]
-          , sc.[MonthlyWeek]
-          , [ScheduleDays] =
-          CASE
-          WHEN sc.[DaysOfMonth] IS NOT NULL THEN COALESCE(dom.[Label], '(' + CAST(sc.[DaysOfMonth] AS VARCHAR(20)) + ') NOT CODED')
-          WHEN sc.[DaysOfWeek] IS NOT NULL THEN COALESCE(dow.[Label], '(' + CAST(sc.[DaysOfWeek] AS VARCHAR(20)) + ') NOT CODED')
-          END
-          FROM
-          [dbo].[Schedule] sc
-          LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
-          LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
-          LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
-          ) sch
-          PIVOT
-          (
-          COUNT(sch.[Label])
-          FOR sch.[Label]
-          IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
-          ) AS pvt
-          )
-          ,
-          report_subscription
-          AS
-          (
-          SELECT
-          s.[SubscriptionID]
-          , s.[Report_OID]
-          , [SubscriptionDescription] = s.[Description]
-          , s.[ExtensionSettings]
-          , s.[EventType]
-          , s.[OwnerID]
-          , s.[ModifiedByID]
-          , s.[ModifiedDate]
-          , [RunTime] = CONVERT(VARCHAR(5), s.[LastRunTime], 8)
-          , [LastRunDate] = CONVERT(VARCHAR(11), s.[LastRunTime], 13)
-          , [LastRunTime] = CAST(CONVERT(CHAR(16), s.[LastRunTime], 113) AS DATETIME)
-          , s.[DeliveryExtension]
-          , s.[MatchData]
-          , [SubscriptionLastStatus] = s.[LastStatus]
-          , [StatusFail] = CASE WHEN s.[LastStatus] LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END
-          , [EmailSubject] = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailTo] = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
-          , [EmailCc] = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailBcc] = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailComment] = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailIncludeLink] = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailRenderFormat] = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , [EmailPriority] = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
-          , sch.[MinutesInterval]
-          , sch.[DaysInterval]
-          , sch.[WeeksInterval]
-          , sch.[DaysOfWeek]
-          , sch.[DaysOfMonth]
-          , sch.[Month]
-          , sch.[MonthlyWeek]
-          , sch.[ScheduleName]
-          , sch.[ScheduleDays]
-          , sch.[SchDaySun]
-          , sch.[SchDayMon]
-          , sch.[SchDayTue]
-          , sch.[SchDayWed]
-          , sch.[SchDayThr]
-          , sch.[SchDayFri]
-          , sch.[SchDaySat]
-          , sch.[ScheduleStartDate]
-          , sch.[ScheduleEndDate]
-          , sch.[Flags]
-          , sch.[RecurrenceType]
-          , sch.[State]
-          , s.[LastStatus]
-          FROM
-          [dbo].[Subscriptions] AS s
-          LEFT JOIN [dbo].[Notifications] AS n ON n.[SubscriptionID] = s.[SubscriptionID] AND s.[Report_OID] = n.[ReportID]
-          LEFT JOIN [dbo].[ReportSchedule] AS rs ON s.[SubscriptionID] = rs.[SubscriptionID]
-          LEFT JOIN subscription_schedule AS sch ON rs.[ScheduleID] = sch.[ScheduleID]
-          )
-          SELECT
-          c.[ItemID]
-          , c.[Name]
-          , c.[Description]
-          , c.[Parameter]
-          , c.[ReportFolder]
-          , c.[ReportPath]
-          , [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
-          , [URL_Report] = 'http://' + Host_Name() + '/Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
-          , [URL] = 'http://' + Host_Name() + '/Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
-          , [URL2] = 'http://' + Host_Name() + '/Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
-          , [ReportCreatedBy] = urc.[SimpleUserName]
-          , c.[ReportCreationDate]
-          , [ReportModifiedBy] = urm.[SimpleUserName]
-          , c.[ReportModifiedDate]
-          , [SubscriptionOwner] = usc.[SimpleUserName]
-          , [SubscriptionModifiedBy] = usm.[SimpleUserName]
-          , [SubscriptionModifiedDate] = s.[ModifiedDate]
-          , s.[SubscriptionID]
-          , s.[SubscriptionDescription]
-          , s.[ExtensionSettings]
-          , s.[EventType]
-          , s.[EmailSubject]
-          , s.[EmailTo]
-          , s.[EmailCc]
-          , s.[EmailBcc]
-          , s.[EmailComment]
-          , s.[EmailIncludeLink]
-          , s.[EmailRenderFormat]
-          , s.[EmailPriority]
-          , s.[DeliveryExtension]
-          , s.[SubscriptionLastStatus]
-          , s.[StatusFail]
-          , s.[MatchData]
-          , s.[RunTime]
-          , s.[LastRunDate]
-          , s.[LastRunTime]
-          , s.[MinutesInterval]
-          , s.[DaysInterval]
-          , s.[WeeksInterval]
-          , s.[DaysOfWeek]
-          , s.[DaysOfMonth]
-          , s.[Month]
-          , s.[MonthlyWeek]
-          , [JobName] = NULL
-          , s.[ScheduleName]
-          , s.[ScheduleDays]
-          , s.[SchDaySun]
-          , s.[SchDayMon]
-          , s.[SchDayTue]
-          , s.[SchDayWed]
-          , s.[SchDayThr]
-          , s.[SchDayFri]
-          , s.[SchDaySat]
-          , s.[ScheduleStartDate]
-          , s.[ScheduleEndDate]
-          , s.[Flags]
-          , s.[RecurrenceType]
-          , s.[State]
-          , [EventStatus] = el.[Status]
-          , [EventDateTime] = el.[TimeEnd]
-          , s.[LastStatus]
-          FROM
-          report_catalog AS c
-          INNER JOIN report_subscription AS s ON s.[Report_OID] = c.[ItemID]
-          LEFT JOIN
-          (
-          SELECT
-          b.[ReportID]
-          , b.[Status]
-          , b.[TimeEnd]
-          , [LastRunTime] = CAST(CONVERT(CHAR(16), b.[TimeEnd], 113) AS DATETIME)
-          FROM
-          [dbo].[ExecutionLog] AS b
-          INNER JOIN (SELECT [ReportID], MAX([TimeEnd]) AS [TimeEnd] FROM [dbo].[ExecutionLog] GROUP BY [ReportID]) a ON b.[ReportID] = a.[ReportID] AND b.[TimeEnd] = a.[TimeEnd]
-          GROUP BY
-          b.[ReportID]
-          , b.[Status]
-          , b.[TimeEnd]
-          ) AS el ON el.[ReportID] = c.[ItemID]
-          LEFT JOIN report_status AS rs ON el.[Status] = rs.[StatusName]
-          LEFT JOIN report_users AS urc ON c.[CreatedById] = urc.[UserID]
-          LEFT JOIN report_users AS urm ON c.[ModifiedById] = urm.[UserID]
-          LEFT JOIN report_users AS usc ON s.[OwnerID] = usc.[UserID]
-          LEFT JOIN report_users AS usm ON s.[ModifiedByID] = usm.[UserID]
-          WHERE
-          1=1
-          AND c.[Type] = 2
-          AND (@all_value IN (@ReportFolder) OR c.[ReportFolder] IN(@ReportFolder))
-          AND (@all_value IN (@ReportFolder) OR CHARINDEX(@ReportFolder, c.[ReportPath]) &gt; 0)
-          AND (@all_value IN(@ReportName) OR c.[Name] IN(@ReportName))
-          AND (@all_value IN(@StatusGroup) OR rs.[StatusGroup] IN(@StatusGroup))
-          AND (@all_value IN(@EventStatus) OR el.[Status] IN(@EventStatus))
-          AND (@all_value IN(@SubscriptionStatus) OR s.[SubscriptionLastStatus] LIKE '%' + @SubscriptionStatus + '%')
-          AND (@all_value IN(@LastStatus) OR s.[LastStatus] IN(@LastStatus))
-          AND (@IsDisabled IS NULL OR CASE WHEN s.[ScheduleEndDate] IS NULL THEN 0 WHEN s.[ScheduleEndDate] IS NOT NULL THEN 1 END = @IsDisabled)
-          AND (el.[TimeEnd] &gt;= @StartDateTime OR @StartDateTime IS NULL)
-          AND (el.[TimeEnd] &lt;= @EndDateTime OR @EndDateTime IS NULL)
-          AND
-          (
-          (SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
-          LIKE '%' + @EmailLike + '%' OR @EmailLike IS NULL
-          )
-          OR
-          (
-          CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])
-          WHEN 0 THEN ''
-          ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
-          END
-          LIKE '%' + @EmailLike + '%'
-          )
-          OR
-          (
-          CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])
-          WHEN 0 THEN ''
-          ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
-          END
-          LIKE '%' + @EmailLike + '%')
-          )
-        </CommandText>
+					WITH
+					report_status
+					AS
+					(
+					SELECT tbl.* FROM (VALUES
+					( 'rrRenderingError', 'Failure')
+					, ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
+					, ( 'rsInternalError', 'Failure')
+					, ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
+					, ( 'rsProcessingAborted', 'Failure')
+					, ( 'rsProcessingError', 'Failure')
+					, ( 'rsRenderingExtensionNotFound', 'Failure')
+					, ( 'rsReportServerDatabaseError', 'Failure')
+					, ( 'rsSuccess', 'Success')
+					) tbl ([StatusName], [StatusGroup])
+					)
+					,
+					report_users
+					AS
+					(
+					SELECT
+					[UserID]
+					, [UserName]
+					, [SimpleUserName] = LOWER(RIGHT([UserName], (LEN([UserName]) - CHARINDEX('\', [UserName]))))
+					FROM
+					[dbo].[Users] WITH(NOLOCK)
+					)
+					,
+					report_catalog
+					AS
+					(
+					SELECT
+					c.[ItemID]
+					, c.[CreatedById]
+					, c.[ModifiedById]
+					, c.[Type]
+					, c.[Name]
+					, c.[Description]
+					, c.[Parameter]
+					, [ReportCreationDate] = c.[CreationDate]
+					, [ReportModifiedDate] = c.[ModifiedDate]
+					, [ReportFolder] =
+					CASE
+					WHEN c.Path = '/' + c.Name THEN ''
+					ELSE SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
+					END
+					, [ReportPath] = c.[Path]
+					, [UrlPath] = @ReportServerUrl + 'Reports/Pages/Folder.aspx?ItemPath=%2f'
+					, [ReportDefinition] = CONVERT(VARCHAR(MAX),CONVERT(VARBINARY(MAX), c.[content]))
+					FROM
+					[dbo].[Catalog] AS c WITH (NOLOCK)
+					WHERE
+					1=1
+					AND c.[Type] IN(2, 4)
+					)
+					,
+					subscription_days
+					AS
+					(
+					SELECT tbl.* FROM (VALUES
+					( 'DaysOfMonth', 1, '1')
+					, ( 'DaysOfMonth', 2, '2')
+					, ( 'DaysOfMonth', 4, '3')
+					, ( 'DaysOfMonth', 8, '4')
+					, ( 'DaysOfMonth', 16, '5')
+					, ( 'DaysOfMonth', 32, '6')
+					, ( 'DaysOfMonth', 64, '7')
+					, ( 'DaysOfMonth', 128, '8')
+					, ( 'DaysOfMonth', 256, '9')
+					, ( 'DaysOfMonth', 512, '10')
+					, ( 'DaysOfMonth', 1024, '11')
+					, ( 'DaysOfMonth', 2048, '12')
+					, ( 'DaysOfMonth', 4096, '13')
+					, ( 'DaysOfMonth', 8192, '14')
+					, ( 'DaysOfMonth', 16384, '15')
+					, ( 'DaysOfMonth', 32768, '16')
+					, ( 'DaysOfMonth', 65536, '17')
+					, ( 'DaysOfMonth', 131072, '18')
+					, ( 'DaysOfMonth', 262144, '19')
+					, ( 'DaysOfMonth', 524288, '20')
+					, ( 'DaysOfMonth', 1048576, '21')
+					, ( 'DaysOfMonth', 2097152, '22')
+					, ( 'DaysOfMonth', 4194304, '23')
+					, ( 'DaysOfMonth', 8388608, '24')
+					, ( 'DaysOfMonth', 16777216, '25')
+					, ( 'DaysOfMonth', 33554432, '26')
+					, ( 'DaysOfMonth', 67108864, '27')
+					, ( 'DaysOfMonth', 134217728, '28')
+					, ( 'DaysOfMonth', 268435456, '29')
+					, ( 'DaysOfMonth', 536870912, '30')
+					, ( 'DaysOfMonth', 1073741824, '31')
+					, ( 'DaysOfMonth', 8193, '1st and 14th')
+					, ( 'DaysOfWeek', 1, 'Sun')
+					, ( 'DaysOfWeek', 2, 'Mon')
+					, ( 'DaysOfWeek', 4, 'Tues')
+					, ( 'DaysOfWeek', 8, 'Wed')
+					, ( 'DaysOfWeek', 16, 'Thurs')
+					, ( 'DaysOfWeek', 32, 'Fri')
+					, ( 'DaysOfWeek', 64, 'Sat')
+					, ( 'DaysOfWeek', 62, 'Mon - Fri')
+					, ( 'DaysOfWeek', 10, 'Mon - Wed')
+					, ( 'DaysOfWeek', 24, 'Wed - Thurs')
+					, ( 'DaysOfWeek', 120, 'Wed - Sat')
+					, ( 'DaysOfWeek', 126, 'Mon - Sat')
+					, ( 'DaysOfWeek', 127, 'Daily')
+					, ( 'DayOfWeek', 1, 'Sun')
+					, ( 'DayOfWeek', 127, 'Sun')
+					, ( 'DayOfWeek', 2, 'Mon')
+					, ( 'DayOfWeek', 10, 'Mon')
+					, ( 'DayOfWeek', 62, 'Mon')
+					, ( 'DayOfWeek', 126, 'Mon')
+					, ( 'DayOfWeek', 127, 'Mon')
+					, ( 'DayOfWeek', 4, 'Tue')
+					, ( 'DayOfWeek', 10, 'Tue')
+					, ( 'DayOfWeek', 62, 'Tue')
+					, ( 'DayOfWeek', 126, 'Tue')
+					, ( 'DayOfWeek', 127, 'Tue')
+					, ( 'DayOfWeek', 8, 'Wed')
+					, ( 'DayOfWeek', 10, 'Wed')
+					, ( 'DayOfWeek', 24, 'Wed')
+					, ( 'DayOfWeek', 62, 'Wed')
+					, ( 'DayOfWeek', 120, 'Wed')
+					, ( 'DayOfWeek', 126, 'Wed')
+					, ( 'DayOfWeek', 127, 'Wed')
+					, ( 'DayOfWeek', 16, 'Thr')
+					, ( 'DayOfWeek', 24, 'Thr')
+					, ( 'DayOfWeek', 62, 'Thr')
+					, ( 'DayOfWeek', 120, 'Thr')
+					, ( 'DayOfWeek', 126, 'Thr')
+					, ( 'DayOfWeek', 127, 'Thr')
+					, ( 'DayOfWeek', 32, 'Fri')
+					, ( 'DayOfWeek', 62, 'Fri')
+					, ( 'DayOfWeek', 120, 'Fri')
+					, ( 'DayOfWeek', 126, 'Fri')
+					, ( 'DayOfWeek', 127, 'Fri')
+					, ( 'DayOfWeek', 64, 'Sat')
+					, ( 'DayOfWeek', 120, 'Sat')
+					, ( 'DayOfWeek', 126, 'Sat')
+					, ( 'DayOfWeek', 127, 'Sat')
+					) tbl ([GroupName], [CodeNbr], [Label])
+					)
+					,
+					subscription_schedule
+					AS
+					(
+					SELECT
+					[ScheduleID]
+					, [SchDaySun] = Sun
+					, [SchDayMon] = Mon
+					, [SchDayTue] = Tue
+					, [SchDayWed] = Wed
+					, [SchDayThr] = Thr
+					, [SchDayFri] = Fri
+					, [SchDaySat] = Sat
+					, [ScheduleName]
+					, [ScheduleStartDate]
+					, [ScheduleEndDate]
+					, [Flags]
+					, [RecurrenceType]
+					, [State]
+					, [MinutesInterval]
+					, [DaysInterval]
+					, [WeeksInterval]
+					, [DaysOfWeek]
+					, [DaysOfMonth]
+					, [Month]
+					, [MonthlyWeek]
+					, [ScheduleDays]
+					FROM
+					(
+					SELECT
+					sc.[ScheduleID]
+					, sd.[CodeNbr]
+					, sd.[Label]
+					, [ScheduleName] = CASE WHEN sc.[EventType] = 'SharedSchedule' THEN sc.[name] ELSE NULL END
+					, [ScheduleStartDate] = sc.[StartDate]
+					, [ScheduleEndDate] = sc.[EndDate]
+					, sc.[Flags]
+					, sc.[RecurrenceType]
+					, sc.[State]
+					, sc.[MinutesInterval]
+					, sc.[DaysInterval]
+					, sc.[WeeksInterval]
+					, sc.[DaysOfWeek]
+					, sc.[DaysOfMonth]
+					, sc.[Month]
+					, sc.[MonthlyWeek]
+					, [ScheduleDays] =
+					CASE
+					WHEN sc.[DaysOfMonth] IS NOT NULL THEN COALESCE(dom.[Label], '(' + CAST(sc.[DaysOfMonth] AS VARCHAR(20)) + ') NOT CODED')
+					WHEN sc.[DaysOfWeek] IS NOT NULL THEN COALESCE(dow.[Label], '(' + CAST(sc.[DaysOfWeek] AS VARCHAR(20)) + ') NOT CODED')
+					END
+					FROM
+					[dbo].[Schedule] sc WITH (NOLOCK)
+					LEFT JOIN subscription_days sd ON sc.[DaysOfWeek] = sd.[CodeNbr] AND sd.[GroupName] = 'DayOfWeek'
+					LEFT JOIN subscription_days AS dom ON sc.[DaysOfMonth] = dom.[CodeNbr] AND dom.[GroupName] = 'DaysOfMonth'
+					LEFT JOIN subscription_days AS dow ON sc.[DaysOfWeek] = dow.[CodeNbr] AND dow.[GroupName] = 'DaysOfWeek'
+					) sch
+					PIVOT
+					(
+					COUNT(sch.[Label])
+					FOR sch.[Label]
+					IN ([Sun], [Mon], [Tue], [Wed], [Thr], [Fri], [Sat])
+					) AS pvt
+					)
+					,
+					report_subscription
+					AS
+					(
+					SELECT
+					s.[SubscriptionID]
+					, s.[Report_OID]
+					, [SubscriptionDescription] = s.[Description]
+					, s.[ExtensionSettings]
+					, s.[EventType]
+					, s.[OwnerID]
+					, s.[ModifiedByID]
+					, s.[ModifiedDate]
+					, [RunTime] = CONVERT(VARCHAR(5), s.[LastRunTime], 8)
+					, [LastRunDate] = CONVERT(VARCHAR(11), s.[LastRunTime], 13)
+					, [LastRunTime] = CAST(CONVERT(CHAR(16), s.[LastRunTime], 113) AS DATETIME)
+					, [SubscriptionType] = CASE WHEN CAST(s.[DataSettings] AS NVARCHAR(50)) IS NOT NULL THEN 'Data-Driven' ELSE 'Standard' END
+					, s.[DeliveryExtension]
+					, s.[MatchData]
+					, [SubscriptionLastStatus] = s.[LastStatus]
+					, [StatusFail] = CASE WHEN s.[LastStatus] LIKE '%Mail sent%' THEN 'N' ELSE 'Y' END
+					, [EmailSubject] = CASE CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;SUBJECT&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailTo] = SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings)))
+					, [EmailCc] = CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailBcc] = CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailComment] = CASE CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Comment&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailIncludeLink] = CASE CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;IncludeLink&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailRenderFormat] = CASE CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;RenderFormat&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, [EmailPriority] = CASE CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) WHEN 0 THEN '' ELSE SUBSTRING(s.ExtensionSettings, LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings), CHARINDEX('&lt;/Value&gt;', s.ExtensionSettings, CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings) + 1) - (LEN('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;Priority&lt;/Name&gt;&lt;Value&gt;', s.ExtensionSettings))) END
+					, sch.[MinutesInterval]
+					, sch.[DaysInterval]
+					, sch.[WeeksInterval]
+					, sch.[DaysOfWeek]
+					, sch.[DaysOfMonth]
+					, sch.[Month]
+					, sch.[MonthlyWeek]
+					, sch.[ScheduleName]
+					, sch.[ScheduleDays]
+					, sch.[SchDaySun]
+					, sch.[SchDayMon]
+					, sch.[SchDayTue]
+					, sch.[SchDayWed]
+					, sch.[SchDayThr]
+					, sch.[SchDayFri]
+					, sch.[SchDaySat]
+					, sch.[ScheduleStartDate]
+					, sch.[ScheduleEndDate]
+					, sch.[Flags]
+					, sch.[RecurrenceType]
+					, sch.[State]
+					, s.[LastStatus]
+					, rs.[ScheduleID]
+					, [IsDisabled] = CASE WHEN s.[LastStatus] = 'Disabled' THEN 1 ELSE 0 END
+					FROM
+					[dbo].[Subscriptions] AS s WITH (NOLOCK)
+					LEFT JOIN [dbo].[Notifications] AS n WITH (NOLOCK) ON n.[SubscriptionID] = s.[SubscriptionID] AND s.[Report_OID] = n.[ReportID]
+					LEFT JOIN [dbo].[ReportSchedule] AS rs WITH (NOLOCK) ON s.[SubscriptionID] = rs.[SubscriptionID]
+					LEFT JOIN subscription_schedule AS sch ON rs.[ScheduleID] = sch.[ScheduleID]
+					WHERE
+					1=1
+					AND (@all_value IN (@DeliveryExtension) OR s.[DeliveryExtension] IN(@DeliveryExtension))
+					)
+					SELECT
+					c.[ItemID]
+					, c.[Name]
+					, c.[Description]
+					, c.[Type]
+					, c.[Parameter]
+					, c.[ReportFolder]
+					, c.[ReportPath]
+					, [URL_ReportFolder] = c.[UrlPath] + c.[ReportFolder] + '&amp;ViewMode=List'
+					, [URL_Report] = @ReportServerUrl + 'Reports/report/' + c.[ReportFolder] + '%2f' + c.[Name]
+					, [URL] = @ReportServerUrl + 'Reports/manage/catalogitem/editsubscription' + c.[ReportPath] + '?id=' + CAST(s.[SubscriptionID] AS VARCHAR(80))
+					, [URL2] = @ReportServerUrl + 'Reports/Pages/Report.aspx?ItemPath=' + c.[ReportPath] + '&amp;SelectedTabId=SubscriptionsTab'
+					, [ReportCreatedBy] = urc.[SimpleUserName]
+					, c.[ReportCreationDate]
+					, [ReportModifiedBy] = urm.[SimpleUserName]
+					, c.[ReportModifiedDate]
+					, [SubscriptionOwner] = usc.[SimpleUserName]
+					, [SubscriptionModifiedBy] = usm.[SimpleUserName]
+					, [SubscriptionModifiedDate] = s.[ModifiedDate]
+					, s.[SubscriptionID]
+					, s.[SubscriptionDescription]
+					, s.[ExtensionSettings]
+					, s.[EventType]
+					, s.[EmailSubject]
+					, s.[EmailTo]
+					, s.[EmailCc]
+					, s.[EmailBcc]
+					, s.[EmailComment]
+					, s.[EmailIncludeLink]
+					, s.[EmailRenderFormat]
+					, s.[EmailPriority]
+					, s.[DeliveryExtension]
+					, [DeliveryExtensionImage] =
+					CASE
+					WHEN s.[DeliveryExtension] = 'Report Server Email' THEN 'email'
+					WHEN s.[DeliveryExtension] = 'Report Server FileShare' THEN 'folder_table'
+					ELSE ''
+					END
+					, s.[SubscriptionType]
+					, s.[SubscriptionLastStatus]
+					, s.[StatusFail]
+					, s.[MatchData]
+					, s.[RunTime]
+					, s.[LastRunDate]
+					, s.[LastRunTime]
+					, s.[MinutesInterval]
+					, s.[DaysInterval]
+					, s.[WeeksInterval]
+					, s.[DaysOfWeek]
+					, s.[DaysOfMonth]
+					, s.[Month]
+					, s.[MonthlyWeek]
+					, [JobName] = NULL
+					, s.[ScheduleName]
+					, s.[ScheduleDays]
+					, s.[SchDaySun]
+					, s.[SchDayMon]
+					, s.[SchDayTue]
+					, s.[SchDayWed]
+					, s.[SchDayThr]
+					, s.[SchDayFri]
+					, s.[SchDaySat]
+					, s.[ScheduleStartDate]
+					, s.[ScheduleEndDate]
+					, s.[Flags]
+					, s.[RecurrenceType]
+					, s.[State]
+					, [EventStatus] = el.[Status]
+					, [EventDateTime] = el.[TimeEnd]
+					, s.[LastStatus]
+					, s.[ScheduleID]
+					FROM
+					report_catalog AS c
+					INNER JOIN report_subscription AS s ON s.[Report_OID] = c.[ItemID]
+					LEFT JOIN
+					(
+					SELECT
+					b.[ReportID]
+					, b.[Status]
+					, b.[TimeEnd]
+					, [LastRunTime] = CAST(CONVERT(CHAR(16), b.[TimeEnd], 113) AS DATETIME)
+					FROM
+					[dbo].[ExecutionLog] AS b WITH (NOLOCK)
+					INNER JOIN (SELECT [ReportID], MAX([TimeEnd]) AS [TimeEnd] FROM [dbo].[ExecutionLog] WITH (NOLOCK) GROUP BY [ReportID]) a ON b.[ReportID] = a.[ReportID] AND b.[TimeEnd] = a.[TimeEnd]
+					GROUP BY
+					b.[ReportID]
+					, b.[Status]
+					, b.[TimeEnd]
+					) AS el ON el.[ReportID] = c.[ItemID]
+					LEFT JOIN report_status AS rs ON el.[Status] = rs.[StatusName]
+					LEFT JOIN report_users AS urc ON c.[CreatedById] = urc.[UserID]
+					LEFT JOIN report_users AS urm ON c.[ModifiedById] = urm.[UserID]
+					LEFT JOIN report_users AS usc ON s.[OwnerID] = usc.[UserID]
+					LEFT JOIN report_users AS usm ON s.[ModifiedByID] = usm.[UserID]
+					WHERE
+					1=1
+					AND s.[SubscriptionType] IN(@SubscriptionType)
+					AND (@all_value IN (@ReportFolder) OR c.[ReportFolder] IN(@ReportFolder))
+					AND (@all_value IN(@ReportName) OR c.[Name] IN(@ReportName))
+					AND (@all_value IN(@StatusGroup) OR rs.[StatusGroup] IN(@StatusGroup))
+					AND (@all_value IN(@EventStatus) OR el.[Status] IN(@EventStatus))
+					AND (@all_value IN(@SubscriptionStatus) OR s.[SubscriptionLastStatus] LIKE '%' + @SubscriptionStatus + '%')
+					AND (@all_value IN(@LastStatus) OR s.[LastStatus] IN(@LastStatus))
+					AND (@IsDisabled IS NULL OR s.[IsDisabled] = @IsDisabled)
+					--AND (@IsDisabled IS NULL OR CASE WHEN s.[ScheduleEndDate] IS NULL THEN 0 WHEN s.[ScheduleEndDate] IS NOT NULL THEN 1 END = @IsDisabled)
+					AND (el.[TimeEnd] &gt;= @StartDateTime OR @StartDateTime IS NULL)
+					AND (el.[TimeEnd] &lt;= @EndDateTime OR @EndDateTime IS NULL)
+					AND
+					(
+					(SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;TO&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
+					LIKE '%' + @EmailLike + '%' OR @EmailLike IS NULL
+					)
+					OR
+					(
+					CASE CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])
+					WHEN 0 THEN ''
+					ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;CC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
+					END
+					LIKE '%' + @EmailLike + '%'
+					)
+					OR
+					(
+					CASE CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])
+					WHEN 0 THEN ''
+					ELSE SUBSTRING(s.[ExtensionSettings], LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]), CHARINDEX('&lt;/Value&gt;', s.[ExtensionSettings], CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings]) + 1) - (LEN('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;') + CHARINDEX('&lt;Name&gt;BCC&lt;/Name&gt;&lt;Value&gt;', s.[ExtensionSettings])))
+					END
+					LIKE '%' + @EmailLike + '%')
+					)
+				</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -457,6 +469,10 @@
         <Field Name="Description">
           <DataField>Description</DataField>
           <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
         <Field Name="Parameter">
           <DataField>Parameter</DataField>
@@ -564,6 +580,14 @@
         </Field>
         <Field Name="DeliveryExtension">
           <DataField>DeliveryExtension</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DeliveryExtensionImage">
+          <DataField>DeliveryExtensionImage</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SubscriptionType">
+          <DataField>SubscriptionType</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="SubscriptionLastStatus">
@@ -690,6 +714,10 @@
           <DataField>LastStatus</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="ScheduleID">
+          <DataField>ScheduleID</DataField>
+          <rd:TypeName>System.Guid</rd:TypeName>
+        </Field>
       </Fields>
     </DataSet>
     <DataSet Name="ReportFolder">
@@ -701,32 +729,32 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>
-          WITH
-          catalog_type_description
-          AS
-          (
-          SELECT tbl.* FROM (VALUES
-          ( 1, 'Folder')
-          , ( 2, 'Report')
-          , ( 3, 'Resource')
-          , ( 4, 'Linked Report')
-          , ( 5, 'Data Source')
-          , ( 6, 'Report Model')
-          , ( 8, 'Shared Dataset')
-          , ( 9, 'Report Part')
-          ) tbl ([TypeID], [TypeDescription])
-          WHERE [TypeID] = 2
-          )
-          SELECT
-          [Report_Folder] = SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
-          FROM
-          [dbo].[Subscriptions] AS s WITH (NOLOCK)
-          INNER JOIN [dbo].[Catalog] AS c WITH (NOLOCK) ON s.[Report_OID] = c.[ItemID]
-          INNER JOIN catalog_type_description AS ctd ON ctd.[TypeID] = c.[Type]
-          UNION
-          SELECT @all_value
-          ORDER BY 1
-        </CommandText>
+					WITH
+					catalog_type_description
+					AS
+					(
+					SELECT tbl.* FROM (VALUES
+					( 1, 'Folder')
+					, ( 2, 'Report')
+					, ( 3, 'Resource')
+					, ( 4, 'Linked Report')
+					, ( 5, 'Data Source')
+					, ( 6, 'Report Model')
+					, ( 8, 'Shared Dataset')
+					, ( 9, 'Report Part')
+					) tbl ([TypeID], [TypeDescription])
+					WHERE [TypeID] = 2
+					)
+					SELECT
+					[Report_Folder] = SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)
+					FROM
+					[dbo].[Subscriptions] AS s WITH (NOLOCK)
+					INNER JOIN [dbo].[Catalog] AS c WITH (NOLOCK) ON s.[Report_OID] = c.[ItemID]
+					INNER JOIN catalog_type_description AS ctd ON ctd.[TypeID] = c.[Type]
+					UNION
+					SELECT @all_value
+					ORDER BY 1
+				</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -748,19 +776,19 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>
-          SELECT
-          [Report_Name] = c.[Name]
-          FROM
-          [dbo].[Subscriptions] AS s WITH (NOLOCK)
-          INNER JOIN [dbo].[Catalog] AS c WITH (NOLOCK) ON s.[Report_OID] = c.[ItemID]
-          WHERE
-          1=1
-          AND c.[Type] = 2
-          AND (SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) IN(@ReportFolder) OR @all_value IN (@ReportFolder))
-          UNION
-          SELECT @all_value
-          ORDER BY 1
-        </CommandText>
+					SELECT
+					[Report_Name] = c.[Name]
+					FROM
+					[dbo].[Subscriptions] AS s WITH (NOLOCK)
+					INNER JOIN [dbo].[Catalog] AS c WITH (NOLOCK) ON s.[Report_OID] = c.[ItemID]
+					WHERE
+					1=1
+					AND c.[Type] = 2
+					AND (SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) IN(@ReportFolder) OR @all_value IN (@ReportFolder))
+					UNION
+					SELECT @all_value
+					ORDER BY 1
+				</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -779,9 +807,9 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>
-          SELECT DISTINCT [Status] FROM [dbo].[ExecutionLog]
-          UNION SELECT @all_value
-        </CommandText>
+					SELECT DISTINCT [Status] FROM [dbo].[ExecutionLog] WITH (NOLOCK)
+					UNION SELECT @all_value
+				</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -806,18 +834,27 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>
-          SELECT DISTINCT
-          s.[LastStatus]
-          FROM
-          [dbo].[Subscriptions] AS s
-          WHERE
-          1=1
-          AND (s.[LastRunTime] &gt;= @StartDateTime OR @StartDateTime IS NULL)
-          AND (s.[LastRunTime] &lt;= @EndDateTime OR @EndDateTime IS NULL)
-          UNION
-          SELECT @all_value
-          ORDER BY 1
-        </CommandText>
+					SELECT DISTINCT
+					[s].[LastStatus]
+					FROM [dbo].[Subscriptions] AS [s] WITH(NOLOCK)
+					WHERE
+					1 = 1
+					AND
+					(
+					[s].[LastRunTime] &gt;= @StartDateTime
+					OR @StartDateTime IS NULL
+					)
+					AND
+					(
+					[s].[LastRunTime] &lt;= @EndDateTime
+					OR @EndDateTime IS NULL
+					)
+					UNION
+					SELECT
+					@all_value
+					ORDER BY
+					1;
+				</CommandText>
       </Query>
       <Fields>
         <Field Name="LastStatus">
@@ -835,12 +872,12 @@
           </QueryParameter>
         </QueryParameters>
         <CommandText>
-          SELECT tbl.* FROM (VALUES
-          ( 'Success')
-          , ( 'Failure')
-          ) tbl ([StatusGroup])
-          UNION SELECT @all_value
-        </CommandText>
+					SELECT tbl.* FROM (VALUES
+					( 'Success')
+					, ( 'Failure')
+					) tbl ([StatusGroup])
+					UNION SELECT @all_value
+				</CommandText>
       </Query>
       <Fields>
         <Field Name="StatusGroup">
@@ -867,7 +904,7 @@
                   <Width>0.6cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>8cm</Width>
+                  <Width>6cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.6cm</Width>
@@ -876,7 +913,13 @@
                   <Width>0.6cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>9.485cm</Width>
+                  <Width>7cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>4.00813cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>2.5cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3cm</Width>
@@ -964,6 +1007,9 @@
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.25cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>6cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -1261,6 +1307,84 @@
                               </Style>
                             </Paragraph>
                           </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox2">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Delivery Extension</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox2</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox4">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Subscription Type</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox4</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2217,6 +2341,11 @@
                       <CellContents>
                         <Textbox Name="lblSubscriptionModifiedDate">
                           <CanGrow>true</CanGrow>
+                          <UserSort>
+                            <SortExpression>=Fields!SubscriptionModifiedDate.Value</SortExpression>
+                            <SortExpressionScope>grpDetails2</SortExpressionScope>
+                            <SortTarget>Subscriptions</SortTarget>
+                          </UserSort>
                           <KeepTogether>true</KeepTogether>
                           <Paragraphs>
                             <Paragraph>
@@ -2408,6 +2537,45 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>Schedule ID</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
                 <TablixRow>
@@ -2423,7 +2591,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2508,7 +2678,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2534,7 +2706,7 @@
                             <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <BackgroundImage>
                               <Source>Embedded</Source>
-                              <Value>report</Value>
+                              <Value>=IIF(Fields!Type.Value = 2, "report", "report_link")</Value>
                               <BackgroundRepeat>Clip</BackgroundRepeat>
                             </BackgroundImage>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -2597,7 +2769,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2626,7 +2800,7 @@
                             <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
                             <BackgroundImage>
                               <Source>Embedded</Source>
-                              <Value>email</Value>
+                              <Value>=Fields!DeliveryExtensionImage.Value</Value>
                               <BackgroundRepeat>Clip</BackgroundRepeat>
                             </BackgroundImage>
                             <PaddingLeft>2pt</PaddingLeft>
@@ -2647,7 +2821,9 @@
                               <TextRuns>
                                 <TextRun>
                                   <Value />
-                                  <Style />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                  </Style>
                                 </TextRun>
                               </TextRuns>
                               <Style />
@@ -2656,23 +2832,18 @@
                           <ActionInfo>
                             <Actions>
                               <Action>
-                                <Drillthrough>
-                                  <ReportName>Execution Log</ReportName>
-                                  <Parameters>
-                                    <Parameter Name="ReportName">
-                                      <Value>=Fields!Name.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="StartDate">
-                                      <Value>=Parameters!StartDateTime.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="LogStatus">
-                                      <Value>=Parameters!all_value.Value</Value>
-                                    </Parameter>
-                                    <Parameter Name="EndDate">
-                                      <Value>=Parameters!EndDateTime.Value</Value>
-                                    </Parameter>
-                                  </Parameters>
-                                </Drillthrough>
+                                <Hyperlink>
+																	="javascript:void(window.open('"
+																	+ Globals!ReportServerUrl + "/ReportServer?" + Replace(Globals!ReportFolder, " ", "+")
+																	+ "/Execution Log"
+																	+ "&amp;rs:Command=Render"
+																	+ "&amp;ReportFolder=" + Fields!ReportFolder.Value
+																	+ "&amp;ReportName=" + Fields!Name.Value
+																	+ "&amp;StartDate=" + Parameters!StartDateTime.Value
+																	+ "&amp;LogStatus=" + Parameters!all_value.Value
+																	+ "&amp;EndDate=" + Parameters!EndDateTime.Value
+																	+ "','_blank'))"
+																</Hyperlink>
                               </Action>
                             </Actions>
                           </ActionInfo>
@@ -2741,6 +2912,80 @@
                     </TablixCell>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="DeliveryExtension">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!DeliveryExtension.Value</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>DeliveryExtension</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="SubscriptionType1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!SubscriptionType.Value</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>SubscriptionType1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="txtSubscriptionScheduleSharedName">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -2748,7 +2993,7 @@
                             <Paragraph>
                               <TextRuns>
                                 <TextRun>
-                                  <Value>=IIF(Fields!JobName.Value = UCase(Fields!MatchData.Value), Fields!ScheduleName.Value, "")</Value>
+                                  <Value>=Fields!ScheduleName.Value</Value>
                                   <Style>
                                     <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
@@ -3794,12 +4039,51 @@
                         </Textbox>
                       </CellContents>
                     </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="ScheduleID">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!ScheduleID.Value</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Left</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>ScheduleID</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
                   </TablixCells>
                 </TablixRow>
               </TablixRows>
             </TablixBody>
             <TablixColumnHierarchy>
               <TablixMembers>
+                <TablixMember />
+                <TablixMember />
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
@@ -3876,6 +4160,7 @@
                 <TablixMember />
                 <TablixMember />
                 <TablixMember />
+                <TablixMember />
               </TablixMembers>
             </TablixColumnHierarchy>
             <TablixRowHierarchy>
@@ -3918,7 +4203,7 @@
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
             <Height>1.6cm</Height>
-            <Width>129.41396cm</Width>
+            <Width>137.43709cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -3932,29 +4217,14 @@
         <Height>1.6cm</Height>
         <Style />
       </Body>
-      <Width>129.41396cm</Width>
+      <Width>137.43709cm</Width>
       <Page>
         <PageHeader>
-          <Height>2.45792cm</Height>
+          <Height>2.75cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
-            <Image Name="imgLogo">
-              <Source>Embedded</Source>
-              <Value>ssrs</Value>
-              <Sizing>FitProportional</Sizing>
-              <Height>2.45792cm</Height>
-              <Width>5cm</Width>
-              <Visibility>
-                <Hidden>=IIF(Globals!RenderFormat.Name = "PDF", false, true)</Hidden>
-              </Visibility>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-              </Style>
-            </Image>
-            <Textbox Name="txtTitle">
+            <Textbox Name="Textbox11">
               <CanGrow>true</CanGrow>
               <KeepTogether>true</KeepTogether>
               <Paragraphs>
@@ -3964,83 +4234,86 @@
                       <Value>=Globals!ReportName</Value>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
-                        <FontSize>19pt</FontSize>
+                        <FontSize>18pt</FontSize>
                         <FontWeight>Bold</FontWeight>
                         <Color>=Variables!ColorTableHeaderBackground.Value</Color>
                       </Style>
                     </TextRun>
+                    <TextRun>
+                      <Value>
+												=IIF(IsNothing(Parameters!StartDateTime.Value) And IsNothing(Parameters!EndDateTime.Value), "", vbcrlf)
+												+ IIF(IsNothing(Parameters!StartDateTime.Value), "", "From: ")
+												+ Format(Parameters!StartDateTime.Value, Variables!FormatDateTime.Value)
+												+ IIF(IsNothing(Parameters!EndDateTime.Value), "", " To: ")
+												+ Format(Parameters!EndDateTime.Value, Variables!FormatDateTime.Value)
+											</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>Calibri</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>=Variables!ColorTableHeaderBackground.Value</Color>
+                      </Style>
+                    </TextRun>
                   </TextRuns>
+                  <SpaceAfter>2pt</SpaceAfter>
                   <Style>
                     <TextAlign>Left</TextAlign>
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <Left>5cm</Left>
-              <Height>2.45792cm</Height>
-              <Width>25.385cm</Width>
-              <ZIndex>1</ZIndex>
+              <rd:DefaultName>Textbox8</rd:DefaultName>
+              <Height>2.75cm</Height>
+              <Width>24.86472cm</Width>
               <Visibility>
-                <Hidden>=IIF(Globals!RenderFormat.Name = "PDF", false, true)</Hidden>
+                <Hidden>=IIF(Globals!RenderFormat.Name = "EXCELOPENXML", true, false)</Hidden>
               </Visibility>
               <Style>
                 <Border>
                   <Style>None</Style>
                 </Border>
                 <VerticalAlign>Middle</VerticalAlign>
-                <PaddingLeft>20pt</PaddingLeft>
+                <PaddingLeft>25pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
+            <Image Name="imgLogo">
+              <Source>Embedded</Source>
+              <Value>ssrs</Value>
+              <Sizing>FitProportional</Sizing>
+              <Left>24.86472cm</Left>
+              <Height>2.75cm</Height>
+              <Width>4.30514cm</Width>
+              <ZIndex>1</ZIndex>
+              <Visibility>
+                <Hidden>=IIF(Globals!RenderFormat.Name = "EXCELOPENXML", true, false)</Hidden>
+              </Visibility>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+              </Style>
+            </Image>
           </ReportItems>
           <Style>
             <Border>
+              <Color>LightGrey</Color>
               <Style>None</Style>
+              <Width>0.75pt</Width>
             </Border>
+            <BottomBorder>
+              <Style>Solid</Style>
+            </BottomBorder>
           </Style>
         </PageHeader>
         <PageFooter>
-          <Height>1cm</Height>
+          <Height>0.92063cm</Height>
           <PrintOnFirstPage>true</PrintOnFirstPage>
           <PrintOnLastPage>true</PrintOnLastPage>
           <ReportItems>
-            <Textbox Name="txtPrintedBy">
-              <CanGrow>true</CanGrow>
-              <CanShrink>true</CanShrink>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value>
-                        ="Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()
-                        + Environment.NewLine
-                        + "Produced By: " + Variables!UserName.Value
-                        + " @ " + Variables!ReportRunDateTime.Value
-                      </Value>
-                      <Style>
-                        <FontFamily>Calibri</FontFamily>
-                        <FontSize>8pt</FontSize>
-                        <Color>DimGray</Color>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style>
-                    <TextAlign>Right</TextAlign>
-                  </Style>
-                </Paragraph>
-              </Paragraphs>
-              <Left>30.385cm</Left>
-              <Height>1cm</Height>
-              <Width>8.8823cm</Width>
-              <Style>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Textbox Name="txtCriteria">
               <CanGrow>true</CanGrow>
               <CanShrink>true</CanShrink>
@@ -4058,6 +4331,7 @@
                       </Style>
                     </TextRun>
                   </TextRuns>
+                  <SpaceAfter>2pt</SpaceAfter>
                   <Style>
                     <TextAlign>Left</TextAlign>
                   </Style>
@@ -4066,6 +4340,14 @@
                   <TextRuns>
                     <TextRun>
                       <Value>=Variables!UrlReport.Value</Value>
+                      <ActionInfo>
+                        <Actions>
+                          <Action>
+                            <Hyperlink>="javascript:void(window.open('" + Variables!UrlReportWithParameters.Value + "','_blank'))"</Hyperlink>
+                          </Action>
+                        </Actions>
+                      </ActionInfo>
+                      <ToolTip>Open the report with the current parameters in a separate tab</ToolTip>
                       <Style>
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>8pt</FontSize>
@@ -4074,21 +4356,14 @@
                       </Style>
                     </TextRun>
                   </TextRuns>
+                  <SpaceAfter>2pt</SpaceAfter>
                   <Style>
                     <TextAlign>Left</TextAlign>
                   </Style>
                 </Paragraph>
               </Paragraphs>
-              <ActionInfo>
-                <Actions>
-                  <Action>
-                    <Hyperlink>=Variables!UrlReportWithParameters.Value</Hyperlink>
-                  </Action>
-                </Actions>
-              </ActionInfo>
-              <Height>1cm</Height>
-              <Width>30.385cm</Width>
-              <ZIndex>1</ZIndex>
+              <Height>0.92063cm</Height>
+              <Width>21cm</Width>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -4099,17 +4374,64 @@
                 <PaddingBottom>2pt</PaddingBottom>
               </Style>
             </Textbox>
+            <Textbox Name="txtPrintedBy">
+              <CanGrow>true</CanGrow>
+              <CanShrink>true</CanShrink>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>
+												="Page: " &amp; Globals!PageNumber.ToString() + " of " + Globals!TotalPages.ToString()
+												+ Environment.NewLine
+												+ "Produced By: " + Variables!UserName.Value
+												+ " @ " + Variables!ReportRunDateTime.Value
+											</Value>
+                      <Style>
+                        <FontFamily>Calibri</FontFamily>
+                        <FontSize>8pt</FontSize>
+                        <Color>DimGray</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <SpaceAfter>2pt</SpaceAfter>
+                  <Style>
+                    <TextAlign>Right</TextAlign>
+                  </Style>
+                </Paragraph>
+              </Paragraphs>
+              <Left>21cm</Left>
+              <Height>0.92063cm</Height>
+              <Width>8.16986cm</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
           </ReportItems>
-          <Style />
+          <Style>
+            <Border>
+              <Color>LightGrey</Color>
+              <Style>None</Style>
+              <Width>0.75pt</Width>
+            </Border>
+            <TopBorder>
+              <Style>Solid</Style>
+            </TopBorder>
+          </Style>
         </PageFooter>
-        <PageHeight>29.7cm</PageHeight>
-        <PageWidth>42cm</PageWidth>
+        <PageHeight>21cm</PageHeight>
+        <PageWidth>29.7cm</PageWidth>
         <InteractiveHeight>11in</InteractiveHeight>
         <InteractiveWidth>8.5in</InteractiveWidth>
-        <LeftMargin>0.5cm</LeftMargin>
-        <RightMargin>0.5cm</RightMargin>
-        <TopMargin>0.5cm</TopMargin>
-        <BottomMargin>0.5cm</BottomMargin>
+        <LeftMargin>0.25cm</LeftMargin>
+        <RightMargin>0.25cm</RightMargin>
+        <TopMargin>0.25cm</TopMargin>
+        <BottomMargin>0.25cm</BottomMargin>
         <ColumnSpacing>1cm</ColumnSpacing>
         <Style />
       </Page>
@@ -4125,6 +4447,16 @@
       </DefaultValue>
       <Hidden>true</Hidden>
     </ReportParameter>
+    <ReportParameter Name="ReportServerUrl">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Replace(Globals!ReportServerUrl, "ReportServer", "")</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>ReportServerUrl</Prompt>
+      <Hidden>true</Hidden>
+    </ReportParameter>
     <ReportParameter Name="StartDateTime">
       <DataType>DateTime</DataType>
       <Nullable>true</Nullable>
@@ -4133,16 +4465,40 @@
           <Value>=DateAdd("d", -1, Today)</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Start Date:</Prompt>
+      <Prompt>Start Date</Prompt>
     </ReportParameter>
     <ReportParameter Name="EndDateTime">
       <DataType>DateTime</DataType>
+      <Nullable>true</Nullable>
       <DefaultValue>
         <Values>
           <Value>=Now</Value>
         </Values>
       </DefaultValue>
-      <Prompt>End Date:</Prompt>
+      <Prompt>End Date</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="SubscriptionType">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Data-Driven</Value>
+          <Value>Standard</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Subscription Type</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Data-Driven</Value>
+            <Label>Data-Driven</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Standard</Value>
+            <Label>Standard</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="ReportFolder">
       <DataType>String</DataType>
@@ -4177,6 +4533,15 @@
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ShowParameters">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Parameters</Prompt>
     </ReportParameter>
     <ReportParameter Name="ReportName">
       <DataType>String</DataType>
@@ -4224,6 +4589,67 @@
         </ParameterValues>
       </ValidValues>
     </ReportParameter>
+    <ReportParameter Name="ShowEmailDetails">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show Email Details</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="DeliveryExtension">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>&lt;ALL&gt;</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Delivery Extension</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>&lt;ALL&gt;</Value>
+            <Label>&lt;ALL&gt;</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Report Server Email</Value>
+            <Label>Report Server Email</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Report Server FileShare</Value>
+            <Label>Report Server FileShare</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="LastStatus">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Parameters!all_value.Value</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Last Status</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>LastStatuses</DataSetName>
+          <ValueField>LastStatus</ValueField>
+          <LabelField>LastStatus</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="IsDisabled">
+      <DataType>Boolean</DataType>
+      <Nullable>true</Nullable>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Disabled</Prompt>
+    </ReportParameter>
     <ReportParameter Name="EmailLike">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
@@ -4251,56 +4677,11 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="ShowParameters">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>false</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Parameters</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="LastStatus">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Last Status</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>LastStatuses</DataSetName>
-          <ValueField>LastStatus</ValueField>
-          <LabelField>LastStatus</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="ShowEmailDetails">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>false</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Show Email Details</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="IsDisabled">
-      <DataType>Boolean</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value>false</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Disabled</Prompt>
-    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
-      <NumberOfColumns>2</NumberOfColumns>
-      <NumberOfRows>7</NumberOfRows>
+      <NumberOfColumns>3</NumberOfColumns>
+      <NumberOfRows>6</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -4329,32 +4710,32 @@
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>5</RowIndex>
           <ParameterName>EmailLike</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>5</RowIndex>
           <ParameterName>EventStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>6</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>ShowEmailDetails</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>LastStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>ShowParameters</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>6</RowIndex>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>IsDisabled</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4367,31 +4748,46 @@
           <RowIndex>2</RowIndex>
           <ParameterName>StatusGroup</ParameterName>
         </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>4</RowIndex>
+          <ParameterName>DeliveryExtension</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ReportServerUrl</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>SubscriptionType</ParameterName>
+        </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
   <Code>
-    Private Alt As Boolean
+		Private Alt As Boolean
 
-    Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
-    '------------------------------------------------------------------------------------------------
-    ' Purpose:  To candy stripe the detail rows of a report
-    ' Example:  BackgroundColor = Code.CandyStripe()
-    ' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
-    '------------------------------------------------------------------------------------------------
+		Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
+		'------------------------------------------------------------------------------------------------
+		' Purpose:  To candy stripe the detail rows of a report
+		' Example:  BackgroundColor = Code.CandyStripe()
+		' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
+		'------------------------------------------------------------------------------------------------
 
-    If NewRow Then
-    Alt = Not Alt
-    End If
+		If NewRow Then
+		Alt = Not Alt
+		End If
 
-    If Alt Then
-    Return OddColor
-    Else
-    Return EvenColor
-    End If
+		If Alt Then
+		Return OddColor
+		Else
+		Return EvenColor
+		End If
 
-    End Function
-  </Code>
+		End Function
+	</Code>
   <EmbeddedImages>
     <EmbeddedImage Name="ssrs">
       <MIMEType>image/png</MIMEType>
@@ -4464,6 +4860,15 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
       <MIMEType>image/png</MIMEType>
       <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAITSURBVBgZpcHLThNhGIDh9/vn7/RApwc5VCmFWBPi1mvwAlx7BW69Afeu3bozcSE7E02ILjCRhRrds8AEbKVS2gIdSjvTmf+TYqLu+zyiqszDMCf75PnnnVwhuNcLpwsXk8Q4BYeSOsWpkqrinJI6JXVK6lSRdDq9PO+19vb37XK13Hj0YLMUTVVyWY//Cf8IVwQEGEeJN47S1YdPo4npDpNmnDh5udOh1YsZRcph39EaONpnjs65oxsqvZEyTaHdj3n2psPpKDLBcuOOGUWpZDOG+q0S7751ObuYUisJGQ98T/Ct4Fuo5IX+MGZr95jKjRKLlSxXxFxOEmaaN4us1Upsf+1yGk5ZKhp8C74H5ZwwCGO2drssLZZo1ouIcs2MJikz1oPmapHlaoFXH1oMwphyTghyQj+MefG+RblcoLlaJG/5y4zGCTMikEwTctaxXq/w9kuXdm9Cuzfh9acujXqFwE8xmuBb/hCwl1GKAnGccDwIadQCfD9DZ5Dj494QA2w2qtQW84wmMZ1eyFI1QBVQwV5GiaZOpdsPaSwH5HMZULi9UmB9pYAAouBQbMHHrgQcnQwZV/KgTu1o8PMgipONu2t5KeaNiEkxgAiICDMCCFeEK5aNauAOfoXx8KR9ZOOLk8P7j7er2WBhwWY9sdbDeIJnwBjBWBBAhGsCmiZxPD4/7Z98b/0QVWUehjkZ5vQb/Un5e/DIsVsAAAAASUVORK5CYII=</ImageData>
     </EmbeddedImage>
+    <EmbeddedImage Name="folder_table">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAI1SURBVDjLhZNNSFVREMd/53qfPo3nwq8W1SJaVBKtVAxs56KVIdKiaBct24dBtIkg2tcuLCFavCCiNm2ChAwJQlvlR+LC/OhDffrevfecmWnxUlGe9YfhDDPwmzln5jgzY79G36/dNuO6mB5VVcppIPVCEP1rggRDVCdiakjNbgz1FNr4j+48nzlbEyCqbQAv50YIGthISpR9BS+BoIEggZvn7uK9NBwAqF7rSue1A6tvJQEfhNoAUQCeja0cCBjoaiELQvz1dffnfHNnp3PRTjLIvR3/cl8HxfFlhnoP7wH82EiqHTiLTh3re5xzzoEBGP7NEmpGXAfFDyvgoDi+TBw5MCMXw+kjTWReiAmWoFlDuvQQyeogakakHwPiOsdgT3vNDmYWNwhBifEuMs2QrB5TQysLHEpmKU284MzUKNMTcBaY/rRv1ANvMZQYZ3kNFba+r5Auz6JZmQu5eVq7H9DSdRXJMrwo2/sW5VtZHTkPQGPsNMZHxI0dtPcOAwpmTH5bZvHLO7xPEVXSLEMkxdSTa73ICWD4yRRrpeRVjDczSdDyJCbrmJQ42TgPecU0Aa1guonJJiZlGo9fYvYjFG/1OYCYFDMNqF/FwnoVoilYAEsxLWOyhYYSJiVwbs9bxGRmDsHCLyysVU3Wd2GhhMkGJluYJmi6AJDsACzT36H8s8lv1hfQQmSWAy2AtWGSAhkWVU8XCZIkZpmmu4AkvT/3aLAHox9H4Z/fzwA3lqH2dDv0B6mSc8HU1qcrAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="report_link">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKESURBVDjLjZNPaJJhHMc9ddulU8ei/WkQRQwanbLD1JweDDaI/q2cDhQWOjGNwXTCBk5BbeRczZZjNx1sNWaBS802CNPDOpgo2y4h4kT8O53x7X2eoUvaYYcvPO/vfX6f5/P+3vdlAWBFo1FecGYYm5q7+Pz0Clgs1s0z5iJpvhYOh4vft0P4sR2A90kX6vX6mUIhGo3m3Orq6tCn6RF8mx+B93EXKpVKS0qlEorFYjP5fB5HR0fHgFYDPzYedP4HaEAaKRQKqNVqrQYbhhGEHFJs3O/E4eEhzcvlfWiW9vGCidq1B/XiHlRMiEUT0DTYOjZYH+xEtVqlIc1L/jRcTN5/SWNxMw2Fc5cCiFWLwfqkFF9fS/BxoIPSSf49dYxpVL5N4PmbBJ1BuVz+c6rB2r0OOiACaDwKCTmRPDtpzuVyyGazRQbQc2IwIUFwdhhrovZm89i7PSgWkhidT0DuiEM29wuyVz+RTqeRyWROmcGWH25hO7xeL8xmM5xOJ4xGI2KxGA4ODpo1k8kEl8uFtra2O02DD+PMl2h5Bq3gFqxWK1KpFJLJJAKBACwWCxwOB+LxOK2FQiG6h81mL7UYLMzNQq0YRWRnB1NTUxAKhZBIJLDZbNBqtXQtEAig1+spRKlUFk4MtGKMPeLBoJugADIwHo8Hn8+HSCSCYDAIj8cDLpdLXyMBMKBqi8HMtAFyiZgCdDod+vr6wOFwIBKJaMia1BoGUqk0Tw1UKtWl5f6rcAz04GE/hyqT01ZWVmC326FQKMDso2tSc7vddAZ8Pn+XRX5nkqGO87fHb1yYHLx+Wc+o/xaLxWWZTFaVy+U1Zli63t5eOXNdIjVyj+zp7u7m/wVntrWV38u6ZgAAAABJRU5E
+rkJggg==</ImageData>
+    </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
@@ -4490,35 +4895,35 @@ RJUsLfEg94BfIztkLMvP3v3XN/5rfgIYvAvmgKE6GAAAAABJRU5ErkJggg==</ImageData>
     </Variable>
     <Variable Name="ReportExecutionTime">
       <Value>
-        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
-      </Value>
+				=  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+				+ Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+				+ Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+			</Value>
     </Variable>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
     <Variable Name="UrlReport">
       <Value>
-        =Globals!ReportServerUrl + "/ReportServer?"
-        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
-        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
-      </Value>
+				=Globals!ReportServerUrl + "/ReportServer?"
+				+ Replace(Globals!ReportFolder, " ", "+") + "%2f"
+				+ Replace(Globals!ReportName, " ", "+")
+			</Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
       <Value>
-        =Variables!UrlReport.Value
-        + "&amp;ReportFolder=" + Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
-        + "&amp;ReportName=" + Join(Parameters!ReportName.Value, "&amp;ReportName=")
-        + "&amp;EventStatus=" + Join(Parameters!EventStatus.Value, "&amp;EventStatus=")
-        + IIf(IsNothing(Parameters!EmailLike.Value), "&amp;EmailLike:IsNull=True", "&amp;EmailLike=" &amp; Parameters!EmailLike.Value)
-        + IIf(IsNothing(Parameters!StartDateTime.Value), "&amp;StartDateTime:IsNull=True", "&amp;StartDateTime=" + Format(Parameters!StartDateTime.Value, Variables!FormatDate.Value))
-        + "&amp;SubscriptionStatus=" + Parameters!SubscriptionStatus.Value
-        + "&amp;LastStatus=" + Join(Parameters!LastStatus.Value, "&amp;LastStatus=")
-        + "&amp;IsDisabled=" + CStr(Parameters!IsDisabled.Value)
-        + "&amp;ShowParameters=" + CStr(Parameters!ShowParameters.Value)
-        + "&amp;ShowEmailDetails=" + CStr(Parameters!ShowEmailDetails.Value)
-      </Value>
+				=Variables!UrlReport.Value
+				+ "&amp;ReportFolder=" + Join(Parameters!ReportFolder.Value, "&amp;ReportFolder=")
+				+ "&amp;ReportName=" + Join(Parameters!ReportName.Value, "&amp;ReportName=")
+				+ "&amp;EventStatus=" + Join(Parameters!EventStatus.Value, "&amp;EventStatus=")
+				+ IIf(IsNothing(Parameters!EmailLike.Value), "&amp;EmailLike:IsNull=True", "&amp;EmailLike=" &amp; Parameters!EmailLike.Value)
+				+ IIf(IsNothing(Parameters!StartDateTime.Value), "&amp;StartDateTime:IsNull=True", "&amp;StartDateTime=" + Format(Parameters!StartDateTime.Value, Variables!FormatDate.Value))
+				+ "&amp;SubscriptionStatus=" + Parameters!SubscriptionStatus.Value
+				+ "&amp;LastStatus=" + Join(Parameters!LastStatus.Value, "&amp;LastStatus=")
+				+ "&amp;IsDisabled=" + CStr(Parameters!IsDisabled.Value)
+				+ "&amp;ShowParameters=" + CStr(Parameters!ShowParameters.Value)
+				+ "&amp;ShowEmailDetails=" + CStr(Parameters!ShowEmailDetails.Value)
+			</Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
