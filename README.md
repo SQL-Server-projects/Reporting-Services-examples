@@ -27,7 +27,7 @@ The following examples are used to query the database & report server. I have in
 * [Candy Stripe](/Miscellaneous/Scripts/CandyStripe.vb)
 * [Heat Map Color](/Miscellaneous/Scripts/HeatMapColor.vb)
 * [Heat Map Color Gradate](/Miscellaneous/Scripts/HeatMapColorGradate.vb)
-* [Update Subscription Owner](/Miscellaneous/Scripts/UpdateSubscriptionOwner.sql)
+* [Update Subscription Owner](/Miscellaneous/Scripts/Update_Subscription_Owner.sql)
 ### Reports
 #### [Database Server](/ServerDatabase)
 * [Activity Monitor](/ServerDatabase/Activity%20Monitor.rdl)
