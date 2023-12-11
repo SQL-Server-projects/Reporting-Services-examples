@@ -1,4 +1,4 @@
-<img align="left" src="Images/ReadMe/App.png" width="64px" >
+<img align="left" src="Images/PBIRS.png" width="64px" >
 
 # Microsoft SQL Server Reporting Services (SSRS)
 
