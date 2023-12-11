@@ -12,7 +12,7 @@ AS
 		  END
 	    , [ContentXml] = (CONVERT(XML, CONVERT(VARBINARY(MAX), [Content])))
     FROM 
-	   [ReportServerPowerBi].[dbo].[Catalog] WITH(NOLOCK) 
+	   [dbo].[Catalog] WITH(NOLOCK) 
     WHERE
 	   [Type] = 2 
 )
@@ -63,7 +63,7 @@ SELECT
 FROM
     datasets AS [ds]
     INNER JOIN data_sources AS [src] ON [src].[ItemID] = [ds].[ItemID] AND [src].[LocalDataSourceName] = [ds].[DataSourceName]
-    INNER JOIN [ReportServerPowerBi].[dbo].[Catalog] AS [c] WITH(NOLOCK) ON [ds].[ItemID] = [c].[ItemID]
+    INNER JOIN [dbo].[Catalog] AS [c] WITH(NOLOCK) ON [ds].[ItemID] = [c].[ItemID]
 WHERE
     1=1
     AND ds.[report_folder] NOT IN('Analytics')
