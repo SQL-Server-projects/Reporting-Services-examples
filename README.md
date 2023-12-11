@@ -1,6 +1,6 @@
 <img align="left" src="Images/PBIRS.png" width="250px" >
 
-# Microsoft SQL Server Reporting Services (SSRS)
+# Microsoft Power BI Report Server (PBIRS)
 
 <!---[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/AnthonyDuguid/1.00)--->
 [![Join the chat at https://gitter.im/SqlServerReportingServices](https://badges.gitter.im/SqlServerReportingServices/Lobby.svg)](https://gitter.im/SqlServerReportingServices?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
