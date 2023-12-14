@@ -48,14 +48,5 @@
     <DataSets>@(DataSet)</DataSets>
     <Reports>@(Report)</Reports>
   </PropertyGroup>
-  <ItemGroup>
-    <DataSet Include="Servers.rsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Report Include="Activity Monitor.rdl" />
-    <Report Include="Database Dictionary.rdl" />
-    <Report Include="Job Search.rdl" />
-    <Report Include="Scheduled Jobs.rdl" />
-  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Reporting Services\Microsoft.ReportingServices.MSBuilder.targets" />
 </Project>
