@@ -60,6 +60,8 @@
     <Report Include="Database Dictionary.rdl" />
     <Report Include="Execution Log.rdl" />
     <Report Include="Heatmap Calendar.rdl" />
+    <Report Include="Integration Detail.rdl" />
+    <Report Include="Integrations.rdl" />
     <Report Include="Job Search.rdl" />
     <Report Include="Permissions.rdl" />
     <Report Include="Report List.rdl" />
