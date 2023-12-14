@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SharedDataSet xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/shareddatasetdefinition">
+  <DataSet Name="">
+    <Query>
+      <DataSourceReference>ReportServer</DataSourceReference>
+      <CommandText>SELECT tbl.* FROM (VALUES
+  ( 'Server1')
+, ( 'Server2')
+, ( 'Server3')
+) tbl ([ServerName]) 
+</CommandText>
+    </Query>
+  </DataSet>
+</SharedDataSet>

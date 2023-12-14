@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-11T05:44:23.7337845Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T05:20:49.4326734Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -20,332 +20,219 @@
       <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>7b547408-b2f1-4e68-89c5-06e8cc2a687f</rd:DataSourceID>
     </DataSource>
-    <DataSource Name="SG_AU_REPORTS_mail">
-      <DataSourceReference>SG_AU_REPORTS_mail</DataSourceReference>
-      <rd:SecurityType>None</rd:SecurityType>
-      <rd:DataSourceID>d776d8b0-c27f-450e-acbb-6e55976d7213</rd:DataSourceID>
-    </DataSource>
   </DataSources>
   <DataSets>
     <DataSet Name="ExecutionLogs">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@ReportServerUrl">
-            <Value>=Parameters!ReportServerUrl.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@GroupByColumn">
-            <Value>=Parameters!GroupByColumn.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@blank_value">
-            <Value>=Parameters!blank_value.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ExcludeAdmins">
-            <Value>=Parameters!ExcludeAdmins.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ExecutionExcludedUsers">
-            <Value>=Parameters!ExecutionExcludedUsers.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@LogStatus">
-            <Value>=Parameters!LogStatus.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportFolder">
-            <Value>=Parameters!ReportFolder.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@ReportName">
-            <Value>=Parameters!ReportName.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@UserName">
-            <Value>=Parameters!UserName.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@StartDate">
-            <Value>=Parameters!StartDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@EndDate">
-            <Value>=Parameters!EndDate.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@StatusGroup">
-            <Value>=Parameters!StatusGroup.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Position">
-            <Value>=Parameters!Position.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Department">
-            <Value>=Parameters!Department.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Office">
-            <Value>=Parameters!Office.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
-					--DECLARE @StartDate	    DATETIME = NULL;
-					--DECLARE @EndDate	    DATETIME = NULL;
-					--DECLARE @all_value	    NVARCHAR(100) = '&lt;ALL&gt;';
-					--DECLARE @ReportFolder   NVARCHAR(100) = @all_value;
-					--DECLARE @ReportName	    NVARCHAR(100) = @all_value;
-					--DECLARE @LogStatus	    NVARCHAR(100) = @all_value;
-					--DECLARE @StatusGroup    NVARCHAR(100) = @all_value;
-					--DECLARE @UserName	    NVARCHAR(100) = @all_value;
-					--DECLARE @Position	    NVARCHAR(100) = @all_value;
-					--DECLARE @Department	    NVARCHAR(100) = @all_value;
-					--DECLARE @Office	    NVARCHAR(100) = @all_value;
-					--DECLARE @GroupByColumn  NVARCHAR(100) = NULL;
-					--DECLARE @blank_value    NVARCHAR(100) = @all_value;
-					--DECLARE @ReportServerUrl NVARCHAR(100) = '';
+        <CommandText>DECLARE @StartDate	    DATETIME = NULL;
+DECLARE @EndDate	    DATETIME = NULL;
+DECLARE @all_value	    NVARCHAR(100) = '&lt;ALL&gt;';
+DECLARE @ReportFolder   NVARCHAR(100) = @all_value;
+DECLARE @ReportName	    NVARCHAR(100) = @all_value;
+DECLARE @LogStatus	    NVARCHAR(100) = @all_value;
+DECLARE @StatusGroup    NVARCHAR(100) = @all_value;
+DECLARE @UserName	    NVARCHAR(100) = @all_value;
+DECLARE @GroupByColumn  NVARCHAR(100) = NULL;
+DECLARE @blank_value    NVARCHAR(100) = @all_value;
+DECLARE @ReportServerUrl NVARCHAR(100) = '';
+DECLARE @ExcludeAdmins BIT = NULL;
+DECLARE @ExecutionExcludedUsers NVARCHAR(100) = '';
 
-
-					WITH
-					report_status
-					AS
-					(
-					SELECT tbl.* FROM (VALUES
-					( 'rrRenderingError', 'Failure')
-					, ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
-					, ( 'rsInternalError', 'Failure')
-					, ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
-					, ( 'rsProcessingAborted', 'Failure')
-					, ( 'rsProcessingError', 'Failure')
-					, ( 'rsRenderingExtensionNotFound', 'Failure')
-					, ( 'rsReportServerDatabaseError', 'Failure')
-					, ( 'rsSuccess', 'Success')
-					) tbl ([StatusName], [StatusGroup])
-					)
-					,
-					report_users
-					AS
-					(
-					SELECT [UserID], [UserName], [SimpleUserName] = LOWER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM [dbo].[Users] WITH (NOLOCK)
-					)
-					,
-					user_list
-					AS
-					(
-					SELECT
-					[EmployeeDepartment] = (dpt.[DEPT_NAME] COLLATE SQL_Latin1_General_CP1_CI_AS)
-					, [EmployeeName] = (ur.[EMPLOYEE_NAME] COLLATE SQL_Latin1_General_CP1_CI_AS)
-					, [EmployeeOffice] = (ofc.[OFFC_DESC] COLLATE SQL_Latin1_General_CP1_CI_AS)
-					, [EmployeePosition] = (ur.[POSITION] COLLATE SQL_Latin1_General_CP1_CI_AS)
-					, [EmployeeUserDomainName] = (DEFAULT_DOMAIN() + '\' + ur.[LOGIN] COLLATE SQL_Latin1_General_CP1_CI_AS)
-					, [EmployeeUserName] = (LOWER(ur.[LOGIN]) COLLATE SQL_Latin1_General_CP1_CI_AS)
-					FROM
-					[SAG_PROD].[dbo].[HBM_PERSNL] AS ur WITH (NOLOCK)
-					LEFT JOIN [SAG_PROD].[dbo].[HBL_OFFICE] AS ofc WITH (NOLOCK) ON ofc.[OFFC_CODE] = ur.[OFFC]
-					LEFT JOIN [SAG_PROD].[dbo].[HBL_DEPT] AS dpt WITH (NOLOCK) ON dpt.[DEPT_CODE] = ur.[DEPT]
-					WHERE
-					1=1
-					AND ur.[LOGIN] != ''
-					)
-					,
-					report_catalog
-					AS
-					(
-					SELECT
-					rpt.[ItemID]
-					, rpt.[CreatedById]
-					, rpt.[ModifiedById]
-					, rpt.[Type]
-					, rpt.[Name]
-					, [ReportName] = rpt.[Name]
-					, rpt.[Description]
-					, rpt.[Parameter]
-					, [CreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[CreationDate], 13))
-					, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
-					, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)
-					, rpt.[Path]
-					, [URL_ReportFolder] = @ReportServerUrl + 'Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
-					, [URL_Report] = @ReportServerUrl + 'Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
-					, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.[Content]))
-					FROM
-					[dbo].[Catalog] AS rpt WITH (NOLOCK)
-					WHERE
-					1=1
-					AND rpt.[Type] IN(2, 4, 13)
-					)
-					,
-					execution_log_start
-					AS
-					(
-					SELECT
-					el.[ExecutionId]
-					, el.[UserName]
-					, el.[ReportPath]
-					, el.[TimeStart]
-					, el.[TimeEnd]
-					, el.[Format]
-					, [TimeEnd_LAG] = ISNULL(LAG(el.[TimeEnd]) OVER(PARTITION BY el.[ReportPath], el.[UserName] ORDER BY el.[TimeStart] DESC, el.[TimeEnd] DESC, el.[ExecutionId] DESC, el.[ByteCount] DESC), GETDATE())
-					FROM
-					[dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-					WHERE
-					1=1
-					AND el.[ByteCount] != 0
-					AND el.[Format] IN('PBIX', 'DataModel')
-					AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
-					AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)
-					)
-					,
-					execution_log_finish
-					AS
-					(
-					SELECT
-					els.[ExecutionId]
-					, els.[TimeStart]
-					, [TimeEnd] = MAX(el.[TimeEnd])
-					FROM
-					[execution_log_start] AS els
-					LEFT JOIN [dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-					ON els.[ReportPath] = el.[ReportPath]
-					AND els.[UserName] = el.[UserName]
-					AND el.[TimeEnd] &lt; els.[TimeEnd_LAG]
-					AND el.[TimeEnd] &gt; els.[TimeStart]
-					AND el.[Format] = els.[Format]
-					GROUP BY
-					els.[ExecutionId]
-					, els.[TimeStart]
-					)
-					,
-					execution_log
-					AS
-					(
-					SELECT
-					el.[ReportID]
-					, el.[Status]
-					, el.[UserName]
-					, el.[TimeDataRetrieval]
-					, el.[TimeProcessing]
-					, el.[TimeRendering]
-					, el.[TimeStart]
-					, el.[RowCount]
-					, el.[ByteCount]
-					, el.[Format]
-					, [Parameters] = CONVERT(VARCHAR(2000), el.[Parameters])
-					FROM
-					[dbo].[ExecutionLog] AS el WITH (NOLOCK)
-					LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
-					WHERE
-					1=1
-					AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
-					AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)
-					AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
-					UNION
-					SELECT
-					[ReportID] = rpt.[ItemID]
-					, el.[Status]
-					, el.[UserName]
-					, [TimeDataRetrieval] = 0
-					, [TimeProcessing] = 0
-					, [TimeRendering] = DATEDIFF(SECOND, el.[TimeStart], elf.[TimeEnd]) * 500
-					, el.[TimeStart]
-					, el.[RowCount]
-					, el.[ByteCount]
-					, el.[Format]
-					, [Parameters] = CONVERT(VARCHAR(2000), el.[Parameters])
-					FROM
-					[dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-					INNER JOIN execution_log_finish AS elf ON elf.[ExecutionId] = el.[ExecutionId] AND elf.[TimeStart] = el.[TimeStart]
-					LEFT JOIN report_catalog AS rpt ON rpt.[Path] = el.[ReportPath]
-					LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
-					WHERE
-					1=1
-					AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
-					)
-					SELECT
-					ul.[EmployeeDepartment]
-					, ul.[EmployeeName]
-					, ul.[EmployeeOffice]
-					, ul.[EmployeePosition]
-					, ul.[EmployeeUserDomainName]
-					, ul.[EmployeeUserName]
-					, GroupBy1 =
-					CASE
-					WHEN @GroupByColumn = 'Report Name' THEN rpt.[ReportName]
-					WHEN @GroupByColumn = 'Report Folder' THEN rpt.[ReportFolder]
-					WHEN @GroupByColumn = 'Employee' THEN ISNULL(ul.[EmployeeName], @blank_value)
-					WHEN @GroupByColumn = 'Department' THEN ISNULL(ul.[EmployeeDepartment], @blank_value)
-					WHEN @GroupByColumn = 'Office' THEN ISNULL(ul.[EmployeeOffice], @blank_value)
-					ELSE '&lt;N/A&gt;'
-					END
-					, rpt.[Path]
-					, rpt.[ReportFolder]
-					, rpt.[Name]
-					, rpt.[URL_ReportFolder]
-					, rpt.[URL_Report]
-					, [URL_Report_Filtered] = rpt.URL_Report + '&amp;rs:Command=Render&amp;' + CONVERT(VARCHAR(2000), el.[Parameters])
-					, [UserName] = usr.[SimpleUserName]
-					, el.[Status]
-					, el.[TimeStart]
-					, el.[RowCount]
-					, el.[ByteCount]
-					, el.[Format]
-					, [Parameters] =
-					REPLACE(
-					REPLACE(
-					REPLACE(
-					REPLACE(
-					REPLACE(CONVERT(NVARCHAR(MAX), el.[Parameters])
-					, '%20', ' ')
-					, '%2F', '-')
-					, '%3C', '&lt;')
-					, '%3E', '&gt;')
-					, '%3A', ':')
-					, [TotalSeconds] = DATEADD(ms, (el.[TimeDataRetrieval] + el.[TimeProcessing] + el.[TimeRendering]), 0)
-					, [TimeDataRetrieval] = DATEADD(ms, el.[TimeDataRetrieval], 0)
-					, [TimeProcessing] = DATEADD(ms, el.[TimeProcessing], 0)
-					, [TimeRendering] = DATEADD(ms, el.[TimeRendering], 0)
-					, [TotalSecondsNbr] = (el.[TimeDataRetrieval] + el.[TimeProcessing] + el.[TimeRendering])
-					, [TimeDataRetrievalNbr] = el.[TimeDataRetrieval]
-					, [TimeProcessingNbr] = el.[TimeProcessing]
-					, [TimeRenderingNbr] = el.[TimeRendering]
-					, [OrderbyDate] = CAST([TimeStart] AS DATETIME)
-					, rpt.[Type]
-					FROM
-					report_catalog AS rpt
-					LEFT JOIN execution_log AS el ON el.[ReportID] = rpt.[ItemID]
-					LEFT JOIN report_status AS rs ON el.[Status] = rs.[StatusName]
-					LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
-					LEFT JOIN user_list AS ul ON ul.[EmployeeUserDomainName] = el.[UserName]
-					WHERE
-					1=1
-					AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
-					AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)
-					AND (@all_value IN (@ReportFolder) OR rpt.[ReportFolder] IN(@ReportFolder))
-					AND (@all_value IN(@ReportName) OR rpt.[ReportName] IN(@ReportName))
-					AND (@all_value IN(@LogStatus) OR el.[Status] IN(@LogStatus))
-					AND (@all_value IN(@StatusGroup) OR rs.[StatusGroup] IN(@StatusGroup))
-					AND (@all_value IN(@UserName) OR usr.[SimpleUserName] IN(@UserName))
-					AND (@all_value IN(@Position) OR ul.[EmployeePosition] IN(@Position))
-					AND (@all_value IN(@Department) OR ul.[EmployeeDepartment] IN(@Department))
-					AND (@all_value IN(@Office) OR ul.[EmployeeOffice] IN(@Office));
-				</CommandText>
+WITH
+report_status
+AS
+(
+    SELECT tbl.* FROM (VALUES
+	 ( 'rrRenderingError', 'Failure')
+    , ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
+    , ( 'rsInternalError', 'Failure')
+    , ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
+    , ( 'rsProcessingAborted', 'Failure')
+    , ( 'rsProcessingError', 'Failure')
+    , ( 'rsRenderingExtensionNotFound', 'Failure')
+    , ( 'rsReportServerDatabaseError', 'Failure')
+    , ( 'rsSuccess', 'Success')
+    ) tbl ([StatusName], [StatusGroup]) 
+)
+,
+report_users 
+AS
+(
+	SELECT [UserID], [UserName], [SimpleUserName] = LOWER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM [dbo].[Users] WITH (NOLOCK) 
+)
+, 
+report_catalog
+AS
+(
+	SELECT    
+		  rpt.[ItemID]
+		, rpt.[CreatedById]
+		, rpt.[ModifiedById]
+		, rpt.[Type]
+		, rpt.[Name] 
+		, [ReportName] = rpt.[Name] 
+		, rpt.[Description]
+		, rpt.[Parameter]
+		, [CreationDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[CreationDate], 13))
+		, [ModifiedDate] = CONVERT(DATETIME, CONVERT(VARCHAR(11), rpt.[ModifiedDate], 13))
+		, [ReportFolder] = SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2) 
+		, rpt.[Path]
+		, [URL_ReportFolder] = @ReportServerUrl + 'Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '&amp;ViewMode=List'
+		, [URL_Report] = @ReportServerUrl + 'Reports/Pages/Report.aspx?ItemPath=%2f'  + SUBSTRING(rpt.[Path], 2, Len(rpt.[Path])-Len(rpt.[Name])-2)  + '%2f' + rpt.[Name]
+		, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.[Content]))  
+	FROM 
+		[dbo].[Catalog] AS rpt WITH (NOLOCK) 
+	WHERE 
+		1=1
+		AND rpt.[Type] IN(2, 4, 13)
+)
+, 
+execution_log_start
+AS
+(
+    SELECT 
+	     el.[ExecutionId]
+	   , el.[UserName]
+	   , el.[ReportPath]
+	   , el.[TimeStart]
+	   , el.[TimeEnd]
+	   , el.[Format]
+	   , [TimeEnd_LAG] = ISNULL(LAG(el.[TimeEnd]) OVER(PARTITION BY el.[ReportPath], el.[UserName] ORDER BY el.[TimeStart] DESC, el.[TimeEnd] DESC, el.[ExecutionId] DESC, el.[ByteCount] DESC), GETDATE())
+    FROM 
+	   [dbo].[ExecutionLog2] AS el WITH (NOLOCK)
+    WHERE 
+	   1=1
+	   AND el.[ByteCount] != 0 
+	   AND el.[Format] IN('PBIX', 'DataModel')
+	   AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
+	   AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)	
+)
+, 
+execution_log_finish
+AS
+(
+    SELECT 
+		els.[ExecutionId]
+	   , els.[TimeStart]
+	   , [TimeEnd] = MAX(el.[TimeEnd])
+    FROM 
+	   [execution_log_start] AS els
+	   LEFT JOIN [dbo].[ExecutionLog2] AS el WITH (NOLOCK) 
+		  ON els.[ReportPath] = el.[ReportPath] 
+		  AND els.[UserName] = el.[UserName] 
+		  AND el.[TimeEnd] &lt; els.[TimeEnd_LAG] 
+		  AND el.[TimeEnd] &gt; els.[TimeStart] 
+		  AND el.[Format] = els.[Format]
+    GROUP BY 
+	     els.[ExecutionId]
+	   , els.[TimeStart]
+)
+,
+execution_log
+AS
+(
+    SELECT 
+	     el.[ReportID]
+	   , el.[Status]
+	   , el.[UserName]
+	   , el.[TimeDataRetrieval]
+	   , el.[TimeProcessing]
+	   , el.[TimeRendering]
+	   , el.[TimeStart]
+	   , el.[RowCount]
+	   , el.[ByteCount]
+	   , el.[Format]
+	   , [Parameters] = CONVERT(VARCHAR(2000), el.[Parameters])
+    FROM 
+	   [dbo].[ExecutionLog] AS el WITH (NOLOCK)
+	   LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
+    WHERE 
+	    1=1
+	    AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
+	    AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)	
+	    AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
+    UNION
+    SELECT 
+	     [ReportID] = rpt.[ItemID]
+	   , el.[Status]
+	   , el.[UserName]
+	   , [TimeDataRetrieval] = 0
+	   , [TimeProcessing] = 0
+	   , [TimeRendering] = DATEDIFF(SECOND, el.[TimeStart], elf.[TimeEnd]) * 500
+	   , el.[TimeStart]
+	   , el.[RowCount]
+	   , el.[ByteCount]
+	   , el.[Format]
+	   , [Parameters] = CONVERT(VARCHAR(2000), el.[Parameters])
+    FROM 
+	   [dbo].[ExecutionLog2] AS el WITH (NOLOCK)
+	   INNER JOIN execution_log_finish AS elf ON elf.[ExecutionId] = el.[ExecutionId] AND elf.[TimeStart] = el.[TimeStart]
+	   LEFT JOIN report_catalog AS rpt ON rpt.[Path] = el.[ReportPath]
+	   LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
+    WHERE 
+	    1=1
+	    AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
+)
+SELECT 
+	  GroupBy1 = 
+ 		CASE  
+			WHEN @GroupByColumn = 'Report Name' THEN rpt.[ReportName]
+			WHEN @GroupByColumn = 'Report Folder' THEN rpt.[ReportFolder]
+			WHEN @GroupByColumn = 'Employee' THEN ISNULL(usr.[SimpleUserName], @blank_value)
+			ELSE '&lt;N/A&gt;' 
+		END
+	, rpt.[Path]
+	, rpt.[ReportFolder]
+	, rpt.[Name]
+	, rpt.[URL_ReportFolder]
+	, rpt.[URL_Report]
+	, [URL_Report_Filtered] = rpt.URL_Report + '&amp;rs:Command=Render&amp;' + CONVERT(VARCHAR(2000), el.[Parameters])
+	, el.[Status]
+	, el.[TimeStart]
+	, el.[RowCount]
+	, el.[ByteCount]
+	, el.[Format]
+	, el.[UserName] 
+	, [EmployeeName] = usr.[SimpleUserName]
+	, [Parameters] = 
+		REPLACE(
+		REPLACE(
+		REPLACE(
+		REPLACE(
+		REPLACE(CONVERT(NVARCHAR(MAX), el.[Parameters])
+		, '%20', ' ')
+		, '%2F', '-')
+		, '%3C', '&lt;')
+		, '%3E', '&gt;')
+		, '%3A', ':')
+	, [TotalSeconds] = DATEADD(ms, (el.[TimeDataRetrieval] + el.[TimeProcessing] + el.[TimeRendering]), 0)
+	, [TimeDataRetrieval] = DATEADD(ms, el.[TimeDataRetrieval], 0)
+	, [TimeProcessing] = DATEADD(ms, el.[TimeProcessing], 0)
+	, [TimeRendering] = DATEADD(ms, el.[TimeRendering], 0)
+	, [TotalSecondsNbr] = (el.[TimeDataRetrieval] + el.[TimeProcessing] + el.[TimeRendering])
+	, [TimeDataRetrievalNbr] = el.[TimeDataRetrieval]
+	, [TimeProcessingNbr] = el.[TimeProcessing]
+	, [TimeRenderingNbr] = el.[TimeRendering]
+	, [OrderbyDate] = CAST([TimeStart] AS DATETIME) 
+	, rpt.[Type]
+FROM 
+	report_catalog AS rpt 
+	LEFT JOIN execution_log AS el ON el.[ReportID] = rpt.[ItemID]
+	LEFT JOIN report_status AS rs ON el.[Status] = rs.[StatusName]
+	LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
+WHERE 
+	1=1
+	AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
+	AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)	
+	AND (@all_value IN (@ReportFolder) OR rpt.[ReportFolder] IN(@ReportFolder))
+	AND (@all_value IN(@ReportName) OR rpt.[ReportName] IN(@ReportName))
+	AND (@all_value IN(@LogStatus) OR el.[Status] IN(@LogStatus))
+	AND (@all_value IN(@StatusGroup) OR rs.[StatusGroup] IN(@StatusGroup))
+	AND (@all_value IN(@UserName) OR usr.[SimpleUserName] IN(@UserName));</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
-        <Field Name="EmployeeDepartment">
-          <DataField>EmployeeDepartment</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeName">
-          <DataField>EmployeeName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeOffice">
-          <DataField>EmployeeOffice</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeePosition">
-          <DataField>EmployeePosition</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeUserDomainName">
-          <DataField>EmployeeUserDomainName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="EmployeeUserName">
-          <DataField>EmployeeUserName</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
         <Field Name="GroupBy1">
           <DataField>GroupBy1</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -398,6 +285,10 @@
           <DataField>Format</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
+        <Field Name="EmployeeName">
+          <DataField>EmployeeName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
         <Field Name="Parameters">
           <DataField>Parameters</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -422,10 +313,6 @@
           <DataField>TotalSecondsNbr</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="OrderbyDate">
-          <DataField>OrderbyDate</DataField>
-          <rd:TypeName>System.DateTime</rd:TypeName>
-        </Field>
         <Field Name="TimeDataRetrievalNbr">
           <DataField>TimeDataRetrievalNbr</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
@@ -437,6 +324,10 @@
         <Field Name="TimeRenderingNbr">
           <DataField>TimeRenderingNbr</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="OrderbyDate">
+          <DataField>OrderbyDate</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
         </Field>
         <Field Name="Type">
           <DataField>Type</DataField>
@@ -452,20 +343,20 @@
             <Value>=Parameters!all_value.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					SELECT tbl.* FROM (VALUES
-					( 'rrRenderingError', 'Failure')
-					, ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
-					, ( 'rsInternalError', 'Failure')
-					, ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
-					, ( 'rsProcessingAborted', 'Failure')
-					, ( 'rsProcessingError', 'Failure')
-					, ( 'rsRenderingExtensionNotFound', 'Failure')
-					, ( 'rsReportServerDatabaseError', 'Failure')
-					, ( 'rsSuccess', 'Success')
-					) tbl ([StatusName], [StatusGroup])
-					UNION SELECT @all_value, @all_value
-				</CommandText>
+        <CommandText>SELECT tbl.* FROM (VALUES
+	 ( 'rrRenderingError', 'Failure')
+    , ( 'rsHttpRuntimeClientDisconnectionError', 'Failure')
+    , ( 'rsInternalError', 'Failure')
+    , ( 'rsInvalidDataSourceCredentialSetting', 'Failure')
+    , ( 'rsProcessingAborted', 'Failure')
+    , ( 'rsProcessingError', 'Failure')
+    , ( 'rsRenderingExtensionNotFound', 'Failure')
+    , ( 'rsReportServerDatabaseError', 'Failure')
+    , ( 'rsSuccess', 'Success')
+    ) tbl ([StatusName], [StatusGroup])
+UNION 
+SELECT 
+    @all_value, @all_value;</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -498,93 +389,78 @@
           <QueryParameter Name="@ReportName">
             <Value>=Parameters!ReportName.Value</Value>
           </QueryParameter>
-          <QueryParameter Name="@Position">
-            <Value>=Parameters!Position.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Department">
-            <Value>=Parameters!Department.Value</Value>
-          </QueryParameter>
-          <QueryParameter Name="@Office">
-            <Value>=Parameters!Office.Value</Value>
-          </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					WITH
-					report_users
-					AS
-					(
-					SELECT
-					[UserID]
-					, [UserName]
-					, [EmployeeLogin] = LOWER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName]))))
-					FROM
-					[dbo].[Users] WITH (NOLOCK)
-					)
-					,
-					user_list
-					AS
-					(
-					SELECT
-					[EmployeeName] = (ur.[EMPLOYEE_NAME] COLLATE DATABASE_DEFAULT)
-					, [EmployeeLogin] = (LOWER(ur.[LOGIN]) COLLATE DATABASE_DEFAULT)
-					, [EmployeeUserNameLogin] = ([EMPLOYEE_NAME] + ' (' + LOWER([LOGIN]) + ')' COLLATE DATABASE_DEFAULT)
-					, [EmployeeUserDomainName] = (DEFAULT_DOMAIN() + '\' + ur.[LOGIN] COLLATE DATABASE_DEFAULT)
-					, [EmployeePosition] = (ur.[POSITION] COLLATE DATABASE_DEFAULT)
-					, [EmployeeDepartment] = (dpt.[DEPT_NAME] COLLATE DATABASE_DEFAULT)
-					, [EmployeeOffice] = (ofc.[OFFC_DESC] COLLATE DATABASE_DEFAULT)
-					FROM
-					[SAG_PROD].[dbo].[HBM_PERSNL] AS ur WITH (NOLOCK)
-					LEFT JOIN [SAG_PROD].[dbo].[HBL_OFFICE] AS ofc WITH (NOLOCK) ON ofc.[OFFC_CODE] = ur.[OFFC]
-					LEFT JOIN [SAG_PROD].[dbo].[HBL_DEPT] AS dpt WITH (NOLOCK) ON dpt.[DEPT_CODE] = ur.[DEPT]
-					WHERE
-					1=1
-					AND ur.[LOGIN] != ''
-					)
-					,
-					execution_log
-					AS
-					(
-					SELECT
-					el.[ReportID]
-					, el.[UserName]
-					FROM
-					[dbo].[ExecutionLog] AS el WITH (NOLOCK)
-					WHERE
-					1=1
-					AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
-					AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)
-					UNION
-					SELECT
-					[ReportID] = rpt.[ItemID]
-					, el.[UserName]
-					FROM
-					[dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-					LEFT JOIN [dbo].[Catalog] AS rpt ON rpt.[Path] = el.[ReportPath]
-					WHERE
-					1=1
-					AND (@StartDate IS NULL OR el.[TimeStart] &gt;= @StartDate)
-					AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)
-					)
-					SELECT DISTINCT
-					[UserName] = usr.[EmployeeLogin]
-					, [EMPLOYEE_NAME] = ul.[EmployeeUserNameLogin]
-					, 1
-					FROM
-					execution_log AS el
-					INNER JOIN [dbo].[Catalog] AS c WITH (NOLOCK) ON el.[ReportID] = c.[ItemID]
-					LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
-					LEFT JOIN user_list AS ul ON ul.[EmployeeLogin] = usr.[EmployeeLogin]
-					WHERE
-					1=1
-					AND c.[Type] IN(2, 4, 13)
-					AND (@all_value IN (@ReportFolder) OR SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) IN(@ReportFolder))
-					AND (@all_value IN(@ReportName) OR c.[Name] IN(@ReportName))
-					AND (@all_value IN(@Position) OR ul.[EmployeePosition] IN(@Position))
-					AND (@all_value IN(@Department) OR ul.[EmployeeDepartment] IN(@Department))
-					AND (@all_value IN(@Office) OR ul.[EmployeeOffice] IN(@Office))
-					UNION SELECT @all_value, @all_value, 0
-					ORDER BY 3, 2
-				</CommandText>
+        <CommandText>WITH report_users
+	AS (SELECT 
+			 [UserID]
+		    , [UserName]
+		    , [EmployeeLogin] = LOWER(RIGHT([UserName], (LEN([UserName]) - CHARINDEX('\', [UserName]))))
+	    FROM [dbo].[Users] WITH(NOLOCK)),
+	execution_log
+	AS (SELECT 
+			 [el].[ReportID]
+		    , [el].[UserName]
+	    FROM [dbo].[ExecutionLog] AS [el] WITH(NOLOCK)
+	    WHERE
+		  1 = 1
+		  AND
+			(
+			   @StartDate IS NULL
+			   OR [el].[TimeStart] &gt;= @StartDate
+			)
+		  AND
+			(
+			   @EndDate IS NULL
+			   OR [el].[TimeStart] &lt;= @EndDate
+			)
+	    UNION
+	    SELECT 
+			 [ReportID] = [rpt].[ItemID]
+		    , [el].[UserName]
+	    FROM
+		    [dbo].[ExecutionLog2] AS [el] WITH(NOLOCK)
+		    LEFT JOIN [dbo].[Catalog] AS [rpt] ON [rpt].[Path] = [el].[ReportPath]
+	    WHERE
+		  1 = 1
+		  AND
+			(
+			   @StartDate IS NULL
+			   OR [el].[TimeStart] &gt;= @StartDate
+			)
+		  AND
+			(
+			   @EndDate IS NULL
+			   OR [el].[TimeStart] &lt;= @EndDate
+			))
+	SELECT DISTINCT 
+		  [UserName] = [usr].[EmployeeLogin]
+		, [EMPLOYEE_NAME] = [usr].[UserName]
+		, 1
+	FROM
+		[execution_log] AS [el]
+		INNER JOIN [dbo].[Catalog] AS [c] WITH(NOLOCK) ON [el].[ReportID] = [c].[ItemID]
+		LEFT JOIN [report_users] AS [usr] ON [el].[UserName] = [usr].[UserName]
+	WHERE
+	   1 = 1
+	   AND [c].[Type] IN(2, 4, 13)
+	AND
+		 (
+		    @all_value IN(@ReportFolder)
+	OR SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2) IN(@ReportFolder)
+		 )
+	AND
+		 (
+		    @all_value IN(@ReportName)
+	OR [c].[Name] IN(@ReportName)
+		 )
+	UNION
+	SELECT 
+		  @all_value
+		, @all_value
+		, 0
+	ORDER BY 
+		    3
+		  , 2;</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -613,50 +489,43 @@
             <Value>=Parameters!ReportFolder.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					/*
-					DECLARE @Report_Folder AS VARCHAR(450)
-					SET @Report_Folder = '&lt;ALL&gt;'
-					*/
-
-					SELECT DISTINCT
-					[ReportName] = [c].[Name]
-					, [ReportFolder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
-					FROM
-					[dbo].[ExecutionLog] AS [el]
-					INNER JOIN [dbo].[Catalog] AS [c] ON [el].[ReportID] = [c].[ItemID]
-					WHERE
-					1 = 1
-					AND [c].[TYPE] IN(2, 4, 13)
-					AND
-					(
-					(@all_value IN(@ReportFolder))
-					OR
-					(SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2) IN(@ReportFolder))
-					)
-					UNION
-					SELECT DISTINCT
-					[ReportName] = [c].[Name]
-					, [ReportFolder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
-					FROM
-					[dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-					LEFT JOIN [dbo].[Catalog] AS [c] ON [c].[Path] = el.[ReportPath]
-					WHERE
-					1 = 1
-					AND [c].[TYPE] IN(2, 4, 13)
-					AND
-					(
-					(@all_value IN(@ReportFolder))
-					OR
-					(SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2) IN(@ReportFolder))
-					)
-					UNION
-					SELECT
-					@all_value
-					, @all_value
-					ORDER BY
-					1;
-				</CommandText>
+        <CommandText>SELECT DISTINCT
+      [ReportName] = [c].[Name]
+    , [ReportFolder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
+FROM
+    [dbo].[ExecutionLog] AS [el]
+    INNER JOIN [dbo].[Catalog] AS [c] ON [el].[ReportID] = [c].[ItemID]
+WHERE
+    1 = 1
+    AND [c].[TYPE] IN(2, 4, 13)
+    AND
+    (
+    (@all_value IN(@ReportFolder))
+    OR
+    (SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2) IN(@ReportFolder))
+    )
+UNION
+SELECT DISTINCT
+      [ReportName] = [c].[Name]
+    , [ReportFolder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
+FROM
+    [dbo].[ExecutionLog2] AS el WITH (NOLOCK)
+    LEFT JOIN [dbo].[Catalog] AS [c] ON [c].[Path] = el.[ReportPath]
+WHERE
+    1 = 1
+    AND [c].[TYPE] IN(2, 4, 13)
+    AND
+    (
+    (@all_value IN(@ReportFolder))
+    OR
+    (SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2) IN(@ReportFolder))
+    )
+UNION
+SELECT
+      @all_value
+    , @all_value
+ORDER BY
+1;</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -678,35 +547,33 @@
             <Value>=Parameters!all_value.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					;WITH
-					catalog_type_description
-					AS
-					(
-					SELECT tbl.* FROM (VALUES
-					( 1, 'Folder')
-					, ( 2, 'Report')
-					, ( 3, 'Resource')
-					, ( 4, 'Linked Report')
-					, ( 5, 'Data Source')
-					, ( 6, 'Report Model')
-					, ( 8, 'Shared Dataset')
-					, ( 9, 'Report Part')
-					, ( 13, 'Power BI')
-					) tbl ([TypeID], [TypeDescription])
-					WHERE [TypeID] IN(2, 4, 13)
-					)
-					SELECT
-					[Report_Folder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
-					FROM
-					[dbo].[Catalog] AS [c] WITH(NOLOCK)
-					INNER JOIN [catalog_type_description] AS [ctd] ON [ctd].[TypeID] = [c].[Type]
-					UNION
-					SELECT
-					@all_value
-					ORDER BY
-					1;
-				</CommandText>
+        <CommandText>WITH
+catalog_type_description
+AS
+(
+    SELECT tbl.* FROM (VALUES
+	     ( 1, 'Folder')
+	   , ( 2, 'Report')
+	   , ( 3, 'Resource')
+	   , ( 4, 'Linked Report')
+	   , ( 5, 'Data Source')
+	   , ( 6, 'Report Model')
+	   , ( 8, 'Shared Dataset')
+	   , ( 9, 'Report Part')
+	   , ( 13, 'Power BI')
+    ) tbl ([TypeID], [TypeDescription])
+    WHERE [TypeID] IN(2, 4, 13)
+)
+SELECT
+    [Report_Folder] = SUBSTRING([c].[Path], 2, LEN([c].[Path]) - LEN([c].[Name]) - 2)
+FROM
+    [dbo].[Catalog] AS [c] WITH(NOLOCK)
+    INNER JOIN [catalog_type_description] AS [ctd] ON [ctd].[TypeID] = [c].[Type]
+UNION
+SELECT
+    @all_value
+ORDER BY
+1;</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -719,18 +586,15 @@
     <DataSet Name="MinStartDate">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
-        <CommandText>
-					SET DATEFORMAT dmy
-
-					SELECT
-					MinStartDate = MIN(el.TimeStart)
-					FROM
-					dbo.Catalog c
-					LEFT OUTER JOIN dbo.ExecutionLog el ON el.ReportID = c.ItemID
-					WHERE
-					c.[Type] = 2
-					AND c.Name NOT IN('Report Execution Log')
-				</CommandText>
+        <CommandText>SET DATEFORMAT DMY;
+SELECT 
+	  [MinStartDate] = MIN([el].[TimeStart])
+FROM
+	[dbo].[Catalog] AS [c]
+	LEFT OUTER JOIN [dbo].[ExecutionLog] AS [el] ON [el].[ReportID] = [c].[ItemID]
+WHERE
+   [c].[Type] = 2
+   AND [c].[Name] NOT IN('Report Execution Log');</CommandText>
         <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
       </Query>
       <Fields>
@@ -740,106 +604,20 @@
         </Field>
       </Fields>
     </DataSet>
-    <DataSet Name="Departments">
-      <Query>
-        <DataSourceName>SG_AU_REPORTS_mail</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
-					SELECT DISTINCT
-					[DEPT_NAME]
-					FROM
-					[SAG_PROD].[dbo].[HBL_DEPT]
-					UNION
-					SELECT
-					@all_value
-					ORDER BY
-					1;
-				</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="DEPT_NAME">
-          <DataField>DEPT_NAME</DataField>
-          <rd:TypeName>System.Object</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="Offices">
-      <Query>
-        <DataSourceName>SG_AU_REPORTS_mail</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
-					SELECT DISTINCT
-					[OFFC_DESC]
-					FROM
-					[SAG_PROD].[dbo].[HBL_OFFICE]
-					UNION SELECT @all_value
-					ORDER BY 1
-				</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="OFFC_DESC">
-          <DataField>OFFC_DESC</DataField>
-          <rd:TypeName>System.Object</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
-    <DataSet Name="JobTitles">
-      <Query>
-        <DataSourceName>SG_AU_REPORTS_mail</DataSourceName>
-        <QueryParameters>
-          <QueryParameter Name="@all_value">
-            <Value>=Parameters!all_value.Value</Value>
-          </QueryParameter>
-        </QueryParameters>
-        <CommandText>
-					SELECT DISTINCT
-					[POSITION] = CASE WHEN [POSITION] IS NULL OR [POSITION] = '' THEN '&lt;BLANK&gt;' ELSE [POSITION] END
-					, [POSITION_LABEL] = CASE WHEN [POSITION] IS NULL OR [POSITION] = '' THEN '&lt;BLANK&gt;' ELSE LTRIM(RTRIM([POSITION])) END
-					, 1
-					FROM
-					[SAG_PROD].[dbo].[HBM_PERSNL] WITH (NOLOCK)
-					UNION SELECT @all_value, @all_value, 0
-					ORDER BY 3, 2
-				</CommandText>
-      </Query>
-      <Fields>
-        <Field Name="POSITION">
-          <DataField>POSITION</DataField>
-          <rd:TypeName>System.Object</rd:TypeName>
-        </Field>
-        <Field Name="POSITION_LABEL">
-          <DataField>POSITION_LABEL</DataField>
-          <rd:TypeName>System.Object</rd:TypeName>
-        </Field>
-        <Field Name="ID">
-          <DataField />
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-      </Fields>
-    </DataSet>
     <DataSet Name="ReportStatusGroup">
       <Query>
-        <DataSourceName>SG_AU_REPORTS_mail</DataSourceName>
+        <DataSourceName>ReportServer</DataSourceName>
         <QueryParameters>
           <QueryParameter Name="@all_value">
             <Value>=Parameters!all_value.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					SELECT tbl.* FROM (VALUES
-					( 'Success')
-					, ( 'Failure')
-					) tbl ([StatusGroup])
-					UNION SELECT @all_value
-				</CommandText>
+        <CommandText>SELECT tbl.* FROM (VALUES
+      ( 'Success')
+    , ( 'Failure')
+) tbl ([StatusGroup])
+UNION 
+SELECT @all_value</CommandText>
       </Query>
       <Fields>
         <Field Name="StatusGroup">
@@ -876,15 +654,6 @@
                 </TablixColumn>
                 <TablixColumn>
                   <Width>3.98167cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>5.5cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>6.50605cm</Width>
-                </TablixColumn>
-                <TablixColumn>
-                  <Width>2.94979cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>2.365cm</Width>
@@ -1098,129 +867,6 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>Textbox11</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox54">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox54</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox45">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox45</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>None</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <TopBorder>
-                              <Style>Solid</Style>
-                            </TopBorder>
-                            <BottomBorder>
-                              <Style>Solid</Style>
-                            </BottomBorder>
-                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="Textbox51">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value />
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>Textbox51</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -1649,6 +1295,97 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
+                        <Textbox Name="Textbox1">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox1</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(True, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                        <ColSpan>16</ColSpan>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell />
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox44">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox44</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>None</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.6cm</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
                         <Textbox Name="txtReportFolderLink">
                           <CanGrow>true</CanGrow>
                           <KeepTogether>true</KeepTogether>
@@ -1940,129 +1677,6 @@
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>EmployeeName</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
-                            <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="EmployeePosition">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!EmployeePosition.Value</Value>
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>EmployeePosition</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
-                            <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="EmployeeDepartment">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!EmployeeDepartment.Value</Value>
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>EmployeeDepartment</rd:DefaultName>
-                          <Style>
-                            <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
-                              <Width>0.75pt</Width>
-                            </Border>
-                            <LeftBorder>
-                              <Style>Solid</Style>
-                            </LeftBorder>
-                            <RightBorder>
-                              <Style>Solid</Style>
-                            </RightBorder>
-                            <BackgroundColor>=IIF(RowNumber(Nothing) Mod 2, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
-                            <PaddingLeft>2pt</PaddingLeft>
-                            <PaddingRight>2pt</PaddingRight>
-                            <PaddingTop>2pt</PaddingTop>
-                            <PaddingBottom>2pt</PaddingBottom>
-                          </Style>
-                        </Textbox>
-                      </CellContents>
-                    </TablixCell>
-                    <TablixCell>
-                      <CellContents>
-                        <Textbox Name="EmployeeOffice">
-                          <CanGrow>true</CanGrow>
-                          <KeepTogether>true</KeepTogether>
-                          <Paragraphs>
-                            <Paragraph>
-                              <TextRuns>
-                                <TextRun>
-                                  <Value>=Fields!EmployeeOffice.Value</Value>
-                                  <Style>
-                                    <FontFamily>Calibri</FontFamily>
-                                    <FontSize>8pt</FontSize>
-                                  </Style>
-                                </TextRun>
-                              </TextRuns>
-                              <Style />
-                            </Paragraph>
-                          </Paragraphs>
-                          <rd:DefaultName>EmployeeOffice</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2906,138 +2520,6 @@
                   <TablixHeader>
                     <Size>1cm</Size>
                     <CellContents>
-                      <Textbox Name="Textbox901">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value>Employee Position</Value>
-                                <Style>
-                                  <FontFamily>Calibri</FontFamily>
-                                  <FontSize>8pt</FontSize>
-                                  <Color>=Variables!ColorTableHeaderFont.Value</Color>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
-                          </Paragraph>
-                        </Paragraphs>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                            <Width>0.75pt</Width>
-                          </Border>
-                          <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Middle</VerticalAlign>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixHeader>
-                  <TablixMembers>
-                    <TablixMember />
-                  </TablixMembers>
-                </TablixMember>
-                <TablixMember>
-                  <TablixHeader>
-                    <Size>1cm</Size>
-                    <CellContents>
-                      <Textbox Name="Textbox911">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value>Employee Department</Value>
-                                <Style>
-                                  <FontFamily>Calibri</FontFamily>
-                                  <FontSize>8pt</FontSize>
-                                  <Color>=Variables!ColorTableHeaderFont.Value</Color>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
-                          </Paragraph>
-                        </Paragraphs>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                            <Width>0.75pt</Width>
-                          </Border>
-                          <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Middle</VerticalAlign>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixHeader>
-                  <TablixMembers>
-                    <TablixMember />
-                  </TablixMembers>
-                </TablixMember>
-                <TablixMember>
-                  <TablixHeader>
-                    <Size>1cm</Size>
-                    <CellContents>
-                      <Textbox Name="Textbox921">
-                        <CanGrow>true</CanGrow>
-                        <KeepTogether>true</KeepTogether>
-                        <Paragraphs>
-                          <Paragraph>
-                            <TextRuns>
-                              <TextRun>
-                                <Value>Employee Office</Value>
-                                <Style>
-                                  <FontFamily>Calibri</FontFamily>
-                                  <FontSize>8pt</FontSize>
-                                  <Color>=Variables!ColorTableHeaderFont.Value</Color>
-                                </Style>
-                              </TextRun>
-                            </TextRuns>
-                            <Style>
-                              <TextAlign>Center</TextAlign>
-                            </Style>
-                          </Paragraph>
-                        </Paragraphs>
-                        <Style>
-                          <Border>
-                            <Color>LightGrey</Color>
-                            <Style>Solid</Style>
-                            <Width>0.75pt</Width>
-                          </Border>
-                          <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Middle</VerticalAlign>
-                          <PaddingLeft>2pt</PaddingLeft>
-                          <PaddingRight>2pt</PaddingRight>
-                          <PaddingTop>2pt</PaddingTop>
-                          <PaddingBottom>2pt</PaddingBottom>
-                        </Style>
-                      </Textbox>
-                    </CellContents>
-                  </TablixHeader>
-                  <TablixMembers>
-                    <TablixMember />
-                  </TablixMembers>
-                </TablixMember>
-                <TablixMember>
-                  <TablixHeader>
-                    <Size>1cm</Size>
-                    <CellContents>
                       <Textbox Name="textbox151">
                         <CanGrow>true</CanGrow>
                         <KeepTogether>true</KeepTogether>
@@ -3586,6 +3068,9 @@
                       <KeepTogether>true</KeepTogether>
                     </TablixMember>
                     <TablixMember>
+                      <KeepWithGroup>After</KeepWithGroup>
+                    </TablixMember>
+                    <TablixMember>
                       <Group Name="table5_Details_Group">
                         <DataElementName>Detail</DataElementName>
                       </Group>
@@ -3625,18 +3110,18 @@
             <PageBreak>
               <BreakLocation>Start</BreakLocation>
             </PageBreak>
-            <Height>2.2cm</Height>
-            <Width>57.25292cm</Width>
+            <Height>2.8cm</Height>
+            <Width>42.29708cm</Width>
             <Style>
               <FontFamily>Calibri</FontFamily>
               <FontSize>8pt</FontSize>
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>2.2cm</Height>
+        <Height>2.8cm</Height>
         <Style />
       </Body>
-      <Width>57.25292cm</Width>
+      <Width>42.29708cm</Width>
       <Page>
         <PageHeader>
           <Height>2.75cm</Height>
@@ -3936,19 +3421,84 @@
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="Office">
+    <ReportParameter Name="LogStatus">
       <DataType>String</DataType>
       <DefaultValue>
         <Values>
           <Value>=Parameters!all_value.Value</Value>
         </Values>
       </DefaultValue>
-      <Prompt>Office</Prompt>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>Status</Prompt>
       <ValidValues>
         <DataSetReference>
-          <DataSetName>Offices</DataSetName>
-          <ValueField>OFFC_DESC</ValueField>
-          <LabelField>OFFC_DESC</LabelField>
+          <DataSetName>ReportStatus</DataSetName>
+          <ValueField>StatusName</ValueField>
+          <LabelField>StatusName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="IsCollaspedGroupBy">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Collapsed Group</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="ReportName">
+      <DataType>String</DataType>
+      <Prompt>Report Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ReportName</DataSetName>
+          <ValueField>ReportName</ValueField>
+          <LabelField>ReportName</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="UserName">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Parameters!all_value.Value</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>User Name</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>UserName</DataSetName>
+          <ValueField>UserName</ValueField>
+          <LabelField>EMPLOYEE_NAME</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="ExcludeAdmins">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Exclude Admins</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="StatusGroup">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=Parameters!all_value.Value</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Status Group</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ReportStatusGroup</DataSetName>
+          <ValueField>StatusGroup</ValueField>
+          <LabelField>StatusGroup</LabelField>
         </DataSetReference>
       </ValidValues>
       <MultiValue>true</MultiValue>
@@ -3976,130 +3526,8 @@
           <ParameterValue>
             <Value>Employee</Value>
           </ParameterValue>
-          <ParameterValue>
-            <Value>Department</Value>
-          </ParameterValue>
-          <ParameterValue>
-            <Value>Office</Value>
-          </ParameterValue>
         </ParameterValues>
       </ValidValues>
-    </ReportParameter>
-    <ReportParameter Name="ReportName">
-      <DataType>String</DataType>
-      <Prompt>Report Name</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ReportName</DataSetName>
-          <ValueField>ReportName</ValueField>
-          <LabelField>ReportName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Department">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Department</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>Departments</DataSetName>
-          <ValueField>DEPT_NAME</ValueField>
-          <LabelField>DEPT_NAME</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="IsCollaspedGroupBy">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>false</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Collapsed Group</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="StatusGroup">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Status Group</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ReportStatusGroup</DataSetName>
-          <ValueField>StatusGroup</ValueField>
-          <LabelField>StatusGroup</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="Position">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Position</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>JobTitles</DataSetName>
-          <ValueField>POSITION</ValueField>
-          <LabelField>POSITION_LABEL</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="ExcludeAdmins">
-      <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>true</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Exclude Admins</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="LogStatus">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>Status</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>ReportStatus</DataSetName>
-          <ValueField>StatusName</ValueField>
-          <LabelField>StatusName</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
-    </ReportParameter>
-    <ReportParameter Name="UserName">
-      <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>=Parameters!all_value.Value</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>User Name</Prompt>
-      <ValidValues>
-        <DataSetReference>
-          <DataSetName>UserName</DataSetName>
-          <ValueField>UserName</ValueField>
-          <LabelField>EMPLOYEE_NAME</LabelField>
-        </DataSetReference>
-      </ValidValues>
-      <MultiValue>true</MultiValue>
     </ReportParameter>
     <ReportParameter Name="IsParametersShown">
       <DataType>Boolean</DataType>
@@ -4114,7 +3542,7 @@
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>3</NumberOfColumns>
-      <NumberOfRows>6</NumberOfRows>
+      <NumberOfRows>5</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -4122,8 +3550,8 @@
           <ParameterName>ReportFolder</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>0</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>LogStatus</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4132,18 +3560,18 @@
           <ParameterName>ReportName</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>2</RowIndex>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>GroupByColumn</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>1</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>UserName</ParameterName>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>IsCollaspedGroupBy</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4153,7 +3581,7 @@
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>IsParametersShown</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -4172,21 +3600,6 @@
           <ParameterName>blank_value</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>3</RowIndex>
-          <ParameterName>Department</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>4</RowIndex>
-          <ParameterName>Position</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
-          <ColumnIndex>1</ColumnIndex>
-          <RowIndex>2</RowIndex>
-          <ParameterName>Office</ParameterName>
-        </CellDefinition>
-        <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>4</RowIndex>
           <ParameterName>StatusGroup</ParameterName>
@@ -4203,43 +3616,66 @@
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>2</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>ExcludeAdmins</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
   </ReportParametersLayout>
-  <Code>
-		Private Alt As Boolean
+  <Code>Private Alt As Boolean
 
-		Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
-		'------------------------------------------------------------------------------------------------
-		' Purpose:  To candy stripe the detail rows of a report
-		' Example:  BackgroundColor = Code.CandyStripe()
-		' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
-		'------------------------------------------------------------------------------------------------
+Public Function CandyStripe(ByVal NewRow As Boolean, ByVal OddColor as String, ByVal EvenColor as String) As String
+'------------------------------------------------------------------------------------------------
+' Purpose:  To candy stripe the detail rows of a report
+' Example:  BackgroundColor = Code.CandyStripe()
+' Note:     The first column needs a parameter of "True" passed in example: Code.CandyStripe(True)
+'------------------------------------------------------------------------------------------------
 
-		If NewRow Then
+	If NewRow Then
 		Alt = Not Alt
-		End If
+	End If
 
-		If Alt Then
+	If Alt Then
 		Return OddColor
-		Else
+	Else
 		Return EvenColor
-		End If
+	End If
 
-		End Function
+End Function
 
-		Public Function Divide(ByVal first As Nullable(Of Double), ByVal second As Nullable(Of Double)) As Double
-		If second = 0 or second Is Nothing Then
+Public Function Divide(ByVal first As Nullable(Of Double), ByVal second As Nullable(Of Double)) As Double
+
+	If second = 0 or second Is Nothing Then
 		Return 0
-		Else
+	Else
 		Return (first / second)
-		End If
-		End Function
+	End If
+	
+End Function
 
-	</Code>
+Public Function HeatMapColorGradate( _
+  ByVal Value As Double _
+, ByVal MaxPositive As Double _
+, ByVal Neutral As Double _
+, ByVal ColStr As String) As String
+'------------------------------------------------------------------------------------------------
+' Purpose:  To use a color gradations on a heatmap report
+' Example:  BackgroundColor =Code.HeatMapColorGradate(25, 100, -10, Variables!ColorEventCountGradate.Value)
+' Note:     Use a negative number as the "Neutral" number to avoid too light of a color
+'------------------------------------------------------------------------------------------------
+Const Shd As Double = 255
+Dim ColVar1 As Integer = Convert.ToInt32(Left(Right(ColStr, 6), 2), 16)
+Dim ColVar2 As Integer = Convert.ToInt32(Left(Right(ColStr, 4), 2), 16)
+Dim ColVar3 As Integer = Convert.ToInt32(Right(ColStr, 2), 16) 'Find Largest Range 'Split the #RGB color to R, G, and B components
+Dim decPosRange As Double = Math.Abs(MaxPositive - Neutral) 'Find appropriate color shade
+Dim iColor1 As Integer = ColVar1 + CInt(Math.Round((MaxPositive - Value) * ((Shd - ColVar1) / decPosRange)))
+Dim iColor2 As Integer = ColVar2 + CInt(Math.Round((MaxPositive - Value) * ((Shd - ColVar2) / decPosRange)))
+Dim iColor3 As Integer = ColVar3 + CInt(Math.Round((MaxPositive - Value) * ((Shd - ColVar3) / decPosRange))) 'Return the new color
+Dim heatMapColor As String = "#" &amp; iColor1.ToString("X2") &amp; iColor2.ToString("X2") &amp; iColor3.ToString("X2") 'Reduce a shade for each of the R,G,B components
+
+    Return heatMapColor 
+
+End Function</Code>
   <EmbeddedImages>
     <EmbeddedImage Name="exclamation">
       <MIMEType>image/png</MIMEType>
