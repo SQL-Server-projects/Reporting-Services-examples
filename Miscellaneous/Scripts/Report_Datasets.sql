@@ -66,6 +66,6 @@ FROM
     INNER JOIN [dbo].[Catalog] AS [c] WITH(NOLOCK) ON [ds].[ItemID] = [c].[ItemID]
 WHERE
     1=1
-    AND ds.[report_folder] NOT IN('Analytics')
+    --AND ds.[report_folder] NOT IN('Analytics')
 ORDER BY 
     [Path];

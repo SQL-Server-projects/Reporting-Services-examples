@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-14T05:10:37.0740604Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T22:47:56.4358326Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -195,8 +195,9 @@ ORDER BY
                                 <TextRun>
                                   <Value>Database</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -225,7 +226,8 @@ ORDER BY
                             <RightBorder>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -245,8 +247,9 @@ ORDER BY
                                 <TextRun>
                                   <Value EvaluationMode="Constant">Job</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -266,7 +269,8 @@ ORDER BY
                             <BottomBorder>
                               <Style>Solid</Style>
                             </BottomBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -288,8 +292,9 @@ ORDER BY
                                 <TextRun>
                                   <Value EvaluationMode="Constant">Category</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -313,7 +318,8 @@ ORDER BY
                             <RightBorder>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -333,8 +339,9 @@ ORDER BY
                                 <TextRun>
                                   <Value EvaluationMode="Constant">Step</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -357,7 +364,8 @@ ORDER BY
                             <RightBorder>
                               <Style>Solid</Style>
                             </RightBorder>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -379,8 +387,9 @@ ORDER BY
                                 <TextRun>
                                   <Value EvaluationMode="Constant">Command</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
+                                    <Color>=Variables!ColorTableHeaderFont.Value</Color>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -395,7 +404,8 @@ ORDER BY
                               <Style>Solid</Style>
                               <Width>0.75pt</Width>
                             </Border>
-                            <BackgroundColor>=Variables!ColorTableHeader.Value</BackgroundColor>
+                            <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -420,7 +430,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!database_name.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -457,7 +467,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!Name.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -494,7 +504,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!DESCRIPTION.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -531,7 +541,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!Category.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -568,7 +578,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Count(Fields!step_id.Value)</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                     <Color>Blue</Color>
                                   </Style>
@@ -604,7 +614,7 @@ ORDER BY
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -646,7 +656,7 @@ ORDER BY
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -683,7 +693,7 @@ ORDER BY
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -718,7 +728,7 @@ ORDER BY
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -753,7 +763,7 @@ ORDER BY
                                 <TextRun>
                                   <Value />
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -791,7 +801,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!step_id.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -826,7 +836,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!step_name.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -863,7 +873,7 @@ ORDER BY
                                 <TextRun>
                                   <Value>=Fields!command.Value</Value>
                                   <Style>
-                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontFamily>Calibri</FontFamily>
                                     <FontSize>8pt</FontSize>
                                   </Style>
                                 </TextRun>
@@ -974,23 +984,6 @@ ORDER BY
                         <FontFamily>Calibri</FontFamily>
                         <FontSize>18pt</FontSize>
                         <FontWeight>Bold</FontWeight>
-                        <Color>=Variables!ColorTableHeaderBackground.Value</Color>
-                      </Style>
-                    </TextRun>
-                    <TextRun>
-                      <Value>
-												=IIF(IsNothing(Parameters!StartDateTime.Value) And IsNothing(Parameters!EndDateTime.Value), "", vbcrlf)
-												+ IIF(IsNothing(Parameters!StartDateTime.Value), "", "From: ")
-												+ Format(Parameters!StartDateTime.Value, Variables!FormatDateTime.Value)
-												+ IIF(IsNothing(Parameters!EndDateTime.Value), "", " To: ")
-												+ Format(Parameters!EndDateTime.Value, Variables!FormatDateTime.Value)
-											</Value>
-                      <Style>
-                        <FontStyle>Normal</FontStyle>
-                        <FontFamily>Calibri</FontFamily>
-                        <FontSize>11pt</FontSize>
-                        <FontWeight>Normal</FontWeight>
-                        <TextDecoration>None</TextDecoration>
                         <Color>=Variables!ColorTableHeaderBackground.Value</Color>
                       </Style>
                     </TextRun>
@@ -1195,11 +1188,6 @@ ORDER BY
     </ReportParameter>
     <ReportParameter Name="Category">
       <DataType>String</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>&lt;ALL&gt;</Value>
-        </Values>
-      </DefaultValue>
       <Prompt>Category</Prompt>
       <ValidValues>
         <DataSetReference>
@@ -1294,8 +1282,20 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
   </EmbeddedImages>
   <Language>en-US</Language>
   <Variables>
-    <Variable Name="ColorTableHeader">
-      <Value>Gainsboro</Value>
+    <Variable Name="ColorTableHeaderBackground">
+      <Value>#005F83</Value>
+    </Variable>
+    <Variable Name="ColorTableHeaderFont">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeEvenRow">
+      <Value>#FFFFFF</Value>
+    </Variable>
+    <Variable Name="ColorCandyStripeOddRow">
+      <Value>WhiteSmoke</Value>
+    </Variable>
+    <Variable Name="ColorTableFooterBackground">
+      <Value>#8A8D8F</Value>
     </Variable>
     <Variable Name="FormatDate">
       <Value>dd-MMM-yyyy</Value>
@@ -1305,27 +1305,29 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     </Variable>
     <Variable Name="ReportExecutionTime">
       <Value>
-        =  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
-        + Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
-      </Value>
+				=  Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Hours).ToString, 2) + ":"
+				+ Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Minutes).ToString, 2) + ":"
+				+ Right("00" + (System.DateTime.Now.Subtract(Globals!ExecutionTime).Seconds).ToString, 2)
+			</Value>
     </Variable>
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
     <Variable Name="UrlReport">
       <Value>
-        =Globals!ReportServerUrl + "/ReportServer?"
-        + Replace(Globals!ReportFolder, " ", "+") + "%2f"
-        + Replace(Globals!ReportName, " ", "+") + "&amp;rs:Command=Render"
-      </Value>
+				=Globals!ReportServerUrl + "/ReportServer?"
+				+ Replace(Globals!ReportFolder, " ", "+") + "%2f"
+				+ Replace(Globals!ReportName, " ", "+")
+			</Value>
     </Variable>
     <Variable Name="UrlReportWithParameters">
-      <Value>=Variables!UrlReport.Value
- + "&amp;Server=" &amp; Parameters!Server.Value</Value>
+      <Value>=Variables!UrlReport.Value</Value>
     </Variable>
     <Variable Name="UserName">
       <Value>=Right(User!UserID, len(User!UserID)-instr(User!UserID, "\"))</Value>
+    </Variable>
+    <Variable Name="CompanyName">
+      <Value>Anthony Duguid</Value>
     </Variable>
   </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>

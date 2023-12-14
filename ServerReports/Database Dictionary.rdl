@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-11T05:49:55.9874305Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T22:07:49.9946873Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -431,10 +431,10 @@
                   <Width>11.52229cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3cm</Width>
+                  <Width>3.25cm</Width>
                 </TablixColumn>
                 <TablixColumn>
-                  <Width>3cm</Width>
+                  <Width>3.25cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
@@ -973,6 +973,7 @@
                             <PaddingBottom>2pt</PaddingBottom>
                           </Style>
                         </Textbox>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
@@ -2781,7 +2782,7 @@
             <KeepTogether>true</KeepTogether>
             <DataSetName>Details</DataSetName>
             <Height>2.8cm</Height>
-            <Width>64.91977cm</Width>
+            <Width>65.41977cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2793,7 +2794,7 @@
         <Height>2.8cm</Height>
         <Style />
       </Body>
-      <Width>64.91977cm</Width>
+      <Width>65.41977cm</Width>
       <Page>
         <PageHeader>
           <Height>2.75cm</Height>

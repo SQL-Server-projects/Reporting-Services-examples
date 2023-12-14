@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-11T05:46:45.4736115Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T21:45:41.4102118Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -1834,7 +1834,7 @@ ORDER BY 1</CommandText>
                               </TextRun>
                             </TextRuns>
                             <Style>
-                              <TextAlign>Left</TextAlign>
+                              <TextAlign>Center</TextAlign>
                             </Style>
                           </Paragraph>
                         </Paragraphs>
@@ -1849,14 +1849,14 @@ ORDER BY 1</CommandText>
                             <Style>None</Style>
                           </LeftBorder>
                           <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Top</VerticalAlign>
+                          <VerticalAlign>Middle</VerticalAlign>
                           <PaddingLeft>2pt</PaddingLeft>
                           <PaddingRight>2pt</PaddingRight>
                           <PaddingTop>2pt</PaddingTop>
                           <PaddingBottom>2pt</PaddingBottom>
-                          <WritingMode>Rotate270</WritingMode>
                         </Style>
                       </Textbox>
+                      <rd:Selected>true</rd:Selected>
                     </CellContents>
                   </TablixHeader>
                   <TablixMembers>
@@ -1946,7 +1946,7 @@ ORDER BY 1</CommandText>
                               </TextRun>
                             </TextRuns>
                             <Style>
-                              <TextAlign>Left</TextAlign>
+                              <TextAlign>Center</TextAlign>
                             </Style>
                           </Paragraph>
                         </Paragraphs>
@@ -1961,14 +1961,14 @@ ORDER BY 1</CommandText>
                             <Style>None</Style>
                           </LeftBorder>
                           <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Top</VerticalAlign>
+                          <VerticalAlign>Middle</VerticalAlign>
                           <PaddingLeft>2pt</PaddingLeft>
                           <PaddingRight>2pt</PaddingRight>
                           <PaddingTop>2pt</PaddingTop>
                           <PaddingBottom>2pt</PaddingBottom>
-                          <WritingMode>Rotate270</WritingMode>
                         </Style>
                       </Textbox>
+                      <rd:Selected>true</rd:Selected>
                     </CellContents>
                   </TablixHeader>
                   <TablixMembers>
@@ -2054,7 +2054,7 @@ ORDER BY 1</CommandText>
                               </TextRun>
                             </TextRuns>
                             <Style>
-                              <TextAlign>Left</TextAlign>
+                              <TextAlign>Center</TextAlign>
                             </Style>
                           </Paragraph>
                         </Paragraphs>
@@ -2069,14 +2069,14 @@ ORDER BY 1</CommandText>
                             <Style>None</Style>
                           </LeftBorder>
                           <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
-                          <VerticalAlign>Top</VerticalAlign>
+                          <VerticalAlign>Middle</VerticalAlign>
                           <PaddingLeft>2pt</PaddingLeft>
                           <PaddingRight>2pt</PaddingRight>
                           <PaddingTop>2pt</PaddingTop>
                           <PaddingBottom>2pt</PaddingBottom>
-                          <WritingMode>Rotate270</WritingMode>
                         </Style>
                       </Textbox>
+                      <rd:Selected>true</rd:Selected>
                     </CellContents>
                   </TablixHeader>
                 </TablixMember>

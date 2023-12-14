@@ -138,11 +138,11 @@
     <None Include="Scripts\SSRS_Branding.xlsm" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Reports_with_linked_reports.sql" />
-    <Content Include="Scripts\Reports_with_subreports.sql" />
+    <Content Include="Scripts\Report_Linked.sql" />
+    <Content Include="Scripts\Report_Subreports.sql" />
     <Content Include="Scripts\Report_Datasets.sql" />
     <Content Include="Scripts\Report_Snapshots.sql" />
-    <Content Include="Scripts\Source_control_current_version_reports.sql" />
+    <Content Include="Scripts\Source_Control_Current.sql" />
     <Content Include="Scripts\Update_Subscription_Owner.sql" />
   </ItemGroup>
   <ItemGroup>

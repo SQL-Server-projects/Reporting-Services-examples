@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata">
   <Description>Execution Log Heatmap Report</Description>
+  <am:AuthoringMetadata>
+    <am:CreatedBy>
+      <am:Name>SSDTRS</am:Name>
+      <am:Version>17.8.34330.188</am:Version>
+    </am:CreatedBy>
+    <am:UpdatedBy>
+      <am:Name>SSDTRS</am:Name>
+      <am:Version>17.8.34330.188</am:Version>
+    </am:UpdatedBy>
+    <am:LastModifiedTimestamp>2023-12-14T21:41:58.5916774Z</am:LastModifiedTimestamp>
+  </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -109,7 +120,7 @@ AS
 report_users 
 AS
 (
-	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM ReportServer.dbo.[Users]
+	SELECT [UserID], [UserName], [SimpleUserName] = UPPER(RIGHT([UserName], (LEN([UserName])-CHARINDEX('\', [UserName])))) FROM dbo.[Users]
 )
 ,
 report_catalog
@@ -133,7 +144,7 @@ AS
 		--, [ReportDefinition] = CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.Content))  
 		, [HostName] = Host_Name()
 	FROM 
-		ReportServer.dbo.[Catalog] AS rpt
+		dbo.[Catalog] AS rpt
 	WHERE 
 		1=1
 		AND rpt.[Type] = 2
@@ -151,7 +162,7 @@ SELECT
 	, day_event_count = COUNT(rpt.[Name]) OVER (PARTITION BY CONVERT(DATE, el.TimeStart) ORDER BY CONVERT(DATE, el.TimeStart)) 
 FROM 
 	report_catalog AS rpt 
-	LEFT JOIN ReportServer.dbo.ExecutionLog AS el ON el.ReportID = rpt.ItemID
+	LEFT JOIN dbo.ExecutionLog AS el ON el.ReportID = rpt.ItemID
 	LEFT JOIN report_users AS usr ON el.UserName = usr.UserName
 WHERE 
 	1=1
@@ -380,7 +391,7 @@ AS
 SELECT 
 	[Report_Folder] = SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2)   
 FROM 
-	ReportServer.dbo.[Catalog] AS c WITH (NOLOCK) 
+	dbo.[Catalog] AS c WITH (NOLOCK) 
 	INNER JOIN catalog_type_description AS ctd ON ctd.[TypeID] = c.[Type]
 UNION 
 SELECT @all_value
@@ -413,8 +424,8 @@ SELECT DISTINCT
 	  ReportName = c.Name
 	, ReportFolder = SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2)  
 FROM 
-	ReportServer.dbo.ExecutionLog el 
-	INNER JOIN ReportServer.dbo.Catalog c ON el.ReportID = c.ItemID
+	dbo.ExecutionLog el 
+	INNER JOIN dbo.Catalog c ON el.ReportID = c.ItemID
 WHERE 
 	c.[TYPE] = 2
 	AND (@all_value IN (@ReportFolder) OR SUBSTRING(c.Path, 2, Len(c.Path)-Len(c.Name)-2) IN(@ReportFolder))
@@ -450,8 +461,8 @@ ORDER BY 1</CommandText>
         <CommandText>SELECT DISTINCT	
 	[UserName] = RIGHT(el.[UserName],(LEN(el.[UserName])-CHARINDEX('\',el.[UserName])))  
 FROM 
-	ReportServer.dbo.[ExecutionLog] el 
-	INNER JOIN ReportServer.dbo.[Catalog] c ON el.[ReportID] = c.[ItemID]
+	dbo.[ExecutionLog] el 
+	INNER JOIN dbo.[Catalog] c ON el.[ReportID] = c.[ItemID]
 WHERE 
 	c.[TYPE] = 2
 	AND (@all_value IN (@ReportFolder) OR SUBSTRING(c.[Path], 2, Len(c.[Path])-Len(c.[Name])-2) IN(@ReportFolder))
@@ -475,7 +486,7 @@ UNION SELECT @all_value</CommandText>
         </QueryParameters>
         <CommandText>SELECT DISTINCT	
 el.[Status]
-FROM ReportServer.dbo.[ExecutionLog] el 
+FROM dbo.[ExecutionLog] el 
 UNION SELECT @all_value</CommandText>
       </Query>
       <Fields>
@@ -1385,7 +1396,7 @@ WlsCs4wga8NhPk8ezRxQXlum4kAHbDYjXkctI7R3PrkhjF4lSTbmMFvQXCf1kiN3Xlq/Cjq+FTuBOagz
     <Variable Name="ReportRunDateTime">
       <Value>=Format(DateTime.Now, Variables!FormatDateTime.Value)</Value>
     </Variable>
-	<Variable Name="ReportServer">
+    <Variable Name="ReportServer">
       <Value>=Replace(Globals!ReportServerUrl, "/ReportServer", "")</Value>
     </Variable>
     <Variable Name="UrlReport">
@@ -1407,6 +1418,5 @@ WlsCs4wga8NhPk8ezRxQXlum4kAHbDYjXkctI7R3PrkhjF4lSTbmMFvQXCf1kiN3Xlq/Cjq+FTuBOagz
   </Variables>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <!-- <rd:ReportServerUrl>http://pr-mis1/reportserver</rd:ReportServerUrl> -->
   <rd:ReportID>7e5c8bcf-53be-4d06-a48c-31377cdfacc8</rd:ReportID>
 </Report>
