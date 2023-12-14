@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-14T21:45:01.1826787Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T23:21:08.5828685Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <df:DefaultFontFamily>Segoe UI</df:DefaultFontFamily>
   <Author>Anthony Duguid</Author>
@@ -40,22 +40,7 @@
             <Value>=Parameters!ReportFolder.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>/*--------------------------------------------------------------------------------------------------
-| Purpose:		To show all the Reporting Services folder permissions
-| References:	How to create new permission groups https://www.mssqltips.com/sqlservertip/2793/sql-server-reporting-services-2012-permissions/
-|				How to query folder permissions http://stackoverflow.com/questions/16920251/sql-server-reporting-services-2008-r2-folder-and-report-security
-| Notes:		To deploy this report to the main report page, you must use "Upload File"
-|				SQLCmdMode Script
-|--------------------------------------------------------------------------------------------------
-
-DECLARE @all_value		AS NVARCHAR(50) = '&lt;ALL&gt;';
-DECLARE @UserName		AS NVARCHAR(50) = '&lt;ALL&gt;';
-DECLARE @ReportFolder	AS NVARCHAR(50) = '&lt;ALL&gt;';
-DECLARE @ShowInactive	AS BIT = 0;
-
-*/
-
-SELECT 
+        <CommandText>SELECT 
 	  [FolderName] = cat.[Name]
 	, [FolderPath] = cat.[Path]
 	, rol.[RoleName]
@@ -138,42 +123,40 @@ FROM
             <Value>=Parameters!ReportFolder.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					;WITH
-					report_users
-					AS
-					(
-					SELECT DISTINCT
-					[UserNameFormat] =
-					LOWER
-					(
-					CASE
-					WHEN CHARINDEX('\', usr.[UserName]) &gt; 0 THEN LOWER(SUBSTRING(usr.[UserName] ,CHARINDEX('\', usr.[UserName]) + 1, LEN(usr.[UserName])))
-					ELSE usr.[UserName]
-					END
-					)
-					, usr.[UserName]
-					, usr.[UserID]
-					FROM
-					[dbo].[Catalog] AS cat
-					LEFT JOIN [dbo].[PolicyUserRole] AS urol ON urol.[PolicyID] = cat.[PolicyID]
-					LEFT JOIN [dbo].[Roles] AS rol ON urol.[RoleID] = rol.[RoleID]
-					LEFT JOIN [dbo].[Policies] AS pol ON urol.[PolicyID] = pol.[PolicyID]
-					LEFT JOIN [dbo].[Users] AS usr ON urol.[UserID] = usr.[UserID]
-					WHERE
-					1=1
-					AND (@all_value IN (@ReportFolder) OR cat.[Path] IN(@ReportFolder))
-					)
-					SELECT
-					usr.[UserNameFormat]
-					, usr.[UserName]
-					, [OrderNumber] = 2
-					FROM
-					report_users AS usr
-					UNION
-					SELECT @all_value, @all_value, 1
-					ORDER BY 3, 1
-				</CommandText>
+        <CommandText>WITH report_users
+	AS (SELECT DISTINCT 
+			 [UserNameFormat] = LOWER(CASE
+								 WHEN CHARINDEX('\', [usr].[UserName]) &gt; 0 THEN LOWER(SUBSTRING([usr].[UserName], CHARINDEX('\', [usr].[UserName]) + 1, LEN([usr].[UserName])))
+								 ELSE [usr].[UserName]
+								 END)
+		    , [usr].[UserName]
+		    , [usr].[UserID]
+	    FROM
+		    [dbo].[Catalog] AS [cat]
+		    LEFT JOIN [dbo].[PolicyUserRole] AS [urol] ON [urol].[PolicyID] = [cat].[PolicyID]
+		    LEFT JOIN [dbo].[Roles] AS [rol] ON [urol].[RoleID] = [rol].[RoleID]
+		    LEFT JOIN [dbo].[Policies] AS [pol] ON [urol].[PolicyID] = [pol].[PolicyID]
+		    LEFT JOIN [dbo].[Users] AS [usr] ON [urol].[UserID] = [usr].[UserID]
+	    WHERE
+		  1 = 1
+		  AND
+			(
+			   @all_value IN(@ReportFolder)
+		  OR [cat].[Path] IN(@ReportFolder)
+			))
+	SELECT 
+		  [usr].[UserNameFormat]
+		, [usr].[UserName]
+		, [OrderNumber] = 2
+	FROM [report_users] AS [usr]
+	UNION
+	SELECT 
+		  @all_value
+		, @all_value
+		, 1
+	ORDER BY 
+		    3
+		  , 1;</CommandText>
       </Query>
       <Fields>
         <Field Name="UserNameFormat">
@@ -198,21 +181,22 @@ FROM
             <Value>=Parameters!all_value.Value</Value>
           </QueryParameter>
         </QueryParameters>
-        <CommandText>
-					SELECT
-					[ReportFolder] = cat.[Path]
-					, [OrderNumber] = 2
-					FROM
-					[dbo].[Catalog] AS cat WITH (NOLOCK)
-					WHERE
-					1=1
-					AND LEFT(cat.[Path], 37) != '/68f0607b-9378-4bbb-9e70-4da3d7d66838' -- ignore branding items
-					AND cat.[Type] = 1
-					AND cat.[Path] != ''
-					UNION
-					SELECT @all_value, 1
-					ORDER BY 2, 1
-				</CommandText>
+        <CommandText>SELECT 
+	  [ReportFolder] = [cat].[Path]
+	, [OrderNumber] = 2
+FROM [dbo].[Catalog] AS [cat] WITH(NOLOCK)
+WHERE
+   1 = 1
+   AND LEFT([cat].[Path], 37) != '/68f0607b-9378-4bbb-9e70-4da3d7d66838' -- ignore branding items
+   AND [cat].[Type] = 1
+   AND [cat].[Path] != ''
+UNION
+SELECT 
+	  @all_value
+	, 1
+ORDER BY 
+	    2
+	  , 1;</CommandText>
       </Query>
       <Fields>
         <Field Name="ReportFolder">
@@ -228,13 +212,10 @@ FROM
     <DataSet Name="PermissionKey">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
-        <CommandText>
-					SELECT
-					rol.[RoleName]
-					, rol.[Description]
-					FROM
-					[dbo].[Roles] AS rol
-				</CommandText>
+        <CommandText>SELECT 
+	  [rol].[RoleName]
+	, [rol].[Description]
+FROM [dbo].[Roles] AS [rol];</CommandText>
       </Query>
       <Fields>
         <Field Name="RoleName">

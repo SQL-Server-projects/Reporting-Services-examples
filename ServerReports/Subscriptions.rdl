@@ -10,7 +10,7 @@
       <am:Name>SSDTRS</am:Name>
       <am:Version>17.8.34330.188</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2023-12-11T05:42:28.3249006Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2023-12-14T23:24:25.9527664Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -932,13 +932,11 @@
     <DataSet Name="CatalogTypes">
       <Query>
         <DataSourceName>ReportServer</DataSourceName>
-        <CommandText>
-					SELECT tbl.* FROM (VALUES
-					( 2, 'Report')
-					, ( 4, 'Linked Report')
-					, ( 13, 'Power BI')
-					) tbl ([Type], [TypeDescription])
-				</CommandText>
+        <CommandText>SELECT tbl.* FROM (VALUES
+	 ( 2, 'Report')
+    , ( 4, 'Linked Report')
+    , ( 13, 'Power BI')
+) tbl ([Type], [TypeDescription])</CommandText>
       </Query>
       <Fields>
         <Field Name="Type">
