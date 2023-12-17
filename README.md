@@ -1,7 +1,6 @@
 <img align="left" src="Images/PBIRS.png" width="250px" >
 <br>
 <br>
-<div>
 
 # Microsoft Power BI Report Server (PBIRS)
 
