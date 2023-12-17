@@ -1,7 +1,7 @@
 <img align="left" src="Images/PBIRS.png" width="250px" >
 <br>
 <br>
-
+<div>
 # Microsoft Power BI Report Server (PBIRS)
 
 <!---[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/AnthonyDuguid/1.00)--->
