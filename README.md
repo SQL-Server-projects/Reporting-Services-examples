@@ -2,9 +2,6 @@
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
 
 # Microsoft Power BI Report Server (PBIRS)
 
@@ -20,6 +17,7 @@ The following examples are used to query the database & report server. I have in
 [![star this repo](http://githubbadges.com/star.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices)
 [![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
 --->
+
 ## File List
 ### [Miscellaneous](/Miscellaneous)
 #### [Documentation](/Miscellaneous/Documentation)
@@ -27,24 +25,40 @@ The following examples are used to query the database & report server. I have in
 * [Report Style Guide](/Miscellaneous/Documentation/Report%20Style%20Guide.docx)
 * [Report Unit Testing Checklist](/Miscellaneous/Documentation/Report%20Unit%20Testing%20Checklist.docx)
 #### [Scripts](/Miscellaneous/Scripts)
-* [Apply Standard Header and Footer](/Miscellaneous/Scripts/Apply_Header_Footer.rss)
-* [Backup Deployed Reports](/Miscellaneous/Scripts/Backup_Reports.rss)
-* [Candy Stripe](/Miscellaneous/Scripts/CandyStripe.vb)
-* [Heat Map Color](/Miscellaneous/Scripts/HeatMapColor.vb)
-* [Heat Map Color Gradate](/Miscellaneous/Scripts/HeatMapColorGradate.vb)
-* [Update Subscription Owner](/Miscellaneous/Scripts/Update_Subscription_Owner.sql)
+##### [RSS Scripts](/Miscellaneous/Scripts/RSS)
+* [Apply Standard Header and Footer](/Miscellaneous/Scripts/RSS/Apply_Header_Footer.rss)
+* [Backup Reports](/Miscellaneous/Scripts/RSS/Backup_Reports.rss)
+* [Deploy Reports](/Miscellaneous/Scripts/RSS/Deploy_Reports.rss)
+##### [VB Scripts](/Miscellaneous/Scripts/VB)
+* [Candy Stripe](/Miscellaneous/Scripts/VB/CandyStripe.vb)
+* [Copy Nodes](/Miscellaneous/Scripts/VB/CopyNodes.vb)
+* [Get Parameter and Values](/Miscellaneous/Scripts/VB/GetParameterandValues.vb)
+* [Heat Map Color](/Miscellaneous/Scripts/VB/HeatMapColor.vb)
+* [Heat Map Color Gradate](/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb)
+##### [SQL Scripts](/Miscellaneous/Scripts/SQL)
+* [Report_Datasets](/Miscellaneous/Scripts/SQL/Report_Datasets.sql)
+* [Report_Linked](/Miscellaneous/Scripts/SQL/Report_Linked.sql)
+* [Report_Snapshots](/Miscellaneous/Scripts/SQL/Report_Snapshots.sql)
+* [Report_Subreports](/Miscellaneous/Scripts/SQL/Report_Subreports.sql)
+* [Source_Control_Current](/Miscellaneous/Scripts/SQL/Source_Control_Current.sql)
+* [Update Subscription Owner](/Miscellaneous/Scripts/SQL/Update_Subscription_Owner.sql)
+##### [M Scripts](/Miscellaneous/Scripts/M)
+* [Calendar](/Miscellaneous/Scripts/M/Calendar.M)
+* [Calendar FY](/Miscellaneous/Scripts/M/Calendar_FY.M)
+##### [DAX Scripts](/Miscellaneous/Scripts/DAX)
+* [Calendar Ageing](/Miscellaneous/Scripts/DAX/Calendar_Ageing.dax) 
+* [Calendar Timeframe](/Miscellaneous/Scripts/DAX/Calendar_Timeframe.dax) 
 ### Reports
-#### [Database Server](/ServerDatabase)
-* [Activity Monitor](/ServerDatabase/Activity%20Monitor.rdl)
-* [Database Dictionary](/ServerDatabase/Database%20Dictionary.rdl)
-* [Job Search](/ServerDatabase/Job%20Search.rdl)
-* [Scheduled Jobs](/ServerDatabase/Scheduled%20Jobs.rdl) 
 #### [Report Server](/ServerReports)
+* [Activity Monitor](/ServerReports/Activity%20Monitor.rdl)
 * [Data Sources](/ServerReports/Data%20Sources.rdl)
+* [Database Dictionary](/ServerReports/Database%20Dictionary.rdl)
 * [Execution Log](/ServerReports/Execution%20Log.rdl)
-* [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log) 
+* [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log)
+* [Integrations](/ServerReports/Integrations.rdl)
+* [Job Search](/ServerReports/Job%20Search.rdl)
 * [Permissions](/ServerReports/Permissions.rdl)
-* [Report Documentation](/ServerReports/Report%20Documentation.rdl)  
+* [Scheduled Jobs](/ServerReports/Scheduled%20Jobs.rdl) 
 * [Report List](/ServerReports/Report%20List.rdl) 
 * [Subscriptions](/ServerReports/Subscriptions.rdl) 
 
