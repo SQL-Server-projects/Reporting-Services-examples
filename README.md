@@ -18,9 +18,12 @@ The following examples are used to query the database & report server. I have in
 [![star this repo](http://githubbadges.com/star.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices)
 [![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
 --->
-[Microsoft SQL Server 2022 Reporting Services](https://www.microsoft.com/en-us/download/details.aspx?id=104502)
-[Microsoft SQL Server 2019 Reporting Services](https://www.microsoft.com/en-us/download/details.aspx?id=100122)
+
 [Microsoft Power BI Report Server](https://powerbi.microsoft.com/en-au/report-server/)
+<br>
+[Microsoft SQL Server 2022 Reporting Services](https://www.microsoft.com/en-us/download/details.aspx?id=104502)
+<br>
+[Microsoft SQL Server 2019 Reporting Services](https://www.microsoft.com/en-us/download/details.aspx?id=100122)
 
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
 <table style="width:100%">
