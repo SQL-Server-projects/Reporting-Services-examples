@@ -35,6 +35,9 @@ The following examples are used to query the database & report server. I have in
     <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022">Microsoft Reporting Services Projects 2022</a>
                 <br>
                 <br>
+    <a href="https://dev.azure.com/">Microsoft Azure DevOps Services</a>
+                <br>
+                <br>
     <a href="https://notepad-plus-plus.org/downloads/">Notepad++</a>
 </kbd>
             
