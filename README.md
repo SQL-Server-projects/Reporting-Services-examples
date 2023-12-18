@@ -31,7 +31,7 @@ https://powerbi.microsoft.com/en-au/report-server/
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed SSRS reports, their subscriptions and their execution logs.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed reports, their subscriptions and their execution logs.</span>
                 <br>
             </kbd>
         </td>
@@ -43,7 +43,7 @@ https://powerbi.microsoft.com/en-au/report-server/
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed SSRS subscriptions.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed subscriptions.</span>
                 <br>
             </kbd>
         </td>
