@@ -26,7 +26,7 @@ The following examples are used to query the database & report server. I have in
                 <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Report%20List.rdl">Report Listing</a>
                 <br>
                 <br>
-                <img src="https://raw.githubusercontent.com/aduguid/SoftwarePortfolio/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
+                <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
                 <br>
                 <br>
                 <span style="max-width:256px;">This report is used for querying the deployed SSRS reports, their subscriptions and their execution logs.</span>
@@ -38,7 +38,7 @@ The following examples are used to query the database & report server. I have in
                 <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Subscriptions.rdl">Report Subscriptions</a>
                 <br>
                 <br>
-                <img src="https://raw.githubusercontent.com/aduguid/SoftwarePortfolio/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
+                <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
                 <span style="max-width:256px;">This report is used for querying the deployed SSRS subscriptions.</span>
@@ -50,7 +50,7 @@ The following examples are used to query the database & report server. I have in
                 <a href="https://github.com/aduguid/SqlServerReportingServices/blob/master/ServerReports/Execution%20Log.rdl">Report Execution Log</a>
                 <br>
                 <br>
-                <img src="https://raw.githubusercontent.com/aduguid/SoftwarePortfolio/master/Images/ReadMe/execution_log.png" align="top" width="256px" title="Report Execution Log" />
+                <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/execution_log.png" align="top" width="256px" title="Report Execution Log" />
                 <br>
                 <br>
                 <span style="max-width:256px;">This report is used for querying the report server exection log table.</span>
