@@ -130,9 +130,9 @@
     <None Include="App.config" />
     <None Include="Scripts\RSS\Apply_Header_Footer.rss" />
     <None Include="Scripts\RSS\Backup_Reports.rss" />
-    <None Include="Scripts\DAX\Calendar Ageing.dax" />
-    <None Include="Scripts\M\Calendar FY.M" />
-    <None Include="Scripts\DAX\Calendar Timeframe.dax" />
+    <None Include="Scripts\DAX\Calendar_Ageing.dax" />
+    <None Include="Scripts\M\Calendar_FY.M" />
+    <None Include="Scripts\DAX\Calendar_Timeframe.dax" />
     <None Include="Scripts\M\Calendar.M" />
     <None Include="Scripts\RSS\Deploy_Reports.rss" />
     <None Include="Config\SSRS_Branding.xlsm" />
