@@ -1,7 +1,4 @@
-<img align="left" src="Images/PBIRS1.png" width="250px" >
-<br>
-<br>
-<br>
+<kbd><img align="left" src="Images/PBIRS1.png" width="250px" ></kbd>
 
 # Microsoft Report Server (SSRS & PBIRS)
 
