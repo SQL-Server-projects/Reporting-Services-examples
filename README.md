@@ -18,6 +18,8 @@ The following examples are used to query the database & report server. I have in
 [![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
 --->
 
+https://powerbi.microsoft.com/en-au/report-server/
+
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
 <table style="width:100%">
     <tr valign="top">
