@@ -100,7 +100,18 @@ The following examples are used to query the database & report server. I have in
 <kbd>
 
 ## File List
-### [Miscellaneous](/Miscellaneous)
+#### [Reports](/ServerReports)
+* [Activity Monitor](/ServerReports/Activity%20Monitor.rdl)
+* [Data Sources](/ServerReports/Data%20Sources.rdl)
+* [Database Dictionary](/ServerReports/Database%20Dictionary.rdl)
+* [Execution Log](/ServerReports/Execution%20Log.rdl)
+* [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log)
+* [Integrations](/ServerReports/Integrations.rdl)
+* [Job Search](/ServerReports/Job%20Search.rdl)
+* [Permissions](/ServerReports/Permissions.rdl)
+* [Scheduled Jobs](/ServerReports/Scheduled%20Jobs.rdl) 
+* [Report List](/ServerReports/Report%20List.rdl) 
+* [Subscriptions](/ServerReports/Subscriptions.rdl) 
 #### [Documentation](/Miscellaneous/Documentation)
 * [Report Requirements](/Miscellaneous/Documentation/Report%20Requirements.docx)
 * [Report Style Guide](/Miscellaneous/Documentation/Report%20Style%20Guide.docx)
@@ -129,17 +140,5 @@ The following examples are used to query the database & report server. I have in
 ##### [DAX Scripts](/Miscellaneous/Scripts/DAX)
 * [Calendar Ageing](/Miscellaneous/Scripts/DAX/Calendar_Ageing.dax) 
 * [Calendar Timeframe](/Miscellaneous/Scripts/DAX/Calendar_Timeframe.dax) 
-### Reports
-#### [Report Server](/ServerReports)
-* [Activity Monitor](/ServerReports/Activity%20Monitor.rdl)
-* [Data Sources](/ServerReports/Data%20Sources.rdl)
-* [Database Dictionary](/ServerReports/Database%20Dictionary.rdl)
-* [Execution Log](/ServerReports/Execution%20Log.rdl)
-* [Heat Map Calendar](/ServerReports/Heatmap%20Calendar.rdl) (using execution log)
-* [Integrations](/ServerReports/Integrations.rdl)
-* [Job Search](/ServerReports/Job%20Search.rdl)
-* [Permissions](/ServerReports/Permissions.rdl)
-* [Scheduled Jobs](/ServerReports/Scheduled%20Jobs.rdl) 
-* [Report List](/ServerReports/Report%20List.rdl) 
-* [Subscriptions](/ServerReports/Subscriptions.rdl) 
+
 </kbd>
