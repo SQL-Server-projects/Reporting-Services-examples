@@ -100,11 +100,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Scripts\CandyStripe.vb" />
-    <Compile Include="Scripts\CopyNodes.vb" />
-    <Compile Include="Scripts\GetParameterandValues.vb" />
-    <Compile Include="Scripts\HeatMapColor.vb" />
-    <Compile Include="Scripts\HeatMapColorGradate.vb" />
+    <Compile Include="Scripts\VB\CandyStripe.vb" />
+    <Compile Include="Scripts\VB\CopyNodes.vb" />
+    <Compile Include="Scripts\VB\GetParameterandValues.vb" />
+    <Compile Include="Scripts\VB\HeatMapColor.vb" />
+    <Compile Include="Scripts\VB\HeatMapColorGradate.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -128,22 +128,24 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
-    <None Include="Scripts\Apply_Header_Footer.rss" />
-    <None Include="Scripts\Backup_Reports.rss" />
-    <None Include="Scripts\Calendar Ageing.dax" />
-    <None Include="Scripts\Calendar FY.M" />
-    <None Include="Scripts\Calendar Timeframe.dax" />
-    <None Include="Scripts\Calendar.M" />
-    <None Include="Scripts\Deploy_Reports.rss" />
-    <None Include="Scripts\SSRS_Branding.xlsm" />
+    <None Include="Scripts\RSS\Apply_Header_Footer.rss" />
+    <None Include="Scripts\RSS\Backup_Reports.rss" />
+    <None Include="Scripts\DAX\Calendar Ageing.dax" />
+    <None Include="Scripts\M\Calendar FY.M" />
+    <None Include="Scripts\DAX\Calendar Timeframe.dax" />
+    <None Include="Scripts\M\Calendar.M" />
+    <None Include="Scripts\RSS\Deploy_Reports.rss" />
+    <None Include="Config\SSRS_Branding.xlsm" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Report_Linked.sql" />
-    <Content Include="Scripts\Report_Subreports.sql" />
-    <Content Include="Scripts\Report_Datasets.sql" />
-    <Content Include="Scripts\Report_Snapshots.sql" />
-    <Content Include="Scripts\Source_Control_Current.sql" />
-    <Content Include="Scripts\Update_Subscription_Owner.sql" />
+    <Content Include="Config\Notepad++ DAX.xml" />
+    <Content Include="Config\Notepad++ M Power Query.xml" />
+    <Content Include="Scripts\SQL\Report_Linked.sql" />
+    <Content Include="Scripts\SQL\Report_Subreports.sql" />
+    <Content Include="Scripts\SQL\Report_Datasets.sql" />
+    <Content Include="Scripts\SQL\Report_Snapshots.sql" />
+    <Content Include="Scripts\SQL\Source_Control_Current.sql" />
+    <Content Include="Scripts\SQL\Update_Subscription_Owner.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
