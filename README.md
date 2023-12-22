@@ -18,26 +18,23 @@ The following examples are used to query the database & report server. I have in
 
 <kbd>
 <b>Installs</b>
-                <br>
-                <br>
+                <br><br>
     <a href="https://powerbi.microsoft.com/en-au/report-server/">Microsoft Power BI Report Server</a>
-                <br>
-                <br>
+                <br><br>
     <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502)">Microsoft SQL Server 2022 Reporting Services</a>
-                <br>
-                <br>
+                <br><br>
     <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122">Microsoft SQL Server 2019 Reporting Services</a>
-                <br>
-                <br>
+                <br><br>
     <a href="https://visualstudio.microsoft.com/vs/">Microsoft Visual Studio</a>
-                <br>
-                <br>
+                <br><br>
     <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022">Microsoft Reporting Services Projects 2022</a>
-                <br>
-                <br>
+                <br><br>
+    <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16">Microsoft SQL Server Management Studio</a>
+                  <br><br>
+    <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall">Microsoft Azure Data Studio</a>
+                  <br><br>
     <a href="https://dev.azure.com/">Microsoft Azure DevOps Services</a>
-                <br>
-                <br>
+                <br><br>
     <a href="https://notepad-plus-plus.org/downloads/">Notepad++</a>
 </kbd>
             
