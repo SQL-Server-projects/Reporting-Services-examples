@@ -43,7 +43,7 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Report%20List.rdl">Report Listing</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/ServerReports/Report%20List.rdl">Report Listing</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
@@ -55,7 +55,7 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
-                <a href="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/ServerReports/Subscriptions.rdl">Report Subscriptions</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/ServerReports/Subscriptions.rdl">Report Subscriptions</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
