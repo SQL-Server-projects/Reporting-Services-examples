@@ -1,0 +1,12 @@
+VAR CurrentValue = SELECTEDMEASURE()
+RETURN
+    SWITCH (
+        TRUE (),
+        // format the number based on value
+        CurrentValue <= -1E6, "#,0,,.00 M",
+        CurrentValue <= -1E3, "#,0,.00 K",
+        CurrentValue <= 1E3, "#,0.00",
+        CurrentValue < 1E6, "#,0,.00 K",
+        CurrentValue < 1E9, "#,0,,.00 M",
+        CurrentValue < 1E12, "#,0,,,.00 B"
+    )

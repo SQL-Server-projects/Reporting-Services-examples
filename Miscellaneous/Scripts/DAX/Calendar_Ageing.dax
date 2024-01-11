@@ -1,9 +1,9 @@
 Calendar Ageing = 
 VAR _today_date =         TODAY()  //'Properties'[Today Date]
-//VAR _future_date =      DATE ( YEAR ( _today_date ) - 6, 01, 01 )
 VAR _min_date1 =          CALCULATE(MIN(Table1[Date1]))
 VAR _min_date2 =          CALCULATE(MIN(Table2[Date2]))
 VAR _future_date =        IF(_min_date1 < _min_date2, _min_date1, _min_date2)
+//VAR _future_date =      DATE( YEAR( _today_date ) - 6, 01, 01 )
  
 VAR _result = 
 UNION (

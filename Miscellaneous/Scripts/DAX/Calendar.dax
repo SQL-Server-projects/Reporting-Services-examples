@@ -1,0 +1,35 @@
+Calendar = 
+VAR _today_date =        TODAY()  //'Properties'[Today Date]
+VAR _fiscal_year =		 YEAR(EDATE( _today_date, 6))
+VAR _fiscal_year_start = DATE ( _fiscal_year - 1, 07, 01)
+VAR _fiscal_year_end =	 DATE ( _fiscal_year, 06, 30)
+
+VAR _result = 
+    ADDCOLUMNS
+    (
+        CALENDAR(_fiscal_year_start, _fiscal_year_end)
+        , "Calendar Year", YEAR([Date])
+        , "Calendar Quarter", FORMAT([Date], "\C\Yyyyy \Qq")
+        , "Calendar Quarter Nbr", QUARTER([Date])
+        , "Month", MONTH([Date])
+        , "Month Name", FORMAT([Date], "MMMM")
+        , "Month Name Short", FORMAT([Date], "MMM")
+        , "Day", Day([Date])
+        , "Day Name", FORMAT([Date], "DDDD")
+        , "Day Name Short", FORMAT([Date], "DDD")
+        , "Fiscal Year", YEAR(EDATE([Date], 6))
+        , "Fiscal Year Period Start", FORMAT(EDATE([Date], 6), "yyyy01")
+        , "Fiscal Year Period End", FORMAT(EDATE([Date], 6), "yyyy12")
+        , "Fiscal Year Quarter", FORMAT(EDATE([Date], 6), "\F\Yyyyy \Qq")
+        , "Fiscal Year Quarter Nbr", FORMAT(EDATE([Date], 6), "q")
+        , "Period", FORMAT(EDATE([Date], 6), "yyyyMM")
+        , "Month Start", DATE(YEAR([Date]), MONTH([Date]), 1)
+        , "Month End", EOMONTH([Date], 0)
+        , "Week Starting", [Date] - WEEKDAY([Date], 2)   // Sunday
+        , "Week Ending", [Date] + 7 - WEEKDAY([Date], 1) // Saturday
+        , "Is Future", IF([Date] > _today_date, 1, 0)
+        , "Is Current FY", IF(YEAR(EDATE([Date], 6)) = _fiscal_year, 1, 0)
+    )
+
+RETURN
+_result
