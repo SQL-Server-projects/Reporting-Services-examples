@@ -1,5 +1,5 @@
 Calendar = 
-VAR _today_date =        'Properties'[Today Date]
+VAR _today_date =        TODAY()  //'Properties'[Today Date]
 VAR _fiscal_year =       YEAR(EDATE( _today_date, 6))
 VAR _fiscal_year_start = DATE ( _fiscal_year - 1, 07, 01)
 VAR _fiscal_year_end =   DATE ( _fiscal_year, 06, 30)
