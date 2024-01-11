@@ -10,8 +10,8 @@ VAR _tomorrow_date =                IF(_today_date + 1 > _fiscal_year_end, _fisc
 VAR _quarter_start =                DATE ( YEAR (_today_date), ROUNDUP ( DIVIDE ( MONTH (_today_date), 3 ), 0 ) * 3 - 2, 1 )
 VAR _week_start =                   _today_date - WEEKDAY ( _today_date, 2 )
 VAR _week_end =                     _today_date - WEEKDAY ( _today_date, 2 ) + 6
-VAR _previous_month_start =         IF(MONTH(_today_date) = 1, DATE(YEAR(_today_date)-1, MONTH(12), 1), DATE(YEAR(_today_date), MONTH(_today_date)-1, 1))
-VAR _previous_month_end =           DATE(YEAR(_today_date), MONTH(_previous_month_start), DAY(EOMONTH(_previous_month_start,0)))
+VAR _previous_month_start =         IF(MONTH(_today_date) = 1, DATE(YEAR(_today_date)-1, 12, 1), DATE(YEAR(_today_date), MONTH(_today_date)-1, 1))
+VAR _previous_month_end =           DATE(YEAR(_previous_month_start), MONTH(_previous_month_start), DAY(EOMONTH(_previous_month_start,0)))
 VAR _previous_fiscal_year_start =   DATE ( _fiscal_year - 2, 07, 01 )
 VAR _previous_fiscal_year_end =     DATE ( _fiscal_year - 1, 06, 30 )
 VAR _previous_quarter_start =       EDATE(_quarter_start, -3) 
