@@ -135,7 +135,9 @@ The following examples are used to query the database & report server. I have in
 * [Calendar](/Miscellaneous/Scripts/M/Calendar.M)
 * [Calendar FY](/Miscellaneous/Scripts/M/Calendar_FY.M)
 ##### [DAX Scripts](/Miscellaneous/Scripts/DAX)
+* [Calendar](/Miscellaneous/Scripts/DAX/Calendar.dax) 
 * [Calendar Ageing](/Miscellaneous/Scripts/DAX/Calendar_Ageing.dax) 
 * [Calendar Timeframe](/Miscellaneous/Scripts/DAX/Calendar_Timeframe.dax) 
+* [Dynamic_Number_Format](/Miscellaneous/Scripts/DAX/Dynamic_Number_Format.dax) 
 
 </kbd>
