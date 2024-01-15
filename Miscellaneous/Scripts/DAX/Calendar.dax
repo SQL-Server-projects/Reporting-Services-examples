@@ -31,7 +31,7 @@ VAR _result =
         , "Month Start",                DATE(YEAR([Date]), MONTH([Date]), 1)
         , "Month",                      MONTH([Date])
         , "Week Ending",                [Date] + 7 - WEEKDAY([Date], 1) // Saturday
-        , "Week Starting",              [Date] - WEEKDAY([Date], 2)   // Sunday
+        , "Week Starting",              [Date] - WEEKDAY([Date], 1) + 1 // Sunday
     )
 
 RETURN
