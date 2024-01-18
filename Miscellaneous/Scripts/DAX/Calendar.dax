@@ -22,6 +22,7 @@ VAR _result =
         , "Fiscal Year Period",         FORMAT(EDATE([Date], 6), "yyyyMM")
         , "Fiscal Year Quarter Nbr",    FORMAT(EDATE([Date], 6), "q")
         , "Fiscal Year Quarter",        FORMAT(EDATE([Date], 6), "\F\Yyyyy \Qq")
+        , "Fiscal Year Half",           FORMAT(EDATE([Date], 6), "\F\Yyyyy \H") & ROUNDUP(MONTH(EDATE([Date], 6)) / 6, 0)
         , "Fiscal Year",                YEAR(EDATE([Date], 6))
         , "Is Current FY",              IF(YEAR(EDATE([Date], 6)) = _fiscal_year, 1, 0)
         , "Is Future",                  IF([Date] > _today_date, 1, 0)
@@ -32,6 +33,8 @@ VAR _result =
         , "Month",                      MONTH([Date])
         , "Week Ending",                [Date] + 7 - WEEKDAY([Date], 1) // Saturday
         , "Week Starting",              [Date] - WEEKDAY([Date], 1) + 1 // Sunday
+        , "Week of Month",              ROUNDUP(DIVIDE(DAY([Date]), 7), 0)
+        , "Week of Year",               WEEKNUM([Date])
     )
 
 RETURN
