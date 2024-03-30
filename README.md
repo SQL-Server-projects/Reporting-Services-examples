@@ -61,7 +61,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed subscriptions.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed subscriptions and their schedules.</span>
                 <br>
             </kbd>
         </td>
