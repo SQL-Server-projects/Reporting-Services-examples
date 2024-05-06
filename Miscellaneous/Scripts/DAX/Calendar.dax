@@ -7,12 +7,14 @@ VAR _fiscal_year_end =   DATE ( _fiscal_year, 06, 30)
 VAR _result = 
     ADDCOLUMNS
     (
+        //CALENDARAUTO()   //range of dates is calculated automatically based on data in the model
         CALENDAR(_fiscal_year_start, _fiscal_year_end)
         , "Calendar Year Period End",   FORMAT([Date], "yyyy12")
         , "Calendar Year Period Start", FORMAT([Date], "yyyy01")
         , "Calendar Year Period",       FORMAT([Date], "yyyyMM")
         , "Calendar Year Quarter Nbr",  QUARTER([Date])
         , "Calendar Year Quarter",      FORMAT([Date], "\C\Yyyyy \Qq")
+        , "Calendar Year Half",         FORMAT([Date], "\F\Yyyyy \H") & ROUNDUP(MONTH([Date]) / 6, 0)
         , "Calendar Year",              YEAR([Date])
         , "Day Name Short",             FORMAT([Date], "DDD")
         , "Day Name",                   FORMAT([Date], "DDDD")
