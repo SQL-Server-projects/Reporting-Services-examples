@@ -18,6 +18,7 @@ VAR _result =
         , "Calendar Year",              YEAR([Date])
         , "Day Name Short",             FORMAT([Date], "DDD")
         , "Day Name",                   FORMAT([Date], "DDDD")
+        , "Day Of Week",                WEEKDAY([Date])  
         , "Day",                        DAY([Date])
         , "Fiscal Year Period End",     FORMAT(EDATE([Date], 6), "yyyy12")
         , "Fiscal Year Period Start",   FORMAT(EDATE([Date], 6), "yyyy01")
@@ -26,6 +27,9 @@ VAR _result =
         , "Fiscal Year Quarter",        FORMAT(EDATE([Date], 6), "\F\Yyyyy \Qq")
         , "Fiscal Year Half",           FORMAT(EDATE([Date], 6), "\F\Yyyyy \H") & ROUNDUP(MONTH(EDATE([Date], 6)) / 6, 0)
         , "Fiscal Year",                YEAR(EDATE([Date], 6))
+        , "Week of Fiscal Year",        IF(MONTH([Date]) < 7
+                                        , WEEKNUM([Date], 1) + (WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) - 1)
+                                        , WEEKNUM([Date], 1) - WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) + 1)
         , "Is Current FY",              IF(YEAR(EDATE([Date], 6)) = _fiscal_year, 1, 0)
         , "Is Future",                  IF([Date] > _today_date, 1, 0)
         , "Month End",                  EOMONTH([Date], 0)
