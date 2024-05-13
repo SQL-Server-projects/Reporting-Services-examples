@@ -229,7 +229,6 @@ AS
 	   LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
     WHERE
 	   1=1
-	   --AND usr.[SimpleUserName] NOT IN('Tony.Duguid', 'Iain.Nicolson', 'Andrew.Stasis', 'nho', 'dhivian.govender')
 	   AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
     UNION
     SELECT 
@@ -242,7 +241,6 @@ AS
 	   LEFT JOIN [dbo].[Catalog] AS rpt ON rpt.[Path] = el.[ReportPath]
     WHERE
 	   1=1
-	   --AND usr.[SimpleUserName] NOT IN('Tony.Duguid', 'Iain.Nicolson', 'Andrew.Stasis', 'nho', 'dhivian.govender')
 	   AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
 	   AND el.[ByteCount] != 0 
 	   AND el.[Format] IN('PBIX', 'DataModel')
