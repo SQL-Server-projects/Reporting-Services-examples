@@ -130,6 +130,7 @@
     <None Include="App.config" />
     <None Include="Scripts\DAX\Dynamic_Number_Format.dax" />
     <None Include="Scripts\DAX\Calendar.dax" />
+    <None Include="Scripts\M\Users.M" />
     <None Include="Scripts\RSS\Apply_Header_Footer.rss" />
     <None Include="Scripts\RSS\Backup_Reports.rss" />
     <None Include="Scripts\DAX\Calendar_Ageing.dax" />
@@ -138,6 +139,7 @@
     <None Include="Scripts\M\Calendar.M" />
     <None Include="Scripts\RSS\Deploy_Reports.rss" />
     <None Include="Config\SSRS_Branding.xlsm" />
+    <None Include="Templates\Template.pbix" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Config\Notepad++ DAX.xml" />
@@ -161,9 +163,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Templates\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
