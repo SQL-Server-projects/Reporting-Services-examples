@@ -154,6 +154,7 @@
     <Content Include="Scripts\SQL\Report_Datasets.sql" />
     <Content Include="Scripts\SQL\Report_Snapshots.sql" />
     <Content Include="Scripts\SQL\Source_Control_Current.sql" />
+    <Content Include="Scripts\SQL\Unused_Stored_Procedures.sql" />
     <Content Include="Scripts\SQL\Update_Subscription_Owner.sql" />
   </ItemGroup>
   <ItemGroup>
