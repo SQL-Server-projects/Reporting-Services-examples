@@ -1,0 +1,35 @@
+KeePass (password manager)	https://keepass.info/ 
+Microsoft Azure Data Studio	https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall#download-azure-data-studio
+Microsoft Azure Storage Explorer	https://azure.microsoft.com/en-us/products/storage/storage-explorer/
+Microsoft Office 365	https://www.office.com/?omkt=en-au&auth=2 
+	https://portal.office.com/account/?ref=MeControl#installs 
+Microsoft Power Automate	https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409
+Microsoft Power BI Report Server	https://powerbi.microsoft.com/en-au/report-server/
+Microsoft Power BI Desktop RS	https://powerbi.microsoft.com/en-au/report-server/
+Microsoft Power BI Report Builder	https://www.microsoft.com/en-us/download/details.aspx?id=58158
+Microsoft Power BI Gateway	https://powerbi.microsoft.com/en-us/gateway/
+Microsoft Power BI Desktop Online	https://www.microsoft.com/en-us/download/details.aspx?id=58494
+https://admin.microsoft.com/Adminportal/Home#/licenses
+• Analyze in Excel (Power BI)	https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/
+• Bravo (Power BI)	https://github.com/sql-bi/Bravo/releases
+• DAX Studio (Power BI)	https://daxstudio.org/
+• Tabular Editor (Power BI)	https://github.com/TabularEditor/TabularEditor/releases/
+• ALM Toolkit (Power BI)	https://www.sqlbi.com/tools/alm-toolkit/
+• Microsoft R (Power BI)	https://mran.microsoft.com/download
+https://www.rstudio.com/products/rstudio/download/
+Microsoft SQL Server Management Studio	https://aka.ms/ssmsfullsetup
+• RedGate SQL Search (SSMS)	https://www.red-gate.com/dynamic/products/sql-development/sql-search/download 
+• Apex SQL Refactor (SSMS)	https://www.apexsql.com/zips/ApexSQLRefactor.exe
+Microsoft Visual Studio Code	https://code.visualstudio.com/docs/?dv=win64user
+Microsoft Visual Studio Professional 2022	https://visualstudio.microsoft.com/vs/
+Microsoft Reporting Services 2022	https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022
+Microsoft Integration Services 2022	https://marketplace.visualstudio.com/items?itemName=SSIS.MicrosoftDataToolsIntegrationServices
+Microsoft Analysis Services 2022	https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftAnalysisServicesModelingProjects2022
+Microsoft PowerToys	https://learn.microsoft.com/en-us/windows/powertoys/install
+Notepad++	https://notepad-plus-plus.org/downloads/
+Python 	https://www.python.org/downloads/ 
+Snagit	https://www.techsmith.com/download/licenses/snagit/21 
+WinDirStat	https://portableapps.com/apps/utilities/windirstat_portable
+	WinDirStat Portable (disk usage analyzer and cleanup tool) | PortableApps.com
+	WinDirStat is a disk usage stats viewer and cleanup tool with many handy features: Directory list, Treemap and Extension list views so you can view your files the way you want Coupling. Select an i...
+WinMerge	https://github.com/WinMerge/winmerge

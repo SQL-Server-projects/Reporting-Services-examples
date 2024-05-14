@@ -1,0 +1,6 @@
+
+copy .json files here...
+
+C:\Program Files (x86)\Common Files\Microsoft Shared\Power BI Desktop\External Tools
+
+use https://www.base64-image.de/ to generate the Base64 Image code for icons

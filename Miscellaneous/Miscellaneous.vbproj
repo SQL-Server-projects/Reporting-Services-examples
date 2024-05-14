@@ -115,6 +115,16 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Config\DaxGuide.pbitool.json" />
+    <None Include="Config\FormatDax.pbitool.json" />
+    <None Include="Config\FormatM.pbitool.json" />
+    <None Include="Config\InHouseDocumentation.pbitool.json" />
+    <None Include="Config\PowerBiOnline.pbitool.json" />
+    <None Include="Config\PowerBiOnprem.pbitool.json" />
+    <None Include="Config\PowerBiOnpremTest.pbitool.json" />
+    <None Include="Config\PowerBiReport.pbitool.json" />
+    <None Include="Config\SqlServerProfiler.pbitool.json" />
+    <None Include="Config\Visual_Studio.vsconfig" />
     <None Include="Documentation\Report Requirements.docx" />
     <None Include="Documentation\Report Style Guide.docx" />
     <None Include="Documentation\Report Unit Testing Checklist.docx" />
@@ -149,6 +159,8 @@
   <ItemGroup>
     <Content Include="Config\Notepad++ DAX.xml" />
     <Content Include="Config\Notepad++ M Power Query.xml" />
+    <Content Include="Config\Power BI External Tools.txt" />
+    <Content Include="Config\Software List.txt" />
     <Content Include="Scripts\SQL\Report_Linked.sql" />
     <Content Include="Scripts\SQL\Report_Subreports.sql" />
     <Content Include="Scripts\SQL\Report_Datasets.sql" />
