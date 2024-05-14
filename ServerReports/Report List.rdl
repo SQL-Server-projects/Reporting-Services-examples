@@ -8,9 +8,9 @@
     </am:CreatedBy>
     <am:UpdatedBy>
       <am:Name>SSDTRS</am:Name>
-      <am:Version>17.8.34408.163</am:Version>
+      <am:Version>17.9.34728.123</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2024-01-11T03:06:04.5632426Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2024-05-14T02:48:16.5037350Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <Author>Anthony Duguid</Author>
   <AutoRefresh>0</AutoRefresh>
@@ -43,6 +43,9 @@
           </QueryParameter>
           <QueryParameter Name="@ExecutionExcludedUsers">
             <Value>=Parameters!ExecutionExcludedUsers.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@HasFavorites">
+            <Value>=Parameters!HasFavorites.Value</Value>
           </QueryParameter>
           <QueryParameter Name="@HasSnapshots">
             <Value>=Parameters!HasSnapshots.Value</Value>
@@ -229,7 +232,6 @@ AS
 	   LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
     WHERE
 	   1=1
-	   --AND usr.[SimpleUserName] NOT IN('Tony.Duguid', 'Iain.Nicolson', 'Andrew.Stasis', 'nho', 'dhivian.govender')
 	   AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
     UNION
     SELECT 
@@ -242,7 +244,6 @@ AS
 	   LEFT JOIN [dbo].[Catalog] AS rpt ON rpt.[Path] = el.[ReportPath]
     WHERE
 	   1=1
-	   --AND usr.[SimpleUserName] NOT IN('Tony.Duguid', 'Iain.Nicolson', 'Andrew.Stasis', 'nho', 'dhivian.govender')
 	   AND (@ExcludeAdmins = 0 OR usr.[SimpleUserName] NOT IN(@ExecutionExcludedUsers))
 	   AND el.[ByteCount] != 0 
 	   AND el.[Format] IN('PBIX', 'DataModel')
@@ -269,6 +270,7 @@ SELECT
 	, el.[ExecutionLogCount]
 	, sc.[SubscriptionCount]
 	, snp.[SnapshotCount]
+	, fav.[FavoritesCount]
 	, [SearchForStr] = ISNULL(@SearchFor, ' ') 
 	, [Hidden] = CASE WHEN rpt.[Hidden] = 1 THEN 'Y' ELSE 'N' END
 	, [ParentReport] = [prt].[Path]
@@ -279,6 +281,7 @@ FROM
 	LEFT JOIN report_snapshots AS snp ON rpt.[ItemID] = snp.[ItemID] 
 	LEFT JOIN (SELECT [ExecutionLogCount] = COUNT([ReportID]), [ReportID] FROM execution_log GROUP BY [ReportID]) el ON el.[ReportID] = rpt.[ItemID]
 	LEFT JOIN (SELECT [SubscriptionCount] = COUNT([Report_OID]), [Report_OID] FROM [dbo].[Subscriptions] WITH (NOLOCK) GROUP BY [Report_OID]) sc ON sc.[Report_OID] = rpt.[ItemID]
+	LEFT JOIN (SELECT [FavoritesCount] = COUNT([ItemID]), [ItemID] FROM [dbo].[Favorites] WITH(NOLOCK) GROUP BY [ItemID]) fav ON fav.[ItemID] = rpt.[ItemID]
 	LEFT JOIN report_users AS urc ON rpt.[CreatedById] = urc.[UserID] 
 	LEFT JOIN report_users AS urm ON rpt.[ModifiedById] = urm.[UserID]
 	LEFT JOIN custom_report_policy AS crp ON rpt.[ItemID] = crp.[ItemID]
@@ -287,6 +290,7 @@ WHERE
 	1=1
 	AND ((@HasStringSql IS NULL) OR (CASE WHEN REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(MAX), CONVERT(VARBINARY(MAX), rpt.[ReportDefinition])), ' ', ''), CHAR(10), ''), CHAR(13), '') LIKE '%&lt;/QueryParameters&gt;&lt;CommandText&gt;%' THEN 1 ELSE 0 END) = @HasStringSql)
 	AND ((@HasSubscriptions IS NULL) OR ((CASE WHEN ISNULL(sc.[SubscriptionCount], 0) &gt; 0 THEN 1 ELSE 0 END) = @HasSubscriptions))
+	AND ((@HasFavorites IS NULL) OR ((CASE WHEN ISNULL(fav.[FavoritesCount], 0) &gt; 0 THEN 1 ELSE 0 END) = @HasFavorites))
 	AND ((@HasSnapshots IS NULL) OR ((CASE WHEN ISNULL(snp.[SnapshotCount], 0) &gt; 0 THEN 1 ELSE 0 END) = @HasSnapshots))
 	AND ((@IsHidden IS NULL) OR ((CASE WHEN rpt.[Hidden] = 1 THEN 1 ELSE 0 END) = @IsHidden))
 	AND ((@HasCustomPermissions IS NULL) OR ((CASE WHEN crp.[ItemID] IS NOT NULL THEN 1 ELSE 0 END) = @HasCustomPermissions))
@@ -394,6 +398,10 @@ WHERE
           <DataField>SnapshotCount</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
+        <Field Name="FavoritesCount">
+          <DataField>FavoritesCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
         <Field Name="SearchForStr">
           <DataField>SearchForStr</DataField>
           <rd:TypeName>System.String</rd:TypeName>
@@ -492,7 +500,7 @@ AS
 		[dbo].[Catalog] AS rpt WITH (NOLOCK) 
 	WHERE 
 		1=1
-		AND rpt.[Type] = 2
+		AND rpt.[Type] IN(2, 4, 13, 14)
 )
 SELECT DISTINCT 
 	[ReportCreatedBy] = urc.[SimpleUserName]
@@ -569,7 +577,7 @@ AS
 		[dbo].[Catalog] AS rpt WITH (NOLOCK) 
 	WHERE 
 		1=1
-		AND rpt.[Type] = 2
+		AND rpt.[Type] IN(2, 4, 13, 14)
 )
 SELECT DISTINCT 
 	[ReportModifiedBy] = urm.[SimpleUserName]
@@ -637,6 +645,12 @@ ORDER BY 1</CommandText>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>6cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>0.6cm</Width>
+                </TablixColumn>
+                <TablixColumn>
+                  <Width>1.4cm</Width>
                 </TablixColumn>
                 <TablixColumn>
                   <Width>0.6cm</Width>
@@ -1175,6 +1189,89 @@ ORDER BY 1</CommandText>
                             </Paragraph>
                           </Paragraphs>
                           <rd:DefaultName>SnapshotCount</rd:DefaultName>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="txtReportExecutionLogLink5">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style />
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <Style>
+                            <Border>
+                              <Color>LightGrey</Color>
+                              <Style>Solid</Style>
+                              <Width>0.75pt</Width>
+                            </Border>
+                            <LeftBorder>
+                              <Style>None</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>None</Style>
+                            </RightBorder>
+                            <BackgroundColor>=Code.CandyStripe(False, Variables!ColorCandyStripeEvenRow.Value, Variables!ColorCandyStripeOddRow.Value)</BackgroundColor>
+                            <BackgroundImage>
+                              <Source>Embedded</Source>
+                              <Value>=IIF(Fields!FavoritesCount.Value = 0, "blank", "heart")</Value>
+                              <BackgroundRepeat>Clip</BackgroundRepeat>
+                            </BackgroundImage>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                    </TablixCell>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="FavoritesCount">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!FavoritesCount.Value</Value>
+                                  <Style>
+                                    <FontFamily>Calibri</FontFamily>
+                                    <FontSize>8pt</FontSize>
+                                    <Format>#,0;(#,0)</Format>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Right</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>FavoritesCount</rd:DefaultName>
                           <Style>
                             <Border>
                               <Color>LightGrey</Color>
@@ -2119,6 +2216,108 @@ ORDER BY 1</CommandText>
                   <TablixHeader>
                     <Size>1.5cm</Size>
                     <CellContents>
+                      <Textbox Name="lblReportExecutionLogLink6">
+                        <CanGrow>true</CanGrow>
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value />
+                                <Style>
+                                  <FontFamily>Calibri</FontFamily>
+                                  <FontSize>8pt</FontSize>
+                                  <Color>=Variables!ColorTableHeaderFont.Value</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Center</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <Style>
+                          <Border>
+                            <Color>LightGrey</Color>
+                            <Style>None</Style>
+                            <Width>0.75pt</Width>
+                          </Border>
+                          <TopBorder>
+                            <Style>Solid</Style>
+                          </TopBorder>
+                          <BottomBorder>
+                            <Style>Solid</Style>
+                          </BottomBorder>
+                          <LeftBorder>
+                            <Style>None</Style>
+                          </LeftBorder>
+                          <RightBorder>
+                            <Style>None</Style>
+                          </RightBorder>
+                          <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                          <VerticalAlign>Middle</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                </TablixMember>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>1.5cm</Size>
+                    <CellContents>
+                      <Textbox Name="Textbox16">
+                        <CanGrow>true</CanGrow>
+                        <UserSort>
+                          <SortExpression>=Fields!FavoritesCount.Value</SortExpression>
+                        </UserSort>
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>Favorites</Value>
+                                <Style>
+                                  <FontFamily>Calibri</FontFamily>
+                                  <FontSize>8pt</FontSize>
+                                  <Color>=Variables!ColorTableHeaderFont.Value</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style>
+                              <TextAlign>Left</TextAlign>
+                            </Style>
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Textbox14</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>LightGrey</Color>
+                            <Style>Solid</Style>
+                            <Width>0.75pt</Width>
+                          </Border>
+                          <LeftBorder>
+                            <Style>None</Style>
+                          </LeftBorder>
+                          <BackgroundColor>=Variables!ColorTableHeaderBackground.Value</BackgroundColor>
+                          <VerticalAlign>Top</VerticalAlign>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                          <WritingMode>Rotate270</WritingMode>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                </TablixMember>
+                <TablixMember>
+                  <TablixHeader>
+                    <Size>1.5cm</Size>
+                    <CellContents>
                       <Textbox Name="textbox6">
                         <CanGrow>true</CanGrow>
                         <UserSort>
@@ -2586,7 +2785,7 @@ ORDER BY 1</CommandText>
             <KeepTogether>true</KeepTogether>
             <DataSetName>Reports</DataSetName>
             <Height>2.1cm</Height>
-            <Width>60.45cm</Width>
+            <Width>62.45cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -2600,7 +2799,7 @@ ORDER BY 1</CommandText>
         <Height>2.1cm</Height>
         <Style />
       </Body>
-      <Width>60.45cm</Width>
+      <Width>62.45cm</Width>
       <Page>
         <PageHeader>
           <Height>2.75cm</Height>
@@ -2901,6 +3100,15 @@ ORDER BY 1</CommandText>
       <Nullable>true</Nullable>
       <Prompt>Embedded Data Source</Prompt>
     </ReportParameter>
+    <ReportParameter Name="ExcludeAdmins">
+      <DataType>Boolean</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>true</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Exclude Admins</Prompt>
+    </ReportParameter>
     <ReportParameter Name="SearchType">
       <DataType>String</DataType>
       <DefaultValue>
@@ -2942,6 +3150,11 @@ ORDER BY 1</CommandText>
       <Nullable>true</Nullable>
       <Prompt>Custom Permissions</Prompt>
     </ReportParameter>
+    <ReportParameter Name="IsHidden">
+      <DataType>Boolean</DataType>
+      <Nullable>true</Nullable>
+      <Prompt>Hidden</Prompt>
+    </ReportParameter>
     <ReportParameter Name="ModifiedDateFrom">
       <DataType>DateTime</DataType>
       <Nullable>true</Nullable>
@@ -2967,14 +3180,10 @@ ORDER BY 1</CommandText>
       <Nullable>true</Nullable>
       <Prompt>Subscriptions</Prompt>
     </ReportParameter>
-    <ReportParameter Name="ExcludeAdmins">
+    <ReportParameter Name="HasStringSql">
       <DataType>Boolean</DataType>
-      <DefaultValue>
-        <Values>
-          <Value>true</Value>
-        </Values>
-      </DefaultValue>
-      <Prompt>Exclude Admins</Prompt>
+      <Nullable>true</Nullable>
+      <Prompt>String SQL</Prompt>
     </ReportParameter>
     <ReportParameter Name="ModifiedDateTo">
       <DataType>DateTime</DataType>
@@ -2991,10 +3200,14 @@ ORDER BY 1</CommandText>
       <Nullable>true</Nullable>
       <Prompt>Snapshots</Prompt>
     </ReportParameter>
-    <ReportParameter Name="HasStringSql">
+    <ReportParameter Name="ShowSql">
       <DataType>Boolean</DataType>
-      <Nullable>true</Nullable>
-      <Prompt>String SQL</Prompt>
+      <DefaultValue>
+        <Values>
+          <Value>false</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Show SQL</Prompt>
     </ReportParameter>
     <ReportParameter Name="ModifiedBy">
       <DataType>String</DataType>
@@ -3030,19 +3243,15 @@ ORDER BY 1</CommandText>
       </ValidValues>
       <MultiValue>true</MultiValue>
     </ReportParameter>
-    <ReportParameter Name="IsHidden">
+    <ReportParameter Name="HasFavorites">
       <DataType>Boolean</DataType>
       <Nullable>true</Nullable>
-      <Prompt>Hidden</Prompt>
-    </ReportParameter>
-    <ReportParameter Name="ShowSql">
-      <DataType>Boolean</DataType>
       <DefaultValue>
         <Values>
-          <Value>false</Value>
+          <Value xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
         </Values>
       </DefaultValue>
-      <Prompt>Show SQL</Prompt>
+      <Prompt>Favorites</Prompt>
     </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
@@ -3087,7 +3296,7 @@ ORDER BY 1</CommandText>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>3</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <RowIndex>4</RowIndex>
           <ParameterName>ShowSql</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -3131,8 +3340,8 @@ ORDER BY 1</CommandText>
           <ParameterName>HasCustomPermissions</ParameterName>
         </CellDefinition>
         <CellDefinition>
-          <ColumnIndex>2</ColumnIndex>
-          <RowIndex>5</RowIndex>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>2</RowIndex>
           <ParameterName>IsHidden</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -3142,7 +3351,7 @@ ORDER BY 1</CommandText>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>3</ColumnIndex>
-          <RowIndex>4</RowIndex>
+          <RowIndex>3</RowIndex>
           <ParameterName>HasStringSql</ParameterName>
         </CellDefinition>
         <CellDefinition>
@@ -3152,8 +3361,13 @@ ORDER BY 1</CommandText>
         </CellDefinition>
         <CellDefinition>
           <ColumnIndex>3</ColumnIndex>
-          <RowIndex>3</RowIndex>
+          <RowIndex>1</RowIndex>
           <ParameterName>ExcludeAdmins</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>5</RowIndex>
+          <ParameterName>HasFavorites</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
@@ -3356,6 +3570,10 @@ ZEd+FK/S+temADzQYvRiVfv5rJO21DzFrXUbbzm17SsOEDpcDy1H2VpnK1yTVO1ERPQ1D3pa+umE8Z8B
 mRgzR4zgWp6vq1b708xo4yUrpgBVVVXVrK5zvYZBTev3t9yH58I21jH8usUIx/mr+qxWT/Qv7ML6GtVNAtaWa1FmrKwuWtVDhzRd1wvaEVwd2nLD27XdltYgEJvVHAS0CAQ62ybadS7ZbPbQNs6jU/Wwuve09ZCAiIjaz2MVtN9ZZ51VAvBh0xdU9dW///3vMwtBv99UpkvlcdGvSJD0VXH7QMxo47CLgZSJiBUjxhiTMmJSxkjfpj9eABRwurdV/eGniRTufmBU/d0zRuUBec9Yme0SeTKqy782ePBGdYsWLXKr2gTVWrNtn74blS/79NO/77//bs/xin19NSU1aLkO40tJDVqui2jOEoX/XoA9sqkzOQqrWZzd4hgXosVITlMwNGolnfrWQVrz62Y0rUuavbJjNW0A2unF6i0XxVdVVdW0DBa/qlGkVmmoZzRdx9bTp85f02mBK9HcPlp22uc0fQZaXP+2gum10pY6cu2a66CzCQxWci5t1n/T9x/oqnpola3tolU8VJjD33BERAx61ilpTFRQbPr6vPn7xx037Zltt8Wlgwf39L2exQo1mR6lYtgvUH/nRKKRVu0IAfqLwIoYERELICNOy8VKP2MMAGynifuGMTZO9ypLPvisUJ/ps+ny+x5+qk6M1hqY5wz0WY3k9VSqtLwgwfYKM+6zTz5dZI15hFeHWm0I+l9JDWpra6ubOvorOthttPHVBgAtOmkz0Gr0ofn9bXXk2gjSxrSxaLvNY3Xhpqor6qjlZzYFFF9J0NPGdTm/rTpvfl0XfvT5K7v+q9v0tqvaUkeuXWc2FO1o/a/Be9e4HlbV9gGMYfY2IiIGPd3GnXeOSwAkAEIADQCWAqhF4xO6vwDA5TNmpAbanj3jQrG3DUxv56LNIXaIU93WuWQHA9lMRASqBgKBShoqGcBtBpWhKm5sAmNMCq6E9DILUQE2cep+feA+uz3Nq0DNnaTmjlfT0+IHWnfSmqbZjGzZuWsx
 itCu/UFaBy2tAqLZ7RmVaZEeeUW63lYvuRDAnNra2gfWQh2NxDpck9KeznPLzF2tA8zmOujMKE/zPjxoGn1ofayWbaA916+r2tKaaDUqNqer67+tdrG6fXM6Wg+5XE7aavvNnwdgDgMeIqKOY+rLbkpVZdads8o/yiQ9nXg9KtJSKep6uMTv6/noI5C+UOkJI1YFZVag4swCm/LuOnDvXd9hDdLa1rx3S1eOvFDHrgEa10px80oiIqKV4EhPd41GG6fO1Td9vc8aIaJWAc+hrAUiIqL2YfY2IqL1EBe3ExERMeghIlovVVVV1axuFKfVYvkLudaDiIho1Ti9jYioG2nO3tVW2m60sTi+K1J3ExERMeghIqKvLPhZ2c+ZQIKIiKj9OL2NiKgbyeVyAuBCVZ3VnOa4lQsBjGHAQ0RERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE
 RERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERES0dv1/HWJo/4F3tIkAAAAASUVORK5CYII=</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="heart">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJ3SURBVBgZBcHPi5RlHADwz/POOzu7o21bIWVsiiAR1kYdJOwHdAgKO3QQDMqCTv4XdQikg1BCUnTQCIK6REVdOnWTClIRjAwNCdFy1t1xdnZm3nee59vnkyICAOSTJyu5HCsdR6PESju4fXG6vvFBOxzOVd7r7tn7Zju4vbF58dJnk7Y9VQMAaNu3PbTr03rtyR6hGqw/N/3u+6ct9mYrrx5+cXHfXpHLzqVffn3/2pnPl2oAgNJfPN5de7xnNGK8re733Xf0yCFtq2oKl/+UcO/aE1K3+1YNAJBTtdptC+sbRGHzrqruUDLDIaUw3mbnDlFKrwYAyFujmbZhe8w8kzOzGfM5udDMmGyjaPM86is/HrywuHzgQEoVWKh0ujf2WFjewfUb5DklyC2TGbMpqw+7c/6CzeHdH+oU1WOPPH+2m1IiyPtvWf/oQ/es7ra0Z5Wr19gYkVt6XQ486s6li37/+tvfxpPJido8pkrTm936RG46VMv6x9YMf7rhvzNn7T78soUqsT3R7Fzyx6mPjfdv5eF4/NqRweBmrU0VlHkfYevaOcPL5+nhFa6XL+mhB/TfqfWtdJ796spNqJWqo+oY/X1Fc+cfZbbtgYOvW3nqDUlS5q1mMKEU3fsX1Mv7/HX6GQC1OUnHrhfeJTJRkDWDb8hjZEkjTDSDic6OEwCg1kZEZM2/X6AQgUwUES3RijIhjykTAAC1JgqBIAqRRTTEnGhEmZK3lTwSeQsFANRmUaREFBFzoqXMRJkRU1GmooxF3qJMUAGAOtrSy+NN0oNSSuiITiXpgKRCIhJqeTICAHXMZj9fPf3SIYEEAAAACCSUcg7gf+9HV+4TlzZTAAAAAElFTkSuQmCC</ImageData>
     </EmbeddedImage>
   </EmbeddedImages>
   <Language>en-US</Language>
