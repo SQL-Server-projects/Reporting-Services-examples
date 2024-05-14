@@ -130,7 +130,12 @@
     <None Include="App.config" />
     <None Include="Scripts\DAX\Dynamic_Number_Format.dax" />
     <None Include="Scripts\DAX\Calendar.dax" />
-    <None Include="Scripts\M\Users.M" />
+    <None Include="Scripts\M\Azure DevOps Services Changesets.M" />
+    <None Include="Scripts\M\SN Ticket Id.M" />
+    <None Include="Scripts\M\SN Ticket Subcategory.M" />
+    <None Include="Scripts\M\SN Ticket User.M" />
+    <None Include="Scripts\M\SN Ticket.M" />
+    <None Include="Scripts\M\Active Directory Users.M" />
     <None Include="Scripts\RSS\Apply_Header_Footer.rss" />
     <None Include="Scripts\RSS\Backup_Reports.rss" />
     <None Include="Scripts\DAX\Calendar_Ageing.dax" />
