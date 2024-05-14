@@ -1,4 +1,4 @@
-//set the parameter "servicenow_url" e.g https://your_company.service-now.com/
+//set the parameter "servicenow_url" e.g. https://your_company.service-now.com/
 // * NOTE: all M files with the prefix SN are required to run this query 
 
 let
