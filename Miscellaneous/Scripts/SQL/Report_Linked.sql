@@ -1,6 +1,6 @@
 
     SELECT 
-		 [Original_Report] = [prt].[Path]
+	      [Original_Report] = [prt].[Path]
 	    , [Linked_Report] = [rpt].[Path]
     FROM
 	    [dbo].[Catalog](NOLOCK) AS [rpt]
