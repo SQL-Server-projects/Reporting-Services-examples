@@ -64,6 +64,7 @@
     <Report Include="Integrations.rdl" />
     <Report Include="Job Search.rdl" />
     <Report Include="Permissions.rdl" />
+    <Report Include="Report Favorites.rdl" />
     <Report Include="Report List.rdl" />
     <Report Include="Scheduled Jobs.rdl" />
     <Report Include="Subscriptions.rdl" />

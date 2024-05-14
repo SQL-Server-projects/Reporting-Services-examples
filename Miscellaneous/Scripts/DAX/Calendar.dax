@@ -18,6 +18,7 @@ VAR _result =
         , "Calendar Year",              YEAR([Date])
         , "Day Name Short",             FORMAT([Date], "DDD")
         , "Day Name",                   FORMAT([Date], "DDDD")
+        , "Day Of Week",                WEEKDAY([Date])  
         , "Day",                        DAY([Date])
         , "Fiscal Year Period End",     FORMAT(EDATE([Date], 6), "yyyy12")
         , "Fiscal Year Period Start",   FORMAT(EDATE([Date], 6), "yyyy01")
@@ -37,6 +38,9 @@ VAR _result =
         , "Week Starting",              [Date] - WEEKDAY([Date], 1) + 1 // Sunday
         , "Week of Month",              1 + WEEKNUM([Date]) - WEEKNUM( EOMONTH([Date], -1 ) + 1 )
         , "Week of Year",               WEEKNUM([Date])
+        , "Week of Fiscal Year",        IF(MONTH([Date]) < 7
+                                        , WEEKNUM([Date], 1) + (WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) - 1)
+                                        , WEEKNUM([Date], 1) - WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) + 1)
     )
 
 RETURN
