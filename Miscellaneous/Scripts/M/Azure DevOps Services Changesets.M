@@ -1,4 +1,4 @@
-//set the parameter "source_control_org_url" e.g https://dev.azure.com/YourOrganziation/YourProject
+//set the parameter "source_control_org_url" e.g. https://dev.azure.com/YourOrganziation/YourProject
 
 let
     Source = VSTS.Contents(source_control_org_url & "/_apis/tfvc/changesets?api-version=6.0"),
