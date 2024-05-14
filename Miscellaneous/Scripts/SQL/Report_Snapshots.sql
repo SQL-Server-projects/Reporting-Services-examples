@@ -12,7 +12,7 @@ BEGIN
     --EXEC [admin].[report_snapshots] @ReportName = NULL, @ReportFormat = 'PDF' --all snapshots for every report
 
     SELECT 
-		[ReportName] = c.[Name]
+	     [ReportName] = c.[Name]
 	   , [SnaphsotDate] = FORMAT([h].[snapshotdate], 'dd-MMM-yyyy')
 	   , [FileName] = FORMAT([h].[snapshotdate], 'yyyyMMdd')
 	   , [Url_Download] = 'http://' + @@SERVERNAME + '/ReportServer/Pages/ReportViewer.aspx?' + [c].[path] + '&rs:Command=Render&rs:Format=' + @ReportFormat + '&rs:Snapshot=' + FORMAT([h].[snapshotdate], 'yyyy-MM-ddTHH:mm:ss')
@@ -23,11 +23,11 @@ BEGIN
 	   --, [ScheduleName] = [sc].[name] 
 	   --, [ScheduleNextRunTime] = [sc].[nextruntime]
     FROM
-	    [ReportServer].[dbo].[History] AS [h] (NOLOCK)
-	    INNER JOIN [ReportServer].[dbo].[SnapshotData] AS [s] (NOLOCK) ON [h].[snapshotdataid] = [s].[snapshotdataid]
-	    INNER JOIN [ReportServer].[dbo].[Catalog] AS [c] (NOLOCK) ON [c].[itemid] = [h].[reportid]
-	    INNER JOIN [ReportServer].[dbo].[ReportSchedule] AS [rs] (NOLOCK) ON [rs].[reportid] = [h].[reportid]
-	    INNER JOIN [ReportServer].[dbo].[Schedule] AS [sc] (NOLOCK) ON [sc].[scheduleid] = [rs].[scheduleid]
+	    [dbo].[History] AS [h] (NOLOCK)
+	    INNER JOIN [dbo].[SnapshotData] AS [s] (NOLOCK) ON [h].[snapshotdataid] = [s].[snapshotdataid]
+	    INNER JOIN [dbo].[Catalog] AS [c] (NOLOCK) ON [c].[itemid] = [h].[reportid]
+	    INNER JOIN [dbo].[ReportSchedule] AS [rs] (NOLOCK) ON [rs].[reportid] = [h].[reportid]
+	    INNER JOIN [dbo].[Schedule] AS [sc] (NOLOCK) ON [sc].[scheduleid] = [rs].[scheduleid]
     WHERE
 	  1=1
 	  AND [rs].[reportaction] = 2 -- Create schedule

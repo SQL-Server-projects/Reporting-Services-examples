@@ -7,21 +7,25 @@ VAR _fiscal_year_end =   DATE ( _fiscal_year, 06, 30)
 VAR _result = 
     ADDCOLUMNS
     (
+        //CALENDARAUTO()   //range of dates is calculated automatically based on data in the model
         CALENDAR(_fiscal_year_start, _fiscal_year_end)
         , "Calendar Year Period End",   FORMAT([Date], "yyyy12")
         , "Calendar Year Period Start", FORMAT([Date], "yyyy01")
         , "Calendar Year Period",       FORMAT([Date], "yyyyMM")
         , "Calendar Year Quarter Nbr",  QUARTER([Date])
         , "Calendar Year Quarter",      FORMAT([Date], "\C\Yyyyy \Qq")
+        , "Calendar Year Half",         FORMAT([Date], "\F\Yyyyy \H") & ROUNDUP(MONTH([Date]) / 6, 0)
         , "Calendar Year",              YEAR([Date])
         , "Day Name Short",             FORMAT([Date], "DDD")
         , "Day Name",                   FORMAT([Date], "DDDD")
+        , "Day Of Week",                WEEKDAY([Date])  
         , "Day",                        DAY([Date])
         , "Fiscal Year Period End",     FORMAT(EDATE([Date], 6), "yyyy12")
         , "Fiscal Year Period Start",   FORMAT(EDATE([Date], 6), "yyyy01")
         , "Fiscal Year Period",         FORMAT(EDATE([Date], 6), "yyyyMM")
         , "Fiscal Year Quarter Nbr",    FORMAT(EDATE([Date], 6), "q")
         , "Fiscal Year Quarter",        FORMAT(EDATE([Date], 6), "\F\Yyyyy \Qq")
+        , "Fiscal Year Half",           FORMAT(EDATE([Date], 6), "\F\Yyyyy \H") & ROUNDUP(MONTH(EDATE([Date], 6)) / 6, 0)
         , "Fiscal Year",                YEAR(EDATE([Date], 6))
         , "Is Current FY",              IF(YEAR(EDATE([Date], 6)) = _fiscal_year, 1, 0)
         , "Is Future",                  IF([Date] > _today_date, 1, 0)
@@ -31,7 +35,12 @@ VAR _result =
         , "Month Start",                DATE(YEAR([Date]), MONTH([Date]), 1)
         , "Month",                      MONTH([Date])
         , "Week Ending",                [Date] + 7 - WEEKDAY([Date], 1) // Saturday
-        , "Week Starting",              [Date] - WEEKDAY([Date], 2)   // Sunday
+        , "Week Starting",              [Date] - WEEKDAY([Date], 1) + 1 // Sunday
+        , "Week of Month",              1 + WEEKNUM([Date]) - WEEKNUM( EOMONTH([Date], -1 ) + 1 )
+        , "Week of Year",               WEEKNUM([Date])
+        , "Week of Fiscal Year",        IF(MONTH([Date]) < 7
+                                        , WEEKNUM([Date], 1) + (WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) - 1)
+                                        , WEEKNUM([Date], 1) - WEEKNUM(DATE(YEAR([Date]), 7, 1), 1) + 1)
     )
 
 RETURN

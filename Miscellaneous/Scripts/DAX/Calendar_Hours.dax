@@ -1,0 +1,8 @@
+﻿Calendar Hours = 
+VAR _start_time =   TIME(0, 0, 0)
+VAR _end_time =     TIME(23, 0, 0)
+VAR _duration =     TIME(1, 0, 0)
+VAR _hours =        SELECTCOLUMNS (GENERATESERIES(_start_time, _end_time, _duration), "Hours", [Value] )    
+
+RETURN
+_hours

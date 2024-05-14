@@ -109,26 +109,26 @@ AS
 	   AND (@EndDate IS NULL OR el.[TimeStart] &lt;= @EndDate)	
 )
 , 
-execution_log_finish
-AS
-(
-    SELECT 
-		els.[ExecutionId]
-	   , els.[TimeStart]
-	   , [TimeEnd] = MAX(el.[TimeEnd])
-    FROM 
-	   [execution_log_start] AS els
-	   LEFT JOIN [dbo].[ExecutionLog2] AS el WITH (NOLOCK) 
-		  ON els.[ReportPath] = el.[ReportPath] 
-		  AND els.[UserName] = el.[UserName] 
-		  AND el.[TimeEnd] &lt; els.[TimeEnd_LAG] 
-		  AND el.[TimeEnd] &gt; els.[TimeStart] 
-		  AND el.[Format] = els.[Format]
-    GROUP BY 
-	     els.[ExecutionId]
-	   , els.[TimeStart]
-)
-,
+--execution_log_finish -- takes too long to render the report, find a better way to show the execution time of power bi
+--AS
+--(
+    --SELECT 
+	   --  els.[ExecutionId]
+	   --, els.[TimeStart]
+	   --, [TimeEnd] = MAX(el.[TimeEnd])
+    --FROM 
+	   --[execution_log_start] AS els
+	   --LEFT JOIN [ReportServerPowerBi].[dbo].[ExecutionLog2] AS el WITH (NOLOCK) 
+		  --ON els.[ReportPath] = el.[ReportPath] 
+		  --AND els.[UserName] = el.[UserName] 
+		  --AND el.[TimeEnd] < els.[TimeEnd_LAG] 
+		  --AND el.[TimeEnd] > els.[TimeStart] 
+		  --AND el.[Format] = els.[Format]
+    --GROUP BY 
+	   --  els.[ExecutionId]
+	   --, els.[TimeStart]
+--)
+--,
 execution_log
 AS
 (
@@ -159,7 +159,7 @@ AS
 	   , el.[UserName]
 	   , [TimeDataRetrieval] = 0
 	   , [TimeProcessing] = 0
-	   , [TimeRendering] = DATEDIFF(SECOND, el.[TimeStart], elf.[TimeEnd]) * 500
+	   , [TimeRendering] = NULL -- DATEDIFF(SECOND, el.[TimeStart], elf.[TimeEnd]) * 500
 	   , el.[TimeStart]
 	   , el.[RowCount]
 	   , el.[ByteCount]
@@ -167,7 +167,7 @@ AS
 	   , [Parameters] = CONVERT(VARCHAR(2000), el.[Parameters])
     FROM 
 	   [dbo].[ExecutionLog2] AS el WITH (NOLOCK)
-	   INNER JOIN execution_log_finish AS elf ON elf.[ExecutionId] = el.[ExecutionId] AND elf.[TimeStart] = el.[TimeStart]
+	   --INNER JOIN execution_log_finish AS elf ON elf.[ExecutionId] = el.[ExecutionId] AND elf.[TimeStart] = el.[TimeStart]
 	   LEFT JOIN report_catalog AS rpt ON rpt.[Path] = el.[ReportPath]
 	   LEFT JOIN report_users AS usr ON el.[UserName] = usr.[UserName]
     WHERE 

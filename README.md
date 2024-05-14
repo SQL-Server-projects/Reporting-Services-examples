@@ -11,7 +11,7 @@
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 <!---
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2017 Anthony Duguid")
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2024 Anthony Duguid")
 [![star this repo](http://githubbadges.com/star.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices)
 [![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
 --->
@@ -19,21 +19,21 @@ The following examples are used to query the database & report server. I have in
 <kbd>
 <b>Installs</b>
                 <br><br>
-    <a href="https://powerbi.microsoft.com/en-au/report-server/">Microsoft Power BI Report Server</a>
+    <a href="https://powerbi.microsoft.com/en-au/report-server/">Power BI Report Server</a>
                 <br><br>
-    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502)">Microsoft SQL Server 2022 Reporting Services</a>
+    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502)">SQL Server 2022 Reporting Services</a>
                 <br><br>
-    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122">Microsoft SQL Server 2019 Reporting Services</a>
+    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122">SQL Server 2019 Reporting Services</a>
                 <br><br>
-    <a href="https://visualstudio.microsoft.com/vs/">Microsoft Visual Studio</a>
+    <a href="https://visualstudio.microsoft.com/vs/">Visual Studio</a>
                 <br><br>
-    <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022">Microsoft Reporting Services Projects 2022</a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022">Reporting Services Projects 2022</a>
                 <br><br>
-    <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16">Microsoft SQL Server Management Studio</a>
+    <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16">SQL Server Management Studio</a>
                   <br><br>
-    <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall">Microsoft Azure Data Studio</a>
+    <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall">Azure Data Studio</a>
                   <br><br>
-    <a href="https://dev.azure.com/">Microsoft Azure DevOps Services</a>
+    <a href="https://dev.azure.com/">Azure DevOps Services</a>
                 <br><br>
     <a href="https://notepad-plus-plus.org/downloads/">Notepad++</a>
 </kbd>
@@ -61,7 +61,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed subscriptions.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed subscriptions and their schedules.</span>
                 <br>
             </kbd>
         </td>
@@ -135,7 +135,9 @@ The following examples are used to query the database & report server. I have in
 * [Calendar](/Miscellaneous/Scripts/M/Calendar.M)
 * [Calendar FY](/Miscellaneous/Scripts/M/Calendar_FY.M)
 ##### [DAX Scripts](/Miscellaneous/Scripts/DAX)
+* [Calendar](/Miscellaneous/Scripts/DAX/Calendar.dax) 
 * [Calendar Ageing](/Miscellaneous/Scripts/DAX/Calendar_Ageing.dax) 
 * [Calendar Timeframe](/Miscellaneous/Scripts/DAX/Calendar_Timeframe.dax) 
+* [Dynamic_Number_Format](/Miscellaneous/Scripts/DAX/Dynamic_Number_Format.dax) 
 
 </kbd>
