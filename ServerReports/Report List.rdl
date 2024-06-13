@@ -2060,7 +2060,7 @@ ORDER BY 1</CommandText>
                   <TablixHeader>
                     <Size>1.5cm</Size>
                     <CellContents>
-                      <Textbox Name="textbox16">
+                      <Textbox Name="textbox16a">
                         <CanGrow>true</CanGrow>
                         <UserSort>
                           <SortExpression>=Fields!ExecutionLogCount.Value</SortExpression>
