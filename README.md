@@ -96,7 +96,7 @@ The following examples are used to query the database & report server. I have in
                 <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Template</a>
                 <br>
                 <br>
-                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Heat Map Calendar" />
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Power BI Template" />
                 <br>
                 <br>
                 <span style="max-width:256px;">A Power BI template with a matrix formatted as a calendar, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts. It includes date filtering based on timeframes and ageing.</span>
