@@ -49,7 +49,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed reports, their subscriptions and their execution logs.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed reports, their subscriptions and their execution logs. It contains hyperlinks to the folder, report, subscription and execution log as well as various parameters to maintain quality. </span>
                 <br>
             </kbd>
         </td>
@@ -61,7 +61,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed subscriptions and their schedules.</span>
+                <span style="max-width:256px;">This report is used for querying the deployed subscriptions and their schedules. It contains hyperlinks to the folder, report, subscription and execution log as well as various parameters. </span>
                 <br>
             </kbd>
         </td>
@@ -73,7 +73,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/execution_log.png" align="top" width="256px" title="Report Execution Log" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the report server exection log table.</span>
+                <span style="max-width:256px;">This report is used for querying the report server exection log. It contains various parameters to filter the results. </span>
                 <br>
             </kbd>
         </td>
@@ -88,6 +88,18 @@ The following examples are used to query the database & report server. I have in
                 <br>
                 <br>
                 <span style="max-width:256px;">The report uses a nested tablix inside of a matrix to show a calendar view. The heat map is implemented using a function with a report variable for the base color to produce a gradients of the color. Each day on the calendar can be hyperlinked to a detailed Reporting Services report.</span>
+                <br>
+            </kbd>
+        </td>
+        <td width="33%">
+            <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Template</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Heat Map Calendar" />
+                <br>
+                <br>
+                <span style="max-width:256px;">A Power BI template with a matrix formatted as a calendar, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts. It includes date filtering based on timeframes and ageing.</span>
                 <br>
             </kbd>
         </td>
