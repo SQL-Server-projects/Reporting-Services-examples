@@ -37,6 +37,7 @@ VAR _result =
         , "Month",                      MONTH([Date])
         , "Week Ending",                [Date] + 7 - WEEKDAY([Date], 1) // Saturday
         , "Week Starting",              [Date] - WEEKDAY([Date], 1) + 1 // Sunday
+        , "Week Day",                   WEEKDAY([Date], 2)
         , "Week of Month",              1 + WEEKNUM([Date]) - WEEKNUM( EOMONTH([Date], -1 ) + 1 )
         , "Week of Year",               WEEKNUM([Date])
         , "Week of Fiscal Year",        IF(MONTH([Date]) < 7
