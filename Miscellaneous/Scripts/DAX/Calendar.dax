@@ -30,6 +30,7 @@ VAR _result =
         , "Is Current FY",              IF(YEAR(EDATE([Date], 6)) = _fiscal_year, 1, 0)
         , "Is Future",                  IF([Date] > _today_date, 1, 0)
         , "Is Past",                    IF([Date] < _today_date, 1, 0)
+        , "Is Weekend",                 IF(WEEKDAY([Date], 1) = 1 || WEEKDAY([Date], 1) = 7, 1, 0)
         , "Month End",                  EOMONTH([Date], 0)
         , "Month Name Short",           FORMAT([Date], "MMM")
         , "Month Name",                 FORMAT([Date], "MMMM")
