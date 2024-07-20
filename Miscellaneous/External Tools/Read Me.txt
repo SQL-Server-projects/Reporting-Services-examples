@@ -1,3 +1,8 @@
-I used this site to get the code for the icons https://www.base64-image.de/
 
 The order of the buttons in the external tools is alphabetic on the json file name. This is why I use a two digit number prefix.
+
+copy .json files here...
+
+C:\Program Files (x86)\Common Files\Microsoft Shared\Power BI Desktop\External Tools
+
+use https://www.base64-image.de/ to generate the Base64 Image code for icons
