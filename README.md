@@ -103,6 +103,18 @@ The following examples are used to query the database & report server. I have in
                 <br>
             </kbd>
         </td>
+        <td width="33%">
+            <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Service Now</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow.png" align="top" width="256px" title="Power BI Service Now" />
+                <br>
+                <br>
+                <span style="max-width:256px;">A Power BI template for Service Now using Rest API with a slicer for changing the date used in the relationship and a slicer for changing the Y axis on the clustered bar chart, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts.</span>
+                <br>
+            </kbd>
+        </td>
     </tr>
 </table>
 
