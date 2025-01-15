@@ -183,11 +183,8 @@ Power BI templates ensure that all reports adhere to a consistent design, mainta
 
 Power BI External Tools are additional applications or links to websites that integrate seamlessly with Power BI Desktop, enabling advanced modeling, debugging, optimization, and customization tasks. These tools extend Power BI's capabilities by providing specialized functionalities that are not natively available in the Power BI Desktop interface.
 
-<kbd>
-        <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="100px" >
-        <br>
-        <br>
-        <span style="max-width:256px;">
+  <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="150px" >
+  
 The order of the buttons in the External Tools menu is determined alphabetically by the JSON file name. To manage this, I use a two-digit number prefix.
 
 Place the .json files in the following directory: C:\Program Files (x86)\Common Files\Microsoft Shared\Power BI Desktop\External Tools
@@ -212,13 +209,12 @@ Here is the list of installs for External Tools:
 | [⚡](https://data-marc.com/model-documenter/) |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
 | [⚡](https://loop.cloud.microsoft/) |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
 | [⚡](https://en.brunner.bi/measurekiller) |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
- 
+
 If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
 
 There is also an article on [Microsoft Learn about External Tools](https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-external-tools).
 
-</span>
-</kbd> 
+
 
 <br>
 <br>
@@ -229,8 +225,6 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 ## Software
 
 Below is a curated list of essential software I use to manage and enhance my development, reporting, and productivity tasks. Each entry includes the name, description, and a direct link for easy access. This list reflects my preferred tools for efficient development, data management, and reporting tasks.
-
-<kbd> 
   
 |Link|Name|Purpose|
 |:----------|:----------|:----------|
@@ -255,8 +249,6 @@ Below is a curated list of essential software I use to manage and enhance my dev
 | [⚡](https://keepass.info/) |Password Management (KeePass)|Secure tool for managing and storing passwords.|
 | [⚡](https://portableapps.com/apps/utilities/windirstat_portable) |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
 | [⚡](https://mockaroo.com/) |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
-
-</kbd> 
 
 <br>
 <br>
