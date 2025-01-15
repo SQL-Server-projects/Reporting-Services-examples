@@ -25,6 +25,7 @@ The following examples are used to query the database & report server. I have in
 ## Reports
             
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
+
 <table style="width:100%">
     <tr valign="top">
         <td width="33%">
@@ -112,6 +113,7 @@ The following examples are used to query the database & report server. I have in
 </table>
 
 <a id="user-content-title" class="anchor" href="#dashboards" aria-hidden="true"> </a>
+
 ## Dashboards
 
   <table style="width:100%">
@@ -157,7 +159,10 @@ The following examples are used to query the database & report server. I have in
 
 </kbd>
 
+<br>
+
 <a id="user-content-title" class="anchor" href="#tools" aria-hidden="true"> </a>
+
 ## Power BI External Tools
 <kbd>
         <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="100px" >
@@ -197,6 +202,7 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 </kbd> 
 
 <a id="user-content-title" class="anchor" href="#software" aria-hidden="true"> </a>
+
 ## Software
 
 Here is a list of software I use for my environment
@@ -232,7 +238,9 @@ Here is a list of software I use for my environment
 <br>
 <br>
 
+
 <a id="user-content-title" class="anchor" href="#list" aria-hidden="true"> </a>
+
 ## File List
 
 <kbd>
