@@ -216,29 +216,30 @@ Below is a curated list of essential software I use to manage and enhance my dev
 
 <kbd> 
   
-| Name | Location |
-| -------- | ------- |
-| Power BI Report Server | https://powerbi.microsoft.com/en-au/report-server/ |
-| SQL Server 2022 Reporting Services | https://www.microsoft.com/en-us/download/details.aspx?id=104502 |
-| SQL Server 2019 Reporting Services | https://www.microsoft.com/en-us/download/details.aspx?id=100122 |
-| Visual Studio | https://visualstudio.microsoft.com/vs/ |
-| Reporting Services Projects 2022 | https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022 |
-| SQL Server Management Studio | https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16 |
-| RedGate SQL Prompt | https://www.red-gate.com/products/sql-prompt/ |
-| Azure Data Studio | https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall |
-| Azure DevOps Services | https://dev.azure.com/ |
-| Azure Storage Explorer | https://azure.microsoft.com/en-us/products/storage/storage-explorer/ |
-| Microsoft Power Automate | https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409 | 
-| Microsoft PowerToys | https://learn.microsoft.com/en-us/windows/powertoys/install |
-| Microsoft Loop | https://apps.microsoft.com/detail/9p1hq5tqzmgd?hl=en-US&gl=US |
-| Notepad++ | https://notepad-plus-plus.org/downloads/ |
-| Animated Files | https://www.screentogif.com/ |
-| Image Markup | https://www.techsmith.com/screen-capture.html |
-| Image Editor | https://www.gimp.org/ |
-| Problem Recording | https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder |
-| Password Management | https://keepass.info/ |
-| Disk Usage | https://portableapps.com/apps/utilities/windirstat_portable |
-| Mock Data | https://mockaroo.com/ | 
+|Link|Name|Purpose|
+|:----------|:----------|:----------|
+| [⚡](https://powerbi.microsoft.com/en-au/report-server/) |Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
+| [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=104502) |SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
+| [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=100122) |SQL Server 2019 Reporting Services|Legacy version of SQL Server Reporting Services for enterprise reporting.|
+| [⚡](https://visualstudio.microsoft.com/vs/) |Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
+| [⚡](https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022) |Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
+| [⚡](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16) |SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
+| [⚡](https://www.red-gate.com/products/sql-prompt/) |RedGate SQL Prompt|Productivity tool for writing, formatting, and refactoring SQL code.|
+| [⚡](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database.|
+| [⚡](https://dev.azure.com/) |Azure DevOps Services|Cloud-based platform for managing DevOps workflows, CI/CD, and source code repositories.|
+| [⚡](https://azure.microsoft.com/en-us/products/storage/storage-explorer/) |Azure Storage Explorer|Tool for managing Azure Storage accounts, including blobs, queues, and tables.|
+| [⚡](https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409) |Microsoft Power Automate|Workflow automation tool for streamlining repetitive tasks and processes.|
+| [⚡](https://learn.microsoft.com/en-us/windows/powertoys/install) |Microsoft PowerToys|Utility toolset to enhance Windows productivity and usability.|
+| [⚡](https://apps.microsoft.com/detail/9p1hq5tqzmgd?hl=en-US&gl=US) |Microsoft Loop|Collaborative workspace for managing projects, content, and ideas seamlessly.|
+| [⚡](https://notepad-plus-plus.org/downloads/) |Notepad++|Lightweight text and code editor with extensive plugin support.|
+| [⚡](https://www.screentogif.com/) |Animated Files (ScreenToGif)|Tool for creating animated GIFs and recording on-screen activities.|
+| [⚡](https://www.techsmith.com/screen-capture.html) |Image Markup (Snagit)|Screen capture and image annotation tool for professional workflows.|
+| [⚡](https://www.gimp.org/) |Image Editor (GIMP)|Open-source image editing software for graphic design and photo manipulation.|
+| [⚡](https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder) |Problem Recording|Step-by-step problem recorder for documenting workflows and troubleshooting.|
+| [⚡](https://keepass.info/) |Password Management (KeePass)|Secure tool for managing and storing passwords.|
+| [⚡](https://portableapps.com/apps/utilities/windirstat_portable) |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
+| [⚡](https://mockaroo.com/) |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
+
 
 </kbd> 
 
