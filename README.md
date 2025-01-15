@@ -11,6 +11,14 @@
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
 
+<details>
+  <summary><b>Table of Contents</b></summary>
+ 
+- <a href="#reports">Reports</a>
+- <a href="#dashboards">Dashboards</a>
+</details>
+
+<a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
 ## Reports
             
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
@@ -100,6 +108,7 @@ The following examples are used to query the database & report server. I have in
     </tr>
 </table>
 
+<a id="user-content-title" class="anchor" href="#dashboards" aria-hidden="true"> </a>
 ## Dashboards
 
   <table style="width:100%">
