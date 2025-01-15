@@ -10,33 +10,8 @@
 ![Microsoft Power BI Report Server](https://img.shields.io/badge/PBIRS-15.0.1112.48-red.svg)
 
 The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
-<!---
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE "MIT License Copyright © 2024 Anthony Duguid")
-[![star this repo](http://githubbadges.com/star.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices)
-[![fork this repo](http://githubbadges.com/fork.svg?user=aduguid&repo=SqlServerReportingServices&style=flat&color=fff&background=007ec6)](http://github.com/aduguid/SqlServerReportingServices/fork)
---->
 
-<kbd>
-<b>Installs</b>
-                <br><br>
-    <a href="https://powerbi.microsoft.com/en-au/report-server/">Power BI Report Server</a>
-                <br><br>
-    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502)">SQL Server 2022 Reporting Services</a>
-                <br><br>
-    <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122">SQL Server 2019 Reporting Services</a>
-                <br><br>
-    <a href="https://visualstudio.microsoft.com/vs/">Visual Studio</a>
-                <br><br>
-    <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022">Reporting Services Projects 2022</a>
-                <br><br>
-    <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16">SQL Server Management Studio</a>
-                  <br><br>
-    <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall">Azure Data Studio</a>
-                  <br><br>
-    <a href="https://dev.azure.com/">Azure DevOps Services</a>
-                <br><br>
-    <a href="https://notepad-plus-plus.org/downloads/">Notepad++</a>
-</kbd>
+## Reports
             
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
 <table style="width:100%">
@@ -81,6 +56,25 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Heat Map Calendar</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrsheatmap_calendar.png" align="top" width="256px" title="Heat Map Calendar" />
+                <br>
+                <br>
+                <span style="max-width:256px;">The paginated report features a nested tablix within a matrix to display a calendar view. The heat map is created using a .NET function in custom code and a report variable for the base color, generating a gradient effect. Each day on the calendar is hyperlinked to a detailed Reporting Services report.</span>
+                <br>
+            </kbd>
+        </td>
+    </tr>
+</table>
+
+## Dashboards
+
+  <table style="width:100%">
+    <tr valign="top">
+        <td width="33%">
+            <kbd>
                 <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Template</a>
                 <br>
                 <br>
@@ -116,25 +110,86 @@ The following examples are used to query the database & report server. I have in
             </kbd>
         </td>
     </tr>
-    <tr valign="top">
-        <td width="33%">
-            <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Heat Map Calendar</a>
-                <br>
-                <br>
-                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrsheatmap_calendar.png" align="top" width="256px" title="Heat Map Calendar" />
-                <br>
-                <br>
-                <span style="max-width:256px;">The paginated report features a nested tablix within a matrix to display a calendar view. The heat map is created using a .NET function in custom code and a report variable for the base color, generating a gradient effect. Each day on the calendar is hyperlinked to a detailed Reporting Services report.</span>
-                <br>
-            </kbd>
-        </td>
-    </tr>
 </table>
 
+</kbd>
+
+## Power BI External Tools
 <kbd>
+        <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="100px" >
+        <br>
+        <br>
+        <span style="max-width:256px;">
+The order of the buttons in the External Tools menu is determined alphabetically by the JSON file name. To manage this, I use a two-digit number prefix.
+
+Place the .json files in the following directory: C:\Program Files (x86)\Common Files\Microsoft Shared\Power BI Desktop\External Tools
+
+I used [base64-image.de](https://www.base64-image.de/) to generate Base64 Image code for icons. To create and modify the icons I used  GIMP.
+
+You can find the JSON files in my [GitHub project here](https://github.com/SQL-Server-projects/Reporting-Services-examples/tree/master/Miscellaneous/External%20Tools). Please update the URLs in the JSON files to match your organization's sites for services like ServiceNow, Jira, and Confluence. 
+
+Here is the list of installs for External Tools: 
+
+| Name | Location |
+| -------- | ------- |
+| Analyze in Excel | https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/ |
+| Bravo | https://github.com/sql-bi/Bravo/releases |
+| DAX Studio | https://daxstudio.org/|
+| Tabular Editor | https://github.com/TabularEditor/TabularEditor/releases/ |
+| ALM Toolkit | https://www.sqlbi.com/tools/alm-toolkit/ |
+| Power BI Report Builder|https://go.microsoft.com/fwlink/?LinkId=734968 |
+| SQL Server Management Studio | https://aka.ms/ssmsfullsetup  |
+| SQL Server Profiler | https://aka.ms/ssmsfullsetup  |
+| Azure Data Studio |https://aka.ms/ssmsfullsetup |
+| Model Documenter |https://data-marc.com/model-documenter/ |
+| Microsoft Loop |https://loop.cloud.microsoft/ (I use this for all of our process documentation) |
+| Measure Killer |https://en.brunner.bi/measurekiller |
+ 
+If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
+
+There is also an article on [Microsoft Learn about External Tools](https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-external-tools).
+
+</span>
+</kbd> 
+
+## Installs
+
+Here is the list of installs I use for my environment
+
+<kbd> 
+  
+| Name | Location |
+| -------- | ------- |
+| Power BI Report Server | https://powerbi.microsoft.com/en-au/report-server/ |
+| SQL Server 2022 Reporting Services | https://www.microsoft.com/en-us/download/details.aspx?id=104502 |
+| SQL Server 2019 Reporting Services | https://www.microsoft.com/en-us/download/details.aspx?id=100122 |
+| Visual Studio | https://visualstudio.microsoft.com/vs/ |
+| Reporting Services Projects 2022 | https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022 |
+| SQL Server Management Studio | https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16 |
+| RedGate SQL Prompt | https://www.red-gate.com/products/sql-prompt/ |
+| Azure Data Studio | https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall |
+| Azure DevOps Services | https://dev.azure.com/ |
+| Azure Storage Explorer | https://azure.microsoft.com/en-us/products/storage/storage-explorer/ |
+| Microsoft Power Automate | https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409 | 
+| Microsoft PowerToys | https://learn.microsoft.com/en-us/windows/powertoys/install |
+| Microsoft Loop | https://apps.microsoft.com/detail/9p1hq5tqzmgd?hl=en-US&gl=US |
+| Notepad++ | https://notepad-plus-plus.org/downloads/ |
+| Animated Files | https://www.screentogif.com/ |
+| Image Markup | https://www.techsmith.com/screen-capture.html |
+| Image Editor | https://www.gimp.org/ |
+| Problem Recording | https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder |
+| Password Management | https://keepass.info/ |
+| Disk Usage | https://portableapps.com/apps/utilities/windirstat_portable |
+
+</kbd> 
+
+<br>
+<br>
 
 ## File List
+
+<kbd>
+  
 #### [Reports](/ServerReports)
 * [Activity Monitor](/ServerReports/Activity%20Monitor.rdl)
 * [Data Sources](/ServerReports/Data%20Sources.rdl)
