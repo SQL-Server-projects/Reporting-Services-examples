@@ -75,7 +75,7 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Template</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Example Template</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Power BI Template" />
@@ -87,7 +87,7 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Performance</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Performance Template</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.performance.png" align="top" width="256px" title="Power BI Performance" />
@@ -99,7 +99,7 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
-                <a href="https://github.com/PowerBi-Projects/ServiceNow">Power BI Service Now</a>
+                <a href="https://github.com/PowerBi-Projects/ServiceNow">Service Now Template</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow.png" align="top" width="256px" title="Power BI Service Now" />
