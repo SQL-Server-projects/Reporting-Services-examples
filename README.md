@@ -16,6 +16,9 @@ The following examples are used to query the database & report server. I have in
  
 - <a href="#reports">Reports</a>
 - <a href="#dashboards">Dashboards</a>
+- <a href="#external_tools">Dashboards</a>
+- <a href="#software">Software</a>
+- <a href="#file_list">File List</a>
 </details>
 
 <a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
@@ -154,6 +157,7 @@ The following examples are used to query the database & report server. I have in
 
 </kbd>
 
+<a id="user-content-title" class="anchor" href="#external_tools" aria-hidden="true"> </a>
 ## Power BI External Tools
 <kbd>
         <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="100px" >
@@ -192,7 +196,8 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 </span>
 </kbd> 
 
-## Installs
+<a id="user-content-title" class="anchor" href="#software" aria-hidden="true"> </a>
+## Software
 
 Here is a list of software I use for my environment
 
@@ -227,6 +232,7 @@ Here is a list of software I use for my environment
 <br>
 <br>
 
+<a id="user-content-title" class="anchor" href="#file_list" aria-hidden="true"> </a>
 ## File List
 
 <kbd>
