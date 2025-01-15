@@ -112,7 +112,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Power BI Template" />
                 <br>
                 <br>
-                <span style="max-width:256px;">A Power BI template featuring a matrix formatted as a calendar, with bookmarks for day, week, month, quarter, and year to adjust the date timeline selection and control the X-axis date hierarchy level on charts. It also includes date filtering capabilities based on specific timeframes and aging criteria.</span>
+                <span style="max-width:256px;">A Power BI template featuring a matrix formatted as a calendar, with bookmarks for day, week, month, quarter, and year to adjust the date timeline selection and control the X-axis date hierarchy level on charts. It also includes date filtering capabilities based on specific timeframes and aging criteria. Templates ensure that all reports adhere to a consistent design, maintaining a professional appearance that aligns with the organization's branding guidelines.</span>
                 <br>
             </kbd>
         </td>
@@ -124,7 +124,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.performance.png" align="top" width="256px" title="Power BI Performance" />
                 <br>
                 <br>
-                <span style="max-width:256px;">A Power BI template with a trend and detail execution log, bookmarks for half hour, hour, day, week and month to change the date timeline selection and the X axis date hierarchy level on the trend. The log contains information on the length of time spent running a report's dataset query and the time spent processing the data. If you're a report server administrator, you can review the log information and identify long running tasks. You can also make suggestions to the report authors on the areas of the dataset or processing report they might be able to improve. Templates ensure that all reports adhere to a consistent design, maintaining a professional appearance that aligns with the organization's branding guidelines.</span>
+                <span style="max-width:256px;">A Power BI template with a trend and detail execution log, bookmarks for half hour, hour, day, week and month to change the date timeline selection and the X axis date hierarchy level on the trend. The log contains information on the length of time spent running a report's dataset query and the time spent processing the data. If you're a report server administrator, you can review the log information and identify long running tasks. You can also make suggestions to the report authors on the areas of the dataset or processing report they might be able to improve. </span>
                 <br>
             </kbd>
         </td>
