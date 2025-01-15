@@ -49,7 +49,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/report_list.png" align="top" width="256px" title="Report Listing" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed reports, their subscriptions and their execution logs. It contains hyperlinks to the folder, report, subscription and execution log as well as various parameters to maintain quality. </span>
+                <span style="max-width:256px;">This report is designed for querying deployed reports, their subscriptions, and execution logs. It includes hyperlinks to the folder, report, subscription, and execution log, along with various parameters to ensure quality maintenance. </span>
                 <br>
             </kbd>
         </td>
@@ -61,7 +61,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/subscriptions.png" align="top" width="256px" title="Report Subscriptions" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the deployed subscriptions and their schedules. It contains hyperlinks to the folder, report, subscription and execution log as well as various parameters. </span>
+                <span style="max-width:256px;">This report is used to query deployed subscriptions and their schedules. It includes hyperlinks to the folder, report, subscription, and execution log, along with various parameters for detailed tracking and management. </span>
                 <br>
             </kbd>
         </td>
@@ -73,7 +73,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/aduguid/SqlServerReportingServices/master/Images/ReadMe/execution_log.png" align="top" width="256px" title="Report Execution Log" />
                 <br>
                 <br>
-                <span style="max-width:256px;">This report is used for querying the report server exection log. It contains various parameters to filter the results. </span>
+                <span style="max-width:256px;">This report is used to query the report server execution log, with various parameters available to filter the results. </span>
                 <br>
             </kbd>
         </td>
@@ -87,13 +87,13 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.template.png" align="top" width="256px" title="Power BI Template" />
                 <br>
                 <br>
-                <span style="max-width:256px;">A Power BI template with a matrix formatted as a calendar, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts. It includes date filtering based on timeframes and ageing.</span>
+                <span style="max-width:256px;">A Power BI template featuring a matrix formatted as a calendar, with bookmarks for day, week, month, quarter, and year to adjust the date timeline selection and control the X-axis date hierarchy level on charts. It also includes date filtering capabilities based on specific timeframes and aging criteria.</span>
                 <br>
             </kbd>
         </td>
         <td width="33%">
             <kbd>
-                <a>Power BI Performance</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Performance</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.performance.png" align="top" width="256px" title="Power BI Performance" />
@@ -111,7 +111,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow.png" align="top" width="256px" title="Power BI Service Now" />
                 <br>
                 <br>
-                <span style="max-width:256px;">A Power BI template for Service Now using Rest API with a slicer for changing the date used in the relationship and a slicer for changing the Y axis on the clustered bar chart, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts.</span>
+                <span style="max-width:256px;">A Power BI template for ServiceNow that integrates with the REST API, featuring a slicer to adjust the date used in the relationship, and another slicer to modify the Y-axis on the clustered bar chart. The template also includes bookmarks for day, week, month, quarter, and year, enabling users to toggle the date timeline selection and control the X-axis date hierarchy level on the charts.</span>
                 <br>
             </kbd>
         </td>
@@ -125,7 +125,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrsheatmap_calendar.png" align="top" width="256px" title="Heat Map Calendar" />
                 <br>
                 <br>
-                <span style="max-width:256px;">The report uses a nested tablix inside of a matrix to show a calendar view. The heat map is implemented using a function with a report variable for the base color to produce a gradients of the color. Each day on the calendar can be hyperlinked to a detailed Reporting Services report.</span>
+                <span style="max-width:256px;">The paginated report features a nested tablix within a matrix to display a calendar view. The heat map is created using a .NET function in custom code and a report variable for the base color, generating a gradient effect. Each day on the calendar is hyperlinked to a detailed Reporting Services report.</span>
                 <br>
             </kbd>
         </td>
