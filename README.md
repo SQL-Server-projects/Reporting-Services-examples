@@ -9,7 +9,7 @@
 ![Microsoft Power BI Report Server](https://img.shields.io/badge/SSRS-16.0.1114.11.48-red.svg)
 ![Microsoft Power BI Report Server](https://img.shields.io/badge/PBIRS-15.0.1117.95-red.svg)
 
-The following examples are used to query the database & report server. I have included some useful scripts and documents as well.
+The following examples are provided to query both the database and report server. Additionally, I have included some helpful scripts and documents for reference.
 
 <details>
   <summary><b>Table of Contents</b></summary>
