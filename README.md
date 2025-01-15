@@ -16,9 +16,9 @@ The following examples are used to query the database & report server. I have in
  
 - <a href="#reports">Reports</a>
 - <a href="#dashboards">Dashboards</a>
-- <a href="#tools">External Tools</a>
+- <a href="#tools">External_Tools</a>
 - <a href="#software">Software</a>
-- <a href="#list">File List</a>
+- <a href="#list">File_List</a>
 </details>
 
 <a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
