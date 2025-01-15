@@ -11,7 +11,7 @@
 <br><br>
 [Buy me a coffee ☕ 😁](https://www.paypal.me/AnthonyDuguid/5)
 
-The following examples are provided to query both the database and report server. Additionally, I have included some helpful scripts and documents for reference.
+<br>
 
 <details>
   <summary><b>Table of Contents</b></summary>
@@ -24,7 +24,9 @@ The following examples are provided to query both the database and report server
 - <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/wiki">Wiki</a>
 </details>
 
-<br>
+## About
+The following examples are provided to query both the database and report server. Additionally, I have included some helpful scripts and documents for reference.
+
 <br>
 
 <a id="user-content-reports" class="anchor" href="#reports" aria-hidden="true"> </a>
