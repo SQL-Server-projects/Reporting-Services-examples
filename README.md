@@ -154,7 +154,7 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 
 ## Installs
 
-Here is the list of installs I use for my environment
+Here is a list of software I use for my environment
 
 <kbd> 
   
