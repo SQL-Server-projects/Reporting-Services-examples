@@ -18,10 +18,10 @@ The following examples are provided to query both the database and report server
 - <a href="#dashboards">Power BI Dashboards</a>
 - <a href="#tools">Power BI External Tools</a>
 - <a href="#software">Software</a>
-- <a href="#filelist">File List</a>
+- <a href="#files">File List</a>
 </details>
 
-<a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
+<a id="user-content-reports" class="anchor" href="#reports" aria-hidden="true"> </a>
 ## Reports
 
 SQL Server Reporting Services (SSRS) enables the creation, deployment, and management of interactive, web-based reports. These reports provide a platform for sharing and configuring data, as well as delivering actionable insights. The examples below illustrate how to query both the database and the report server effectively.
@@ -114,7 +114,7 @@ SQL Server Reporting Services (SSRS) enables the creation, deployment, and manag
     </tr>
 </table>
 
-<a id="user-content-title" class="anchor" href="#dashboards" aria-hidden="true"> </a>
+<a id="user-content-dashboards" class="anchor" href="#dashboards" aria-hidden="true"> </a>
 
 ## Dashboards
 
@@ -165,7 +165,7 @@ Power BI templates ensure that all reports adhere to a consistent design, mainta
 
 <br>
 
-<a id="user-content-title" class="anchor" href="#externaltools" aria-hidden="true"> </a>
+<a id="user-content-tools" class="anchor" href="#tools" aria-hidden="true"> </a>
 
 ## Power BI External Tools
 
@@ -208,7 +208,7 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 </span>
 </kbd> 
 
-<a id="user-content-title" class="anchor" href="#software" aria-hidden="true"> </a>
+<a id="user-content-software" class="anchor" href="#software" aria-hidden="true"> </a>
 
 ## Software
 
@@ -247,7 +247,7 @@ Below is a curated list of essential software I use to manage and enhance my dev
 <br>
 
 
-<a id="user-content-title" class="anchor" href="#filelist" aria-hidden="true"> </a>
+<a id="user-content-files" class="anchor" href="#files" aria-hidden="true"> </a>
 
 ## File List
 
