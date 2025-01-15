@@ -22,7 +22,7 @@ The following examples are provided to query both the database and report server
 </details>
 
 <a id="user-content-reports" class="anchor" href="#reports" aria-hidden="true"> </a>
-## Reports
+## SSRS Reports
 
 SQL Server Reporting Services (SSRS) enables the creation, deployment, and management of interactive, web-based reports. These reports provide a platform for sharing and configuring data, as well as delivering actionable insights. The examples below illustrate how to query both the database and the report server effectively.
             
@@ -116,7 +116,7 @@ SQL Server Reporting Services (SSRS) enables the creation, deployment, and manag
 
 <a id="user-content-dashboards" class="anchor" href="#dashboards" aria-hidden="true"> </a>
 
-## Dashboards
+## Power BI Dashboards
 
 Power BI templates ensure that all reports adhere to a consistent design, maintaining a professional appearance that aligns with the organization's branding guidelines. By leveraging these templates, organizations can streamline reporting processes, foster collaboration, and create a polished, cohesive framework for data presentation. Standardized visuals and layouts minimize the risk of misrepresenting data or overlooking critical details. These templates also serve as a valuable starting point for new team members, reducing their learning curve and boosting productivity. Standardization helps stakeholders interpret data more effectively, reducing confusion and enhancing decision-making.
 
