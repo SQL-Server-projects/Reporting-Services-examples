@@ -21,6 +21,7 @@ The following examples are provided to query both the database and report server
 - <a href="#tools">Power BI External Tools</a>
 - <a href="#software">Software</a>
 - <a href="#files">File List</a>
+- <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/wiki">Wiki</a>
 </details>
 
 <br>
