@@ -62,7 +62,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.scheduled_jobs.png" align="top" width="256px" title="Scheduled Jobs" />
                 <br>
                 <br>
-                <span style="max-width:256px;"></span>
+                <span style="max-width:256px;">This report is designed to query and analyze the scheduled jobs within a SQL Server database. The detail shows the start time, end time or end date, and frequency of execution. The timeframe is displayed as a Gantt chart. </span>
                 <br>
             </kbd>
         </td>
@@ -74,7 +74,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.database_dictionary.png" align="top" width="256px" title="Database Dictionary" />
                 <br>
                 <br>
-                <span style="max-width:256px;"></span>
+                <span style="max-width:256px;">This report is designed to query and explore the database dictionary of a SQL Server database. The detail includes a collection of names, definitions, and attributes about data elements that are being used in a database.</span>
                 <br>
             </kbd>
         </td>
