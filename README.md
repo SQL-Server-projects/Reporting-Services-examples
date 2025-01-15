@@ -244,7 +244,7 @@ Below is a curated list of essential software I use to manage and enhance my dev
 | [⚡](https://www.screentogif.com/) |Animated Files (ScreenToGif)|Tool for creating animated GIFs and recording on-screen activities.|
 | [⚡](https://www.techsmith.com/screen-capture.html) |Image Markup (Snagit)|Screen capture and image annotation tool for professional workflows.|
 | [⚡](https://www.gimp.org/) |Image Editor (GIMP)|Open-source image editing software for graphic design and photo manipulation.|
-| [⚡](https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder) |Problem Recording|Step-by-step problem recorder for documenting workflows and troubleshooting.|
+| [⚡](https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder) |Microsoft Problem Recording|Step-by-step problem recorder for documenting workflows and troubleshooting.|
 | [⚡](https://keepass.info/) |Password Management (KeePass)|Secure tool for managing and storing passwords.|
 | [⚡](https://portableapps.com/apps/utilities/windirstat_portable) |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
 | [⚡](https://mockaroo.com/) |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
