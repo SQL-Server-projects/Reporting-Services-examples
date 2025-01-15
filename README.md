@@ -136,7 +136,7 @@ The following examples are used to query the database & report server. I have in
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow1.png" align="top" width="256px" title="Power BI Service Now" />
                 <br>
                 <br>
-                <span style="max-width:256px;">A Power BI template for ServiceNow that integrates with the REST API, featuring a slicer to adjust the date used in the relationship, and another slicer to modify the Y-axis on the clustered bar chart. The template also includes bookmarks for day, week, month, quarter, and year, enabling users to toggle the date timeline selection and control the X-axis date hierarchy level on the charts.</span>
+                <span style="max-width:256px;">A Power BI template for ServiceNow that integrates with the REST API, featuring a slicer to adjust the date used in the relationship, and another slicer to modify the Y-axis on the clustered bar chart. The template also includes bookmarks for day, week, month, quarter, and year, enabling users to toggle the date timeline selection and control the X-axis date hierarchy level on the charts. It's a comprehensive visualization tool designed to provide deep insights into the performance, trends, and key metrics related to tickets generated within the ServiceNow platform. This dashboard offers a user-friendly interface that allows stakeholders, IT managers, and support teams to monitor, analyze, and optimize ticket management processes effectively.</span>
                 <br>
             </kbd>
         </td>
