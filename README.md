@@ -183,8 +183,10 @@ Power BI templates ensure that all reports adhere to a consistent design, mainta
 
 Power BI External Tools are additional applications or links to websites that integrate seamlessly with Power BI Desktop, enabling advanced modeling, debugging, optimization, and customization tasks. These tools extend Power BI's capabilities by providing specialized functionalities that are not natively available in the Power BI Desktop interface.
 
-  <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="150px" >
-  
+<kbd>
+<img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="150px" >
+</kbd>
+
 The order of the buttons in the External Tools menu is determined alphabetically by the JSON file name. To manage this, I use a two-digit number prefix.
 
 Place the .json files in the following directory: C:\Program Files (x86)\Common Files\Microsoft Shared\Power BI Desktop\External Tools
