@@ -14,12 +14,11 @@ The following examples are provided to query both the database and report server
 <details>
   <summary><b>Table of Contents</b></summary>
  
-- <a href="#reports">Reports</a>
-- <a href="#dashboards">Dashboards</a>
-- <a href="#externaltools">External Tools</a>
+- <a href="#reports">SSRS Reports</a>
+- <a href="#dashboards">Power BI Dashboards</a>
+- <a href="#tools">Power BI External Tools</a>
 - <a href="#software">Software</a>
 - <a href="#filelist">File List</a>
-- <a href="#externaltools">Test</a>
 </details>
 
 <a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
