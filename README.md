@@ -21,6 +21,9 @@ The following examples are provided to query both the database and report server
 - <a href="#files">File List</a>
 </details>
 
+<br>
+<br>
+
 <a id="user-content-reports" class="anchor" href="#reports" aria-hidden="true"> </a>
 ## SSRS Reports
 
@@ -114,6 +117,9 @@ SQL Server Reporting Services (SSRS) enables the creation, deployment, and manag
     </tr>
 </table>
 
+<br>
+<br>
+
 <a id="user-content-dashboards" class="anchor" href="#dashboards" aria-hidden="true"> </a>
 
 ## Power BI Dashboards
@@ -164,6 +170,7 @@ Power BI templates ensure that all reports adhere to a consistent design, mainta
 </kbd>
 
 <br>
+<br>
 
 <a id="user-content-tools" class="anchor" href="#tools" aria-hidden="true"> </a>
 
@@ -208,6 +215,9 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 </span>
 </kbd> 
 
+<br>
+<br>
+
 <a id="user-content-software" class="anchor" href="#software" aria-hidden="true"> </a>
 
 ## Software
@@ -245,7 +255,6 @@ Below is a curated list of essential software I use to manage and enhance my dev
 
 <br>
 <br>
-
 
 <a id="user-content-files" class="anchor" href="#files" aria-hidden="true"> </a>
 
