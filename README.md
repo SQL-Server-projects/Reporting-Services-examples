@@ -214,9 +214,6 @@ If you have any other suggestions, please add them in the [comments](https://com
 
 There is also an article on [Microsoft Learn about External Tools](https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-external-tools).
 
-
-
-<br>
 <br>
 <br>
 
@@ -252,13 +249,10 @@ Below is a curated list of essential software I use to manage and enhance my dev
 
 <br>
 <br>
-<br>
 
 <a id="user-content-files" class="anchor" href="#files" aria-hidden="true"> </a>
 
 ## File List
-
-<kbd>
   
 #### [Reports](/ServerReports)
 * [Activity Monitor](/ServerReports/Activity%20Monitor.rdl)
@@ -302,5 +296,3 @@ Below is a curated list of essential software I use to manage and enhance my dev
 * [Calendar Ageing](/Miscellaneous/Scripts/DAX/Calendar_Ageing.dax) 
 * [Calendar Timeframe](/Miscellaneous/Scripts/DAX/Calendar_Timeframe.dax) 
 * [Dynamic_Number_Format](/Miscellaneous/Scripts/DAX/Dynamic_Number_Format.dax) 
-
-</kbd>
