@@ -168,6 +168,9 @@ Power BI templates provide powerful examples of dynamic grouping, bookmarks, and
 <a id="user-content-title" class="anchor" href="#externaltools" aria-hidden="true"> </a>
 
 ## Power BI External Tools
+
+Power BI External Tools are additional applications or links to websites that integrate seamlessly with Power BI Desktop, enabling advanced modeling, debugging, optimization, and customization tasks. These tools extend Power BI's capabilities by providing specialized functionalities that are not natively available in the Power BI Desktop interface.
+
 <kbd>
         <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.external_tools.png" height="100px" >
         <br>
