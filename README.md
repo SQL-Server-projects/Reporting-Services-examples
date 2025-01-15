@@ -16,9 +16,9 @@ The following examples are used to query the database & report server. I have in
  
 - <a href="#reports">Reports</a>
 - <a href="#dashboards">Dashboards</a>
-- <a href="#tools">External_Tools</a>
+- <a href="#externaltools">External_Tools</a>
 - <a href="#software">Software</a>
-- <a href="#list">File_List</a>
+- <a href="#filelist">File_List</a>
 </details>
 
 <a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
@@ -161,7 +161,7 @@ The following examples are used to query the database & report server. I have in
 
 <br>
 
-<a id="user-content-title" class="anchor" href="#tools" aria-hidden="true"> </a>
+<a id="user-content-title" class="anchor" href="#externaltools" aria-hidden="true"> </a>
 
 ## Power BI External Tools
 <kbd>
@@ -239,7 +239,7 @@ Here is a list of software I use for my environment
 <br>
 
 
-<a id="user-content-title" class="anchor" href="#list" aria-hidden="true"> </a>
+<a id="user-content-title" class="anchor" href="#filelist" aria-hidden="true"> </a>
 
 ## File List
 
