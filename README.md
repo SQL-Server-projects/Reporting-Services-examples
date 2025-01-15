@@ -186,20 +186,20 @@ You can find the JSON files in my [GitHub project here](https://github.com/SQL-S
 
 Here is the list of installs for External Tools: 
 
-| Name | Location |
-| -------- | ------- |
-| Analyze in Excel | https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/ |
-| Bravo | https://github.com/sql-bi/Bravo/releases |
-| DAX Studio | https://daxstudio.org/|
-| Tabular Editor | https://github.com/TabularEditor/TabularEditor/releases/ |
-| ALM Toolkit | https://www.sqlbi.com/tools/alm-toolkit/ |
-| Power BI Report Builder|https://go.microsoft.com/fwlink/?LinkId=734968 |
-| SQL Server Management Studio | https://aka.ms/ssmsfullsetup  |
-| SQL Server Profiler | https://aka.ms/ssmsfullsetup  |
-| Azure Data Studio |https://aka.ms/ssmsfullsetup |
-| Model Documenter |https://data-marc.com/model-documenter/ |
-| Microsoft Loop |https://loop.cloud.microsoft/ (I use this for all of our process documentation) |
-| Measure Killer |https://en.brunner.bi/measurekiller |
+|Link|Name|Purpose|
+|:----------|:----------|:----------|
+| [⚡](https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/) |Analyze in Excel|Allows direct analysis of Power BI datasets using Excel’s PivotTable and PivotChart features.|
+| [⚡](https://github.com/sql-bi/Bravo/releases) |Bravo|Tool for managing Power BI datasets, optimizing models, and formatting DAX queries.|
+| [⚡](https://daxstudio.org/) |DAX Studio|Advanced tool for writing, analyzing, and optimizing DAX queries in Power BI and SSAS.|
+| [⚡](https://github.com/TabularEditor/TabularEditor/releases/) |Tabular Editor|Lightweight editor for creating, managing, and optimizing Tabular models.|
+| [⚡](https://www.sqlbi.com/tools/alm-toolkit/) |ALM Toolkit|Schema comparison tool for managing and deploying Tabular model changes.|
+| [⚡](https://go.microsoft.com/fwlink/?LinkId=734968) |Power BI Report Builder|Tool for creating paginated reports to complement Power BI visualizations.|
+| [⚡](https://aka.ms/ssmsfullsetup) |SQL Server Management Studio|Comprehensive tool for managing SQL Server and related services.|
+| [⚡](https://aka.ms/ssmsfullsetup) |SQL Server Profiler|SQL Server trace tool for analyzing and debugging database performance issues.|
+| [⚡](https://aka.ms/ssmsfullsetup) |Azure Data Studio|Cross-platform data management and development tool.|
+| [⚡](https://data-marc.com/model-documenter/) |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
+| [⚡](https://loop.cloud.microsoft/) |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
+| [⚡](https://en.brunner.bi/measurekiller) |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
  
 If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
 
