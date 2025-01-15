@@ -56,7 +56,7 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Scheduled Jobs</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/ServerReports/Scheduled%20Jobs.rdl">Scheduled Jobs</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.scheduled_jobs.png" align="top" width="256px" title="Scheduled Jobs" />
@@ -68,7 +68,7 @@ The following examples are used to query the database & report server. I have in
         </td>
             <td width="33%">
             <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Database Dictionary</a>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/ServerReports/Database%20Dictionary.rdl">Database Dictionary</a>
                 <br>
                 <br>
                 <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.database_dictionary.png" align="top" width="256px" title="Database Dictionary" />
