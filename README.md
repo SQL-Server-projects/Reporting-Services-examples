@@ -24,7 +24,7 @@ The following examples are provided to query both the database and report server
 <a id="user-content-title" class="anchor" href="#reports" aria-hidden="true"> </a>
 ## Reports
 
-SQL Server Reporting Services (SSRS) enables the creation, deployment, and management of interactive, web-based reports. These reports provide a powerful platform for sharing and configuring data, as well as delivering actionable insights. The examples below illustrate how to query both the database and the report server effectively.
+SQL Server Reporting Services (SSRS) enables the creation, deployment, and management of interactive, web-based reports. These reports provide a platform for sharing and configuring data, as well as delivering actionable insights. The examples below illustrate how to query both the database and the report server effectively.
             
 <a id="user-content-ssrs-reports" class="anchor" href="#ssrs-reports" aria-hidden="true"> </a>
 
