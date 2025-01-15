@@ -81,18 +81,6 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
-                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Heat Map Calendar</a>
-                <br>
-                <br>
-                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrsheatmap_calendar.png" align="top" width="256px" title="Heat Map Calendar" />
-                <br>
-                <br>
-                <span style="max-width:256px;">The report uses a nested tablix inside of a matrix to show a calendar view. The heat map is implemented using a function with a report variable for the base color to produce a gradients of the color. Each day on the calendar can be hyperlinked to a detailed Reporting Services report.</span>
-                <br>
-            </kbd>
-        </td>
-        <td width="33%">
-            <kbd>
                 <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Templates">Power BI Template</a>
                 <br>
                 <br>
@@ -105,6 +93,18 @@ The following examples are used to query the database & report server. I have in
         </td>
         <td width="33%">
             <kbd>
+                <a>Power BI Performance</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.performance.png" align="top" width="256px" title="Power BI Performance" />
+                <br>
+                <br>
+                <span style="max-width:256px;">A Power BI template with a trend and detail execution log, bookmarks for half hour, hour, day, week and month to change the date timeline selection and the X axis date hierarchy level on the trend. The log contains information on the length of time spent running a report's dataset query and the time spent processing the data. If you're a report server administrator, you can review the log information and identify long running tasks. You can also make suggestions to the report authors on the areas of the dataset or processing report they might be able to improve.</span>
+                <br>
+            </kbd>
+        </td>
+        <td width="33%">
+            <kbd>
                 <a href="https://github.com/PowerBi-Projects/ServiceNow">Power BI Service Now</a>
                 <br>
                 <br>
@@ -112,6 +112,20 @@ The following examples are used to query the database & report server. I have in
                 <br>
                 <br>
                 <span style="max-width:256px;">A Power BI template for Service Now using Rest API with a slicer for changing the date used in the relationship and a slicer for changing the Y axis on the clustered bar chart, bookmarks for day, week, month, quarter and year to change the date timeline selection and the X axis date hierarchy level on charts.</span>
+                <br>
+            </kbd>
+        </td>
+    </tr>
+    <tr valign="top">
+        <td width="33%">
+            <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Heat Map Calendar</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrsheatmap_calendar.png" align="top" width="256px" title="Heat Map Calendar" />
+                <br>
+                <br>
+                <span style="max-width:256px;">The report uses a nested tablix inside of a matrix to show a calendar view. The heat map is implemented using a function with a report variable for the base color to produce a gradients of the color. Each day on the calendar can be hyperlinked to a detailed Reporting Services report.</span>
                 <br>
             </kbd>
         </td>
