@@ -217,6 +217,7 @@ There is also an article on [Microsoft Learn about External Tools](https://learn
 
 <br>
 <br>
+<br>
 
 <a id="user-content-software" class="anchor" href="#software" aria-hidden="true"> </a>
 
@@ -250,9 +251,9 @@ Below is a curated list of essential software I use to manage and enhance my dev
 | [⚡](https://portableapps.com/apps/utilities/windirstat_portable) |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
 | [⚡](https://mockaroo.com/) |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
 
-
 </kbd> 
 
+<br>
 <br>
 <br>
 
