@@ -88,6 +88,13 @@ The following examples are used to query the database & report server. I have in
                 <br>
                 <span style="max-width:256px;">The paginated report features a nested tablix within a matrix to display a calendar view. The heat map is created using a .NET function in custom code and a report variable for the base color, generating a gradient effect. Each day on the calendar is hyperlinked to a detailed Reporting Services report.</span>
                 <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/sharepoint.teamsite.ssrs.png" align="top" width="256px" title="Heat Map Calendar" />
+                <br>
+                <br>  
+                <span style="max-width:256px;">You can then add it to a SharePoint team site with a report viewer web part.</span>
+                <br>
+                <br>
             </kbd>
         </td>
     </tr>
