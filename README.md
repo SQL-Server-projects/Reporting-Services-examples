@@ -8,6 +8,8 @@
 [![Github commits (since latest release)](https://img.shields.io/github/commits-since/SQL-Server-projects/Reporting-Services-examples/latest.svg)](https://github.com/SQL-Server-projects/Reporting-Services-examples)
 ![Microsoft Power BI Report Server](https://img.shields.io/badge/SSRS-16.0.1114.11.48-red.svg)
 ![Microsoft Power BI Report Server](https://img.shields.io/badge/PBIRS-15.0.1117.95-red.svg)
+<br><br>
+[Buy me a coffee ☕ :)](https://www.paypal.me/AnthonyDuguid/5)
 
 The following examples are provided to query both the database and report server. Additionally, I have included some helpful scripts and documents for reference.
 
