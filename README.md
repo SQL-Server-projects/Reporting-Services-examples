@@ -56,6 +56,30 @@ The following examples are used to query the database & report server. I have in
     <tr valign="top">
         <td width="33%">
             <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Scheduled Jobs</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.scheduled_jobs.png" align="top" width="256px" title="Scheduled Jobs" />
+                <br>
+                <br>
+                <span style="max-width:256px;"></span>
+                <br>
+            </kbd>
+        </td>
+            <td width="33%">
+            <kbd>
+                <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Database Dictionary</a>
+                <br>
+                <br>
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/ssrs.database_dictionary.png" align="top" width="256px" title="Database Dictionary" />
+                <br>
+                <br>
+                <span style="max-width:256px;"></span>
+                <br>
+            </kbd>
+        </td>
+        <td width="33%">
+            <kbd>
                 <a href="https://github.com/SQL-Server-projects/Reporting-Services-examples/blob/master/Miscellaneous/Scripts/VB/HeatMapColorGradate.vb">Heat Map Calendar</a>
                 <br>
                 <br>
@@ -102,7 +126,7 @@ The following examples are used to query the database & report server. I have in
                 <a href="https://github.com/PowerBi-Projects/ServiceNow">Service Now Template</a>
                 <br>
                 <br>
-                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow.png" align="top" width="256px" title="Power BI Service Now" />
+                <img src="https://raw.githubusercontent.com/SQL-Server-projects/Reporting-Services-examples/master/Images/ReadMe/powerbi.servicenow1.png" align="top" width="256px" title="Power BI Service Now" />
                 <br>
                 <br>
                 <span style="max-width:256px;">A Power BI template for ServiceNow that integrates with the REST API, featuring a slicer to adjust the date used in the relationship, and another slicer to modify the Y-axis on the clustered bar chart. The template also includes bookmarks for day, week, month, quarter, and year, enabling users to toggle the date timeline selection and control the X-axis date hierarchy level on the charts.</span>
