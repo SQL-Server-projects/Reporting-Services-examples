@@ -232,7 +232,7 @@ Below is a curated list of essential software I use to manage and enhance my dev
 | [⚡](https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022) |Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
 | [⚡](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16) |SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
 | [⚡](https://www.red-gate.com/products/sql-prompt/) |RedGate SQL Prompt|Productivity tool for writing, formatting, and refactoring SQL code.|
-| [⚡](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database. (End of life Jun 2025)|
+| [⚡](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database. (End of life Feb 2025)|
 | [⚡](https://dev.azure.com/) |Azure DevOps Services|Cloud-based platform for managing DevOps workflows, CI/CD, and source code repositories.|
 | [⚡](https://azure.microsoft.com/en-us/products/storage/storage-explorer/) |Azure Storage Explorer|Tool for managing Azure Storage accounts, including blobs, queues, and tables.|
 | [⚡](https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409) |Microsoft Power Automate|Workflow automation tool for streamlining repetitive tasks and processes.|
