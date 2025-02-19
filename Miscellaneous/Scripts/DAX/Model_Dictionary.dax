@@ -1,0 +1,51 @@
+EVALUATE
+//Column and Measure Definitions = 
+VAR _columns = 
+  UNION(
+    SELECTCOLUMNS(INFO.COLUMNS()
+        , "Column", [ExplicitName]
+        , "Type", "Column"
+        , "Description", [Description]
+        , "Folder", [DisplayFolder]
+        , "Formula", [Expression]
+        , "TableID", [TableID]
+        , "Format", [FormatString]
+        , "ModifiedTime", [ModifiedTime]
+        , "IsHidden", [IsHidden]
+    ) 
+  , SELECTCOLUMNS(INFO.MEASURES()
+        , "Measure", [Name]
+        , "Type", "Measure"
+        , "Description", [Description]
+        , "Folder", [DisplayFolder]
+        , "Formula", [Expression]
+        , "TableID", [TableID]
+        , "Format", [FormatString]
+        , "ModifiedTime", [ModifiedTime]
+        , "IsHidden", [IsHidden]
+    )
+ )   
+
+    
+VAR _tables = SELECTCOLUMNS(INFO.TABLES()
+        , "TableID", [ID]
+        , "Table", [Name]
+    )
+    
+VAR _combined = NATURALLEFTOUTERJOIN(_columns, _tables)
+VAR _filtered = FILTER(_combined, [IsHidden] = FALSE)
+
+RETURN
+    SELECTCOLUMNS(
+        _filtered
+        , "Column", [Column]
+        , "Type", [Type]
+        , "Folder", [Folder]
+        , "Table", [Table]
+        , "Description", [Description]
+        , "Calculation", SUBSTITUTE(SUBSTITUTE([Formula], UNICHAR(13), " "), UNICHAR(10), " ")
+        , "Format", [Format]
+        , "Modified Time", Format([ModifiedTime], "dd-MMM-yyyy hh:mm:ss")
+        //, "Modified Time", [ModifiedTime]
+    ) ORDER BY [Modified Time] DESC
+
