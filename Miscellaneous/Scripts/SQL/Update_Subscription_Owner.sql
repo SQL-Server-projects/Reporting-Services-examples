@@ -15,44 +15,44 @@ GO
 :SETVAR OldUser "DOMAIN\OldUserName"
 :SETVAR NewUser "DOMAIN\NewUserName"
 
-SET XACT_ABORT ON
-BEGIN TRANSACTION
+SET XACT_ABORT ON;
+BEGIN TRANSACTION;
 
-PRINT '====================================================================='
-PRINT 'Update subscriptions...'
+PRINT '=====================================================================';
+PRINT 'Update subscriptions...';
 PRINT '====================================================================='
 
-;WITH 
-new_owner
+WITH 
+[new_owner]
 AS
 (
-    SELECT UserID, UserName FROM dbo.Users WHERE UserName =  N'$(NewUser)'
+    SELECT [UserID], [UserName] FROM [dbo].[Users] WHERE [UserName] =  N'$(NewUser)'
 )
 , 
-subscription_source
+[subscription_source]
 AS
 (
     SELECT DISTINCT
-          s.[Report_OID]
-        , [OldOwner] = ou.[UserName]
-        , [OldOwnerID] = ou.[UserID]
-        , [NewOwner] = nu.[UserName]
-        , [NewOwnerID] = nu.[UserID]
+          [s].[Report_OID]
+        , [OldOwner] = [ou].[UserName]
+        , [OldOwnerID] = [ou].[UserID]
+        , [NewOwner] = [nu].[UserName]
+        , [NewOwnerID] = [nu].[UserID]
     FROM 
-        [dbo].[Subscriptions] AS s
-        INNER JOIN [dbo].[Users] AS ou ON ou.[UserID] = s.[OwnerID]
-        , new_owner AS nu
+        [dbo].[Subscriptions] AS [s]
+        INNER JOIN [dbo].[Users] AS [ou] ON [ou].[UserID] = [s].[OwnerID]
+        , [new_owner] AS [nu]
     WHERE 
         1=1
-        AND ou.[UserName] =  N'$(OldUser)'
+        AND [ou].[UserName] =  N'$(OldUser)'
 )
 --SELECT * FROM subscription_source
-MERGE [dbo].[Subscriptions] AS T
-USING subscription_source AS S ON T.[Report_OID] = S.[Report_OID]
+MERGE [dbo].[Subscriptions] AS [T]
+USING [subscription_source] AS [S] ON [T].[Report_OID] = [S].[Report_OID]
 WHEN MATCHED 
 THEN UPDATE SET 
-        T.[OwnerID] = S.[NewOwnerID] 
-OUTPUT @@ServerName AS ServerName, db_name() AS DatabaseName, $action, inserted.*, deleted.*; 
+        [T].[OwnerID] = [S].[NewOwnerID] 
+OUTPUT @@ServerName AS [ServerName], DB_NAME() AS [DatabaseName], $action, [inserted].*, [deleted].*; 
 
 
 PRINT '******* ROLLBACK TRANSACTION ******* ';
@@ -61,6 +61,6 @@ ROLLBACK TRANSACTION;
 --PRINT '******* COMMIT TRANSACTION ******* ';
 --COMMIT TRANSACTION;
 
-PRINT '====================================================================='
-PRINT 'Finished...'
-PRINT '====================================================================='
+PRINT '=====================================================================';
+PRINT 'Finished...';
+PRINT '=====================================================================';
