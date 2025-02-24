@@ -12,7 +12,7 @@ BEGIN
     --EXEC [admin].[report_snapshots] @ReportName = NULL, @ReportFormat = 'PDF' --all snapshots for every report
 
     SELECT 
-	     [ReportName] = c.[Name]
+	     [ReportName] = [c].[Name]
 	   , [SnaphsotDate] = FORMAT([h].[snapshotdate], 'dd-MMM-yyyy')
 	   , [FileName] = FORMAT([h].[snapshotdate], 'yyyyMMdd')
 	   , [Url_Download] = 'http://' + @@SERVERNAME + '/ReportServer/Pages/ReportViewer.aspx?' + [c].[path] + '&rs:Command=Render&rs:Format=' + @ReportFormat + '&rs:Snapshot=' + FORMAT([h].[snapshotdate], 'yyyy-MM-ddTHH:mm:ss')
