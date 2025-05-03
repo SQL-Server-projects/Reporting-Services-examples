@@ -209,6 +209,7 @@ Here is the list of installs for External Tools:
 | [⚡](https://data-marc.com/model-documenter/) |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
 | [⚡](https://loop.cloud.microsoft/) |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
 | [⚡](https://en.brunner.bi/measurekiller) |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
+| [⚡](https://cran.r-project.org/bin/windows/base/) |R language |The official Comprehensive R Archive Network (CRAN) page for downloading the R programming language for Windows |
 
 If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
 
