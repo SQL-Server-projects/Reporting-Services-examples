@@ -227,6 +227,7 @@ Below is a curated list of essential software I use to manage and enhance my dev
 |Link|Name|Purpose|
 |:----------|:----------|:----------|
 | [⚡](https://powerbi.microsoft.com/en-au/report-server/) |Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
+| [⚡](https://www.microsoft.com/en-au/power-platform/products/power-bi/gateway) |Power BI gateway|Connect to on-premises data sources with a Power BI gateway|
 | [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=104502) |SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
 | [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=100122) |SQL Server 2019 Reporting Services|Legacy version of SQL Server Reporting Services for enterprise reporting.|
 | [⚡](https://visualstudio.microsoft.com/vs/) |Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
