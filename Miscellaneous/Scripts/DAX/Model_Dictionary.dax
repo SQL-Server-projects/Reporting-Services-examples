@@ -3,7 +3,7 @@ EVALUATE
 VAR _columns = 
   UNION(
     SELECTCOLUMNS(INFO.COLUMNS()
-        , "Column", [ExplicitName]
+        , "Column", IF(ISBLANK([ExplicitName]), [InferredName], [ExplicitName])
         , "Type", "Column"
         , "Description", [Description]
         , "Folder", [DisplayFolder]
