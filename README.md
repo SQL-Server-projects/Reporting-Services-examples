@@ -197,19 +197,19 @@ Here is the list of installs for External Tools:
 
 |Link|Name|Purpose|
 |:----------|:----------|:----------|
-| [⚡](https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/) |Analyze in Excel|Allows direct analysis of Power BI datasets using Excel’s PivotTable and PivotChart features.|
-| [⚡](https://github.com/sql-bi/Bravo/releases) |Bravo|Tool for managing Power BI datasets, optimizing models, and formatting DAX queries.|
-| [⚡](https://daxstudio.org/) |DAX Studio|Advanced tool for writing, analyzing, and optimizing DAX queries in Power BI and SSAS.|
-| [⚡](https://github.com/TabularEditor/TabularEditor/releases/) |Tabular Editor|Lightweight editor for creating, managing, and optimizing Tabular models.|
-| [⚡](https://www.sqlbi.com/tools/alm-toolkit/) |ALM Toolkit|Schema comparison tool for managing and deploying Tabular model changes.|
-| [⚡](https://go.microsoft.com/fwlink/?LinkId=734968) |Power BI Report Builder|Tool for creating paginated reports to complement Power BI visualizations.|
-| [⚡](https://aka.ms/ssmsfullsetup) |SQL Server Management Studio|Comprehensive tool for managing SQL Server and related services.|
-| [⚡](https://aka.ms/ssmsfullsetup) |SQL Server Profiler|SQL Server trace tool for analyzing and debugging database performance issues.|
-| [⚡](https://aka.ms/ssmsfullsetup) |Azure Data Studio|Cross-platform data management and development tool.|
-| [⚡](https://data-marc.com/model-documenter/) |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
-| [⚡](https://loop.cloud.microsoft/) |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
-| [⚡](https://en.brunner.bi/measurekiller) |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
-| [⚡](https://cran.r-project.org/bin/windows/base/) |R language |The official Comprehensive R Archive Network (CRAN) page for downloading the R programming language for Windows |
+| <a href="https://www.sqlbi.com/tools/analyze-in-excel-for-power-bi-desktop/" target="_blank">⚡</a> |Analyze in Excel|Allows direct analysis of Power BI datasets using Excel’s PivotTable and PivotChart features.|
+| <a href="https://github.com/sql-bi/Bravo/releases" target="_blank">⚡</a> |Bravo|Tool for managing Power BI datasets, optimizing models, and formatting DAX queries.|
+| <a href="https://daxstudio.org/" target="_blank">⚡</a> |DAX Studio|Advanced tool for writing, analyzing, and optimizing DAX queries in Power BI and SSAS.|
+| <a href="https://github.com/TabularEditor/TabularEditor/releases/" target="_blank">⚡</a> |Tabular Editor|Lightweight editor for creating, managing, and optimizing Tabular models.|
+| <a href="https://www.sqlbi.com/tools/alm-toolkit/" target="_blank">⚡</a> |ALM Toolkit|Schema comparison tool for managing and deploying Tabular model changes.|
+| <a href="https://go.microsoft.com/fwlink/?LinkId=734968" target="_blank">⚡</a> |Power BI Report Builder|Tool for creating paginated reports to complement Power BI visualizations.|
+| <a href="https://aka.ms/ssmsfullsetup" target="_blank">⚡</a> |SQL Server Management Studio|Comprehensive tool for managing SQL Server and related services.|
+| <a href="https://aka.ms/ssmsfullsetup" target="_blank">⚡</a> |SQL Server Profiler|SQL Server trace tool for analyzing and debugging database performance issues.|
+| <a href="https://aka.ms/ssmsfullsetup" target="_blank">⚡</a> |Azure Data Studio|Cross-platform data management and development tool.|
+| <a href="https://data-marc.com/model-documenter/" target="_blank">⚡</a> |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
+| <a href="https://loop.cloud.microsoft/" target="_blank">⚡</a> |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
+| <a href="https://en.brunner.bi/measurekiller" target="_blank">⚡</a> |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
+| <a href="https://cran.r-project.org/bin/windows/base/" target="_blank">⚡</a> |R language |The official Comprehensive R Archive Network (CRAN) page for downloading the R programming language for Windows |
 
 If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
 
@@ -226,28 +226,28 @@ Below is a curated list of essential software I use to manage and enhance my dev
   
 |Link|Name|Purpose|
 |:----------|:----------|:----------|
-| [⚡](https://powerbi.microsoft.com/en-au/report-server/) |Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
-| [⚡](https://www.microsoft.com/en-au/power-platform/products/power-bi/gateway) |Power BI gateway|Connect to on-premises data sources with a Power BI gateway|
-| [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=104502) |SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
-| [⚡](https://www.microsoft.com/en-us/download/details.aspx?id=100122) |SQL Server 2019 Reporting Services|Legacy version of SQL Server Reporting Services for enterprise reporting.|
-| [⚡](https://visualstudio.microsoft.com/vs/) |Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
-| [⚡](https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022) |Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
-| [⚡](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16) |SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
-| [⚡](https://www.red-gate.com/products/sql-prompt/) |RedGate SQL Prompt|Productivity tool for writing, formatting, and refactoring SQL code.|
-| [⚡](https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall) |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database. (End of life Feb 2025)|
-| [⚡](https://dev.azure.com/) |Azure DevOps Services|Cloud-based platform for managing DevOps workflows, CI/CD, and source code repositories.|
-| [⚡](https://azure.microsoft.com/en-us/products/storage/storage-explorer/) |Azure Storage Explorer|Tool for managing Azure Storage accounts, including blobs, queues, and tables.|
-| [⚡](https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409) |Microsoft Power Automate|Workflow automation tool for streamlining repetitive tasks and processes.|
-| [⚡](https://learn.microsoft.com/en-us/windows/powertoys/install) |Microsoft PowerToys|Utility toolset to enhance Windows productivity and usability.|
-| [⚡](https://apps.microsoft.com/detail/9p1hq5tqzmgd?hl=en-US&gl=US) |Microsoft Loop|Collaborative workspace for managing projects, content, and ideas seamlessly.|
-| [⚡](https://notepad-plus-plus.org/downloads/) |Notepad++|Lightweight text and code editor with extensive plugin support.|
-| [⚡](https://www.screentogif.com/) |Animated Files (ScreenToGif)|Tool for creating animated GIFs and recording on-screen activities.|
-| [⚡](https://www.techsmith.com/screen-capture.html) |Image Markup (Snagit)|Screen capture and image annotation tool for professional workflows.|
-| [⚡](https://www.gimp.org/) |Image Editor (GIMP)|Open-source image editing software for graphic design and photo manipulation.|
-| [⚡](https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder) |Microsoft Problem Recording|Step-by-step problem recorder for documenting workflows and troubleshooting.|
-| [⚡](https://keepass.info/) |Password Management (KeePass)|Secure tool for managing and storing passwords.|
-| [⚡](https://portableapps.com/apps/utilities/windirstat_portable) |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
-| [⚡](https://mockaroo.com/) |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
+| <a href="https://powerbi.microsoft.com/en-au/report-server/" target="_blank">⚡</a> |Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
+| <a href="https://www.microsoft.com/en-au/power-platform/products/power-bi/gateway" target="_blank">⚡</a> |Power BI gateway|Connect to on-premises data sources with a Power BI gateway|
+| <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502" target="_blank">⚡</a> |SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
+| <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122" target="_blank">⚡</a> |SQL Server 2019 Reporting Services|Legacy version of SQL Server Reporting Services for enterprise reporting.|
+| <a href="https://visualstudio.microsoft.com/vs/" target="_blank">⚡</a> |Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
+| <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022" target="_blank">⚡</a> |Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
+| <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16" target="_blank">⚡</a> |SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
+| <a href="https://www.red-gate.com/products/sql-prompt/" target="_blank">⚡</a> |RedGate SQL Prompt|Productivity tool for writing, formatting, and refactoring SQL code.|
+| <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall" target="_blank">⚡</a> |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database. (End of life Feb 2025)|
+| <a href="https://dev.azure.com/" target="_blank">⚡</a> |Azure DevOps Services|Cloud-based platform for managing DevOps workflows, CI/CD, and source code repositories.|
+| <a href="https://azure.microsoft.com/en-us/products/storage/storage-explorer/" target="_blank">⚡</a> |Azure Storage Explorer|Tool for managing Azure Storage accounts, including blobs, queues, and tables.|
+| <a href="https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409" target="_blank">⚡</a> |Microsoft Power Automate|Workflow automation tool for streamlining repetitive tasks and processes.|
+| <a href="https://learn.microsoft.com/en-us/windows/powertoys/install" target="_blank">⚡</a> |Microsoft PowerToys|Utility toolset to enhance Windows productivity and usability.|
+| <a href="https://apps.microsoft.com/detail/9p1hq5tqzmgd?hl=en-US&gl=US" target="_blank">⚡</a> |Microsoft Loop|Collaborative workspace for managing projects, content, and ideas seamlessly.|
+| <a href="https://notepad-plus-plus.org/downloads/" target="_blank">⚡</a> |Notepad++|Lightweight text and code editor with extensive plugin support.|
+| <a href="https://www.screentogif.com/" target="_blank">⚡</a> |Animated Files (ScreenToGif)|Tool for creating animated GIFs and recording on-screen activities.|
+| <a href="https://www.techsmith.com/screen-capture.html" target="_blank">⚡</a> |Image Markup (Snagit)|Screen capture and image annotation tool for professional workflows.|
+| <a href="https://www.gimp.org/" target="_blank">⚡</a> |Image Editor (GIMP)|Open-source image editing software for graphic design and photo manipulation.|
+| <a href="https://learn.microsoft.com/en-us/office/troubleshoot/settings/how-to-use-problem-steps-recorder" target="_blank">⚡</a> |Microsoft Problem Recording|Step-by-step problem recorder for documenting workflows and troubleshooting.|
+| <a href="https://keepass.info/" target="_blank">⚡</a> |Password Management (KeePass)|Secure tool for managing and storing passwords.|
+| <a href="https://portableapps.com/apps/utilities/windirstat_portable" target="_blank">⚡</a> |Disk Usage (WinDirStat)|Visualizes disk usage for identifying large files and optimizing storage.|
+| <a href="https://mockaroo.com/" target="_blank">⚡</a> |Mock Data (Mockaroo)|Tool for generating realistic mock data for development and testing.|
 
 <br>
 <br>
