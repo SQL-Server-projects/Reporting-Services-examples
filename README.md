@@ -203,12 +203,12 @@ Here is the list of installs for External Tools:
 | <a href="https://daxstudio.org/" target="_blank">⚡</a> |DAX Studio|Advanced tool for writing, analyzing, and optimizing DAX queries in Power BI and SSAS.|
 | <a href="https://en.brunner.bi/measurekiller" target="_blank">⚡</a> |Measure Killer|Identifies and removes unused or redundant measures in Power BI models.|
 | <a href="https://loop.cloud.microsoft/" target="_blank">⚡</a> |Microsoft Loop|Collaborative workspace for organizing and documenting processes and workflows.|
+| <a href="https://go.microsoft.com/fwlink/?LinkId=734968" target="_blank">⚡</a> |Microsoft Power BI Report Builder|Tool for creating paginated reports to complement Power BI visualizations.|
+| <a href="https://learn.microsoft.com/en-us/ssms/install/install" target="_blank">⚡</a> |Microsoft SQL Server Management Studio|Comprehensive tool for managing SQL Server and related services.|
+| <a href="https://learn.microsoft.com/en-us/ssms/install/install" target="_blank">⚡</a> |Microsoft SQL Server Profiler|SQL Server trace tool for analyzing and debugging database performance issues.|
 | <a href="https://data-marc.com/model-documenter/" target="_blank">⚡</a> |Model Documenter|Automates the generation of comprehensive Power BI model documentation.|
-| <a href="https://www.python.org/downloads/" target="_blank">⚡</a> |Python Language|Python is a high-level, general-purpose programming language.|
-| <a href="https://go.microsoft.com/fwlink/?LinkId=734968" target="_blank">⚡</a> |Power BI Report Builder|Tool for creating paginated reports to complement Power BI visualizations.|
-| <a href="https://cran.r-project.org/bin/windows/base/" target="_blank">⚡</a> |R Language |The official Comprehensive R Archive Network (CRAN) page for downloading the R programming language for Windows |
-| <a href="https://learn.microsoft.com/en-us/ssms/install/install" target="_blank">⚡</a> |SQL Server Management Studio|Comprehensive tool for managing SQL Server and related services.|
-| <a href="https://learn.microsoft.com/en-us/ssms/install/install" target="_blank">⚡</a> |SQL Server Profiler|SQL Server trace tool for analyzing and debugging database performance issues.|
+| <a href="https://www.python.org/downloads/" target="_blank">⚡</a> |Python Language|Data transformation, advanced analytics, and visualization that go beyond what DAX or Power Query can easily do.|
+| <a href="https://cran.r-project.org/bin/windows/base/" target="_blank">⚡</a> |R Language|Enhance data analysis, transformation, and visualization beyond what’s possible with DAX or Power Query|
 | <a href="https://github.com/TabularEditor/TabularEditor/releases/" target="_blank">⚡</a> |Tabular Editor|Lightweight editor for creating, managing, and optimizing Tabular models.|
 
 If you have any other suggestions, please add them in the [comments](https://community.fabric.microsoft.com/t5/Desktop/Power-BI-External-Tools/m-p/4052162#M1286411).
