@@ -226,15 +226,13 @@ Below is a curated list of essential software I use to manage and enhance my dev
   
 |Link|Name|Purpose|
 |:----------|:----------|:----------|
-| <a href="https://powerbi.microsoft.com/en-au/report-server/" target="_blank">⚡</a> |Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
-| <a href="https://www.microsoft.com/en-au/power-platform/products/power-bi/gateway" target="_blank">⚡</a> |Power BI gateway|Connect to on-premises data sources with a Power BI gateway|
-| <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502" target="_blank">⚡</a> |SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
-| <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100122" target="_blank">⚡</a> |SQL Server 2019 Reporting Services|Legacy version of SQL Server Reporting Services for enterprise reporting.|
-| <a href="https://visualstudio.microsoft.com/vs/" target="_blank">⚡</a> |Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
-| <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022" target="_blank">⚡</a> |Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
-| <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16" target="_blank">⚡</a> |SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
+| <a href="https://powerbi.microsoft.com/en-au/report-server/" target="_blank">⚡</a> |Microsoft Power BI Report Server|On-premises report server for hosting and sharing Power BI and paginated reports.|
+| <a href="https://www.microsoft.com/en-au/power-platform/products/power-bi/gateway" target="_blank">⚡</a> |Microsoft Power BI Gateway|Connect to on-premises data sources with a Power BI gateway|
+| <a href="https://www.microsoft.com/en-us/download/details.aspx?id=104502" target="_blank">⚡</a> |Microsoft SQL Server 2022 Reporting Services|Advanced reporting tool for creating, publishing, and managing reports.|
+| <a href="https://visualstudio.microsoft.com/vs/" target="_blank">⚡</a> |Microsoft Visual Studio|Integrated development environment (IDE) for coding, debugging, and deploying applications.|
+| <a href="https://marketplace.visualstudio.com/items?itemName=ProBITools.MicrosoftReportProjectsforVisualStudio2022" target="_blank">⚡</a> |Microsoft Reporting Services Projects 2022|Extension for Visual Studio to design SQL Server Reporting Services (SSRS) reports.|
+| <a href="https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16" target="_blank">⚡</a> |Microsoft SQL Server Management Studio|Comprehensive tool for configuring, managing, and administering SQL Server instances.|
 | <a href="https://www.red-gate.com/products/sql-prompt/" target="_blank">⚡</a> |RedGate SQL Prompt|Productivity tool for writing, formatting, and refactoring SQL code.|
-| <a href="https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall" target="_blank">⚡</a> |Azure Data Studio|Cross-platform data management tool for SQL Server and Azure SQL Database. (End of life Feb 2025)|
 | <a href="https://dev.azure.com/" target="_blank">⚡</a> |Azure DevOps Services|Cloud-based platform for managing DevOps workflows, CI/CD, and source code repositories.|
 | <a href="https://azure.microsoft.com/en-us/products/storage/storage-explorer/" target="_blank">⚡</a> |Azure Storage Explorer|Tool for managing Azure Storage accounts, including blobs, queues, and tables.|
 | <a href="https://go.microsoft.com/fwlink/?LinkId=2102613&clcid=0x409" target="_blank">⚡</a> |Microsoft Power Automate|Workflow automation tool for streamlining repetitive tasks and processes.|
