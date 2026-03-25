@@ -1,5 +1,4 @@
 KeePass (password manager)	https://keepass.info/ 
-Microsoft Azure Data Studio	https://learn.microsoft.com/en-us/azure-data-studio/download-azure-data-studio?tabs=win-install%2Cwin-user-install%2Credhat-install%2Cwindows-uninstall%2Credhat-uninstall#download-azure-data-studio
 Microsoft Azure Storage Explorer	https://azure.microsoft.com/en-us/products/storage/storage-explorer/
 Microsoft Office 365	https://www.office.com/?omkt=en-au&auth=2 
 	https://portal.office.com/account/?ref=MeControl#installs 
